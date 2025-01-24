@@ -1,4 +1,4 @@
-# Wind-Turbine-Noise
+# Wind Turbine Noise
 
 ## About
 This repository contains the Python code used during my Master's Thesis at blueOASIS. The goal of this Master's Thesis is to characterise the underwater acoustic signature of a floating offshore wind turbine under various operational conditions by using industry-oriented engineering models.
