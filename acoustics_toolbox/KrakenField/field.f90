@@ -172,7 +172,25 @@ PROGRAM FIELD
      SourceDepths: DO iS = 1, Pos%Nsz
         M = MIN( MLimit, MSrc )   ! Set number of propagating modes
 
+        ! Waterborne source
         C( 1 : MSrc ) = phiS( 1 : MSrc, is )
+
+        ! ! Airbourne source
+        ! COMPLEX, PARAMETER :: i = ( 0.0, 1.0 )
+        ! COMPLEX            :: gamma_n( MaxM )
+        ! REAL               :: SourceHeight
+        ! REAL               :: SpeedSoundAir
+        ! ALLOCATE ( gamma_n( MaxM ), Stat = IAllocStat )
+        !
+        ! gamma_n( 1 : MSrc ) = SQRT((omega/SpeedSoundAir)**2 - k( 1 : MSrc )**2 )
+        ! 
+        ! ! General 1st order finite difference
+        ! C( 1 : MSrc ) = i * ( EXP( i * gamma_n( 1 : MSrc ) * SourceHeight ) / SourceHeight ) &
+        ! * ( phiS( 1 : MSrc, 2) - phiS( 1 : MSrc, 2)) / (Sz(2) - Sz(1))
+        !
+        ! ! Assuming phiS = 0 at z = 0
+        ! C( 1 : MSrc ) = i * ( EXP( i * gamma_n( 1 : MSrc ) * SourceHeight ) / SourceHeight ) &
+        ! * phiS( 1 : MSrc, 1) / Sz(1)
 
         ! apply the source beam pattern
         IF ( SBPFlag == '*' .AND. iS == 1 ) THEN
