@@ -1,4 +1,4 @@
-from ctypes import *
+from ctypes import c_bool, c_int, c_double, c_void_p, c_char_p, POINTER, CDLL
 from typing import Dict, Any
 
 class QBladeLibrary:
@@ -45,7 +45,7 @@ class QBladeLibrary:
             "runFullSimulation": {"argtypes": None, "restype": c_void_p},
             "setAutoClearTemp": {"argtypes": [c_bool], "restype": c_void_p},
         }
-        
+
         # Automatically load the library
         self.load_library()
 
@@ -55,7 +55,7 @@ class QBladeLibrary:
             self.lib = CDLL(self.lib_path)
             print(f"Successfully loaded library from: {self.lib_path}")
         except Exception as e:
-            raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}")
+            raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}") from e
 
         # Bind functions dynamically
         for func_name, config in self.functions.items():
@@ -63,26 +63,25 @@ class QBladeLibrary:
                 func = getattr(self.lib, func_name)
                 func.argtypes = config.get("argtypes")
                 func.restype = config.get("restype")
-                setattr(self, func_name, func)  # Bind the function to the instance
+                setattr(self, func_name, func)
             except AttributeError as e:
-                raise RuntimeError(f"Failed to bind function '{func_name}': {e}")
+                raise RuntimeError(f"Failed to bind function '{func_name}': {e}") from e
 
         # Call setLibraryPath after the library is loaded
         try:
             self.setLibraryPath(self.lib_path.encode('utf-8'))
             print(f"Library path set to: {self.lib_path}")
         except Exception as e:
-            raise RuntimeError(f"Failed to set library path: {e}")
+            raise RuntimeError(f"Failed to set library path: {e}") from  e
 
-    def unload(self):
-        
-        # Close the QBlade instance if it exists
+    def unload_library(self):
+        """Close the QBlade instance if it exists."""
         try:
             self.closeInstance()
             print("QBlade instance closed.")
         except Exception as e:
             print(f"Warning: Failed to close QBlade instance: {e}")
-        
+
         # Clean up resources and unload the library
         if self.lib:
             del self.lib
