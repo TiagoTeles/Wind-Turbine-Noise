@@ -1,0 +1,57 @@
+----------------------------------------QBlade Blade Definition File------------------------------------------------
+Generated with : QBlade CE v2.0.8.3_beta windows
+Archive Format: 310035
+Time : 16:13:16
+Date : 05.02.2025
+
+----------------------------------------Object Name-----------------------------------------------------------------
+DTU 10MW - Blade                                   OBJECTNAME         - the name of the blade object
+
+----------------------------------------Parameters------------------------------------------------------------------
+HAWT                                               ROTORTYPE          - the rotor type
+false                                              INVERTEDFOILS      - invert the airfoils? (only VAWT) [bool]
+3                                                  NUMBLADES          - number of blades
+
+----------------------------------------Blade Data------------------------------------------------------------------
+POS_[m]             CHORD_[m]           TWIST_[deg]         OFFSET_X_[m]        OFFSET_Y_[m]        P_AXIS [-]          POLAR_FILE          
+2.80000             5.38000             14.50               0.00000             0.00007             0.50000             Polars/Circular_Foil_t100.0_dtu_10mw_Polar_RE1.00E+06.plr
+4.80382             5.38000             14.50               0.00001             -0.00813            0.50000             Polars/Circular_Foil_t100.0_dtu_10mw_Polar_RE1.00E+06.plr
+7.52100             5.38000             14.50               0.00419             -0.01949            0.50000             Polars/Interpolated_t96.9_t96.9_dtu_10mw_Polar_RE0.00E+00.plr
+8.20631             5.38000             14.50               0.00585             -0.02239            0.50000             Polars/Interpolated_t95.3_t95.3_dtu_10mw_Polar_RE0.00E+00.plr
+9.13105             5.38860             14.50               0.01113             -0.02569            0.50000             Polars/Interpolated_t92.7_t92.7_dtu_10mw_Polar_RE0.00E+00.plr
+10.28912            5.42120             14.44               0.02903             -0.02756            0.50000             Polars/Interpolated_t88.8_t88.8_dtu_10mw_Polar_RE0.00E+00.plr
+11.67435            5.48650             14.27               0.06158             -0.02749            0.50000             Polars/Interpolated_t83.4_t83.4_dtu_10mw_Polar_RE0.00E+00.plr
+13.27589            5.58870             13.97               0.13117             -0.02094            0.50000             Polars/Interpolated_t76.7_t76.7_dtu_10mw_Polar_RE0.00E+00.plr
+15.08657            5.72470             13.36               0.23145             -0.01236            0.50000             Polars/Interpolated_t68.8_t68.8_dtu_10mw_Polar_RE0.00E+00.plr
+17.09356            5.88170             12.29               0.35583             -0.00599            0.50000             Polars/Interpolated_t60.3_t60.3_dtu_10mw_Polar_RE0.00E+00.plr
+19.28614            6.03460             11.01               0.48167             -0.01097            0.50000             Polars/Interpolated_t52.3_t52.3_dtu_10mw_Polar_RE0.00E+00.plr
+21.65345            6.14780             9.67                0.60355             -0.02458            0.50000             Polars/Interpolated_t45.8_t45.8_dtu_10mw_Polar_RE0.00E+00.plr
+24.17908            6.20200             8.46                0.70615             -0.04999            0.50000             Polars/Interpolated_t41.0_t41.0_dtu_10mw_Polar_RE0.00E+00.plr
+26.85002            6.19500             7.63                0.77656             -0.08655            0.50000             Polars/Interpolated_t37.3_t37.3_dtu_10mw_Polar_RE0.00E+00.plr
+29.64858            6.12920             6.95                0.82332             -0.13268            0.50000             Polars/Interpolated_t34.5_t34.5_dtu_10mw_Polar_RE0.00E+00.plr
+32.55747            6.00960             6.34                0.84740             -0.18937            0.50000             Polars/Interpolated_t32.3_t32.3_dtu_10mw_Polar_RE0.00E+00.plr
+35.56045            5.84320             5.76                0.85125             -0.25681            0.50000             Polars/Interpolated_t30.5_t30.5_dtu_10mw_Polar_RE0.00E+00.plr
+38.63720            5.64000             5.19                0.83399             -0.33793            0.50000             Polars/Interpolated_t29.0_t29.0_dtu_10mw_Polar_RE0.00E+00.plr
+41.77079            5.41070             4.62                0.80527             -0.42776            0.50000             Polars/Interpolated_t27.8_t27.8_dtu_10mw_Polar_RE0.00E+00.plr
+44.94097            5.16130             4.00                0.77034             -0.53124            0.50000             Polars/Interpolated_t26.7_t26.7_dtu_10mw_Polar_RE0.00E+00.plr
+48.13088            4.89740             3.35                0.73147             -0.64338            0.50000             Polars/Interpolated_t25.8_t25.8_dtu_10mw_Polar_RE0.00E+00.plr
+51.31923            4.62550             2.69                0.69141             -0.76957            0.50000             Polars/Interpolated_t25.2_t25.2_dtu_10mw_Polar_RE0.00E+00.plr
+54.48818            4.35190             2.03                0.65081             -0.90425            0.50000             Polars/Interpolated_t24.7_t24.7_dtu_10mw_Polar_RE0.00E+00.plr
+57.61748            4.08270             1.40                0.61100             -1.05087            0.50000             Polars/Interpolated_t24.3_t24.3_dtu_10mw_Polar_RE0.00E+00.plr
+60.68929            3.82200             0.80                0.57212             -1.20446            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+63.68531            3.57240             0.25                0.53490             -1.36819            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+66.58655            3.33640             -0.25               0.49954             -1.54045            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+69.37625            3.11610             -0.72               0.46627             -1.71458            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+72.03662            2.91300             -1.12               0.43634             -1.90164            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+74.55409            2.72750             -1.49               0.40802             -2.07865            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+76.91114            2.55950             -1.83               0.38248             -2.26458            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+79.09508            2.40870             -2.14               0.35904             -2.44122            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+81.09228            2.26600             -2.42               0.33760             -2.60276            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+82.89220            2.11750             -2.67               0.31544             -2.75466            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+84.48242            1.95880             -2.89               0.29187             -2.90036            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+85.85384            1.79130             -3.06               0.26522             -3.02836            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+86.99962            1.60130             -3.20               0.23361             -3.13530            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+87.91161            1.38580             -3.30               0.19858             -3.22036            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+88.58364            1.13840             -3.37               0.14189             -3.28277            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+89.20000            0.83354             -3.43               0.08990             -3.34000            0.50000             Polars/FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr
+
