@@ -73,7 +73,7 @@ class QBlade:
 
         # Call setLibraryPath after the library is loaded
         try:
-            self.setLibraryPath(self.lib_path.encode('utf-8'))
+            self.setLibraryPath(self.lib_path.encode("utf-8"))
             print(f"Library path set to: {self.lib_path}")
 
         except Exception as e:
