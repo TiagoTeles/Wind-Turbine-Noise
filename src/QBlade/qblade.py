@@ -1,64 +1,97 @@
-import os
-import sys
-from ctypes import *
-from QBladeLibrary import QBladeLibrary
+from ctypes import CDLL, c_bool, c_char_p, c_double, c_int, c_void_p, POINTER
+from typing import Any, Dict
 
-# Define the directory where the QBlade library is located
-dll_directory = "bin/QBlade/"
+class QBlade:
+    def __init__(self, shared_lib_path: str):
+        """Initialize and load the QBlade shared library."""
+        self.lib_path = shared_lib_path
+        self.lib = None
 
-# On Windows systems, we update the PATH environment variable to include the QBlade directory. 
-# This ensures that the required SSL libraries (e.g., libssl and libcrypto) are properly located and loaded.
-# If experiencing issues with this DLL in a Windows Python environment see:
-# https://docs.qblade.org/src/license/license_files.html#resolving-openssl-issues-on-windows
-if os.name == 'nt':  # 'nt' indicates Windows
-    os.environ["PATH"] = os.path.abspath(dll_directory) + ";" + os.environ.get("PATH", "")
+        # Define all functions with argument types and return types
+        self.functions: Dict[str, Dict[str, Any]] = {
+            "createInstance": {"argtypes": [c_int, c_int], "restype": c_void_p},
+            "closeInstance": {"argtypes": None, "restype": c_void_p},
+            "loadProject": {"argtypes": [c_char_p], "restype": c_void_p},
+            "loadSimDefinition": {"argtypes": [c_char_p], "restype": c_void_p},
+            "setOmpNumThreads": {"argtypes": [c_int], "restype": c_void_p},
+            "getCustomData_at_num": {"argtypes": [c_char_p, c_double, c_int], "restype": c_double},
+            "getCustomSimulationTimeData": {"argtypes": [c_char_p], "restype": c_double},
+            "getWindspeed": {"argtypes": [c_double, c_double, c_double, POINTER(c_double * 3)], "restype": c_void_p},
+            "getWindspeedArray": {"argtypes": [POINTER(c_double), POINTER(c_double), POINTER(c_double),POINTER(c_double), POINTER(c_double), POINTER(c_double), c_int],"restype": c_void_p,},
+            "storeProject": {"argtypes": [c_char_p], "restype": c_void_p},
+            "exportResults": {"argtypes": [c_int, c_char_p, c_char_p, c_char_p], "restype": c_void_p},
+            "setLibraryPath": {"argtypes": [c_char_p], "restype": c_void_p},
+            "setLogFile": {"argtypes": [c_char_p], "restype": c_void_p},
+            "addTurbulentWind": {"argtypes": [c_double, c_double, c_double, c_double, c_int, c_double,c_double, c_char_p, c_char_p, c_int, c_double, c_double, c_bool,],"restype": c_void_p,},
+            "setExternalAction": {"argtypes": [c_char_p, c_char_p, c_double, c_double, c_char_p, c_bool, c_int],"restype": c_void_p,},
+            "setMooringStiffness": {"argtypes": [c_double, c_double, c_int, c_int], "restype": c_void_p},
+            "loadTurbulentWindBinary": {"argtypes": [c_char_p], "restype": c_void_p},
+            "setTimestepSize": {"argtypes": [c_double], "restype": c_void_p},
+            "setInitialConditions_at_num": {"argtypes": [c_double, c_double, c_double, c_double, c_int],"restype": c_void_p,},
+            "setRPMPrescribeType_at_num": {"argtypes": [c_int, c_int], "restype": c_void_p},
+            "setRPM_at_num": {"argtypes": [c_double, c_int], "restype": c_void_p},
+            "setRampupTime": {"argtypes": [c_double], "restype": c_void_p},
+            "setTurbinePosition_at_num": {"argtypes": [c_double, c_double, c_double, c_double, c_double, c_double, c_int],"restype": c_void_p,},
+            "getTowerBottomLoads_at_num": {"argtypes": [POINTER(c_double * 6), c_int], "restype": c_void_p},
+            "initializeSimulation": {"argtypes": None, "restype": c_void_p},
+            "advanceTurbineSimulation": {"argtypes": None, "restype": c_bool},
+            "advanceController_at_num": {"argtypes": [POINTER(c_double * 5), c_int], "restype": c_void_p},
+            "setDebugInfo": {"argtypes": [c_bool], "restype": c_void_p},
+            "setUseOpenCl": {"argtypes": [c_bool], "restype": c_void_p},
+            "setGranularDebug": {"argtypes": [c_bool, c_bool, c_bool, c_bool, c_bool], "restype": c_void_p},
+            "setControlVars_at_num": {"argtypes": [POINTER(c_double * 5), c_int], "restype": c_void_p},
+            "getTurbineOperation_at_num": {"argtypes": [POINTER(c_double * 41), c_int], "restype": c_void_p},
+            "setPowerLawWind": {"argtypes": [c_double, c_double, c_double, c_double, c_double], "restype": c_void_p},
+            "runFullSimulation": {"argtypes": None, "restype": c_void_p},
+            "setAutoClearTemp": {"argtypes": [c_bool], "restype": c_void_p},
+        }
 
-# Search the directory below for library files matching the pattern QBlade*.dll or QBlade*.so
-dll_files = [f for f in os.listdir(dll_directory) if 'QBlade' in f and ('.dll' in f or '.so' in f)]
+        # Load the library
+        self.load_library()
 
-# Check if any matching files are found
-if not dll_files:
-    print('No matching QBlade*.dll or QBlade*.so files found in the specified directory:',os.path.abspath(dll_directory))
-    sys.exit(1)  # Exit the script with a non-zero status to indicate an error
+    def load_library(self):
+        """Load the shared library and dynamically bind all functions."""
 
-# Use the first matching file
-dll_file_path = os.path.join(dll_directory, dll_files[0])
+        # Load the shared library
+        try:
+            self.lib = CDLL(self.lib_path)
+            print(f"Successfully loaded library from: {self.lib_path}")
 
-# Display the selected shared library file
-print(f'Using shared library file: {dll_file_path}')
+        except Exception as e:
+            raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}") from e
 
-# Create an object of the class 'QBladeLibrary' that contains the API
-QBLADE = QBladeLibrary(dll_file_path)    
+        # Bind functions dynamically
+        for func_name, config in self.functions.items():
+            try:
+                func = getattr(self.lib, func_name)
+                func.argtypes = config.get("argtypes")
+                func.restype = config.get("restype")
+                setattr(self, func_name, func)
 
-# Creation of a QBlade instance from the library
-QBLADE.createInstance(1,32)
+            except AttributeError as e:
+                raise RuntimeError(f"Failed to bind function '{func_name}': {e}") from e
 
-# Loading a project or sim-file, in this case the DTU_10MW_Demo project or simulation definition file
-#QBLADE.loadSimDefinition(b"./DTU_10MW_Demo.sim") #uncomment this line to load a simulation definition file
-QBLADE.loadProject(b"data/QBlade/NREL_5MW.qpr") 
+        # Call setLibraryPath after the library is loaded
+        try:
+            self.setLibraryPath(self.lib_path.encode('utf-8'))
+            print(f"Library path set to: {self.lib_path}")
 
-# Initializing the sim and ramp-up phase, call before starting the simulation loop
-QBLADE.initializeSimulation()
+        except Exception as e:
+            raise RuntimeError(f"Failed to set library path: {e}") from  e
 
-# We will run the simulation for 500 steps before storing the results
-number_of_timesteps = 500
+    def unload_library(self):
+        """Close the QBlade instance if it exists."""
 
-# Start of the simulation loop
-for i in range(number_of_timesteps):
+        # Close QBlade instance
+        try:
+            self.closeInstance()
+            print("QBlade instance closed.")
 
-    #advance the simulation
-    success = QBLADE.advanceTurbineSimulation() 
-    
-    # Check if the simulation step was successful
-    if not success:  # If success is False, exit the loop
-        print(f"Simulation failed at timestep {i}. Exiting loop.")
-        break
+        except Exception as e:
+            print(f"Warning: Failed to close QBlade instance: {e}")
 
-# Storing the finished simulation in a project as NREL_5MW_Sample_completed, you can open this file to view the results of the simulation inside QBlade's GUI
-QBLADE.storeProject(b"./NREL_5MW_Sample_completed.qpr")
-
-# Storing the simulation results in QBlade ASCII format in the file NREL_5MW_Sample_results.txt
-QBLADE.exportResults(0,b"./",b"NREL_5MW_Sample_results",b"")
-
-# Unloading the qblade library
-QBLADE.unload() 
+        # Clean up resources and unload the library
+        if self.lib:
+            del self.lib
+            self.lib = None
+            print("Library unloaded successfully.")
