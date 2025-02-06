@@ -13,15 +13,8 @@ TURBINE_PATH = "data/QBlade/DTU_10MW/"  # Turbine path
 TURBINE_NAME = "DTU_10MW.sim"           # Turbine name
 N_TIMESTEP = 500                        # Number of timesteps
 
-# Search DLL_PATH for files matching DLL_NAME
-dll_files = []
-
-for f in os.listdir(DLL_PATH):
-    if f == DLL_NAME:
-        dll_files.append(f)
-
 # Ensure a matching file is found
-if dll_files:
+if os.path.exists(os.path.join(DLL_PATH, DLL_NAME)):
     print(f"Using shared library file: {os.path.join(DLL_PATH, DLL_NAME)}!")
 else:
     print(f"No shared library file named {DLL_NAME} was found in {DLL_PATH}!")
