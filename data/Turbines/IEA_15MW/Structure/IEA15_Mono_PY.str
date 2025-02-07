@@ -1,0 +1,105 @@
+
+30	WATERDEPTH //design depth
+
+false 	ISFLOATING //if the structure is fixed the joint coordinates are assigned in a coordinate system with O(0,0,0) at the mudline, for floaters O(0,0,0) is at the MSL and marks the floaters's NP
+
+1025	WATERDENSITY // design density, used for flooded member mass calcs
+
+//all following positions are defined in (x,y,z) [m]: for floaters: from the neutral point, which is located at MSL (0,0,0); for bottom fixed substructures: defined from seabed
+
+TP_INTERFACE_POS //the interface position between substructure and tower or RNA
+X[m]		Y[m]		Z[m]
+0 		0 		45
+
+SUBJOINTS //defined either from MSL (if isFLoating) or from seabed using the designDepth variable (if !isFLoating)	
+JointID	JointX	JointY	JointZ
+1	0	0	45
+2	0	0	40
+3	0	0	35
+4	0	0	30
+5	0	0	25
+6	0	0	20
+7	0	0	15
+8	0	0	10
+9	0	0	5
+10	0	0	0
+11	0	0	-5
+12	0	0	-10
+13	0	0	-15
+14	0	0	-20
+15	0	0	-25
+16	0	0	-30
+17	0	0	-35
+18	0	0	-40
+19	0	0	-45
+
+SUBELEMENTS
+ElemID	MASSD_[kg/m]  EIx_[N.m^2]   EIy_[N.m^2]   EA_[N]        GJ_[N.m^2]    GA_[N]        STRPIT_[deg]  KSX_[-]       KSY_[-]       RGX_[-]       RGY_[-]       XCM_[-]       YCM_[-]       XCE_[-]       YCE_[-]       XCS_[-]       YCS_[-]       DIA_[m]	  DAMP_[-]
+1    	1.4430E+04    4.2748E+12    4.2748E+12    3.4580E+11    3.3899E+12    1.3711E+11    0.0000E+00    5.0830E-01    5.0830E-01    3.5160E-01    3.5160E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+2    	1.3939E+04    4.1310E+12    4.1310E+12    3.3404E+11    3.2759E+12    1.3245E+11    0.0000E+00    5.0802E-01    5.0802E-01    3.5167E-01    3.5167E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+3    	1.3436E+04    3.9834E+12    3.9834E+12    3.2198E+11    3.1588E+12    1.2767E+11    0.0000E+00    5.0773E-01    5.0773E-01    3.5174E-01    3.5174E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+4    	1.2922E+04    3.8324E+12    3.8324E+12    3.0964E+11    3.0391E+12    1.2277E+11    0.0000E+00    5.0743E-01    5.0743E-01    3.5181E-01    3.5181E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+5    	1.2400E+04    3.6792E+12    3.6792E+12    2.9714E+11    2.9175E+12    1.1782E+11    0.0000E+00    5.0713E-01    5.0713E-01    3.5188E-01    3.5188E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+6    	1.1880E+04    3.5264E+12    3.5264E+12    2.8468E+11    2.7964E+12    1.1288E+11    0.0000E+00    5.0683E-01    5.0683E-01    3.5195E-01    3.5195E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+7    	1.1363E+04    3.3742E+12    3.3742E+12    2.7230E+11    2.6757E+12    1.0797E+11    0.0000E+00    5.0653E-01    5.0653E-01    3.5202E-01    3.5202E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+8    	1.1029E+04    3.2758E+12    3.2758E+12    2.6430E+11    2.5978E+12    1.0479E+11    0.0000E+00    5.0634E-01    5.0634E-01    3.5206E-01    3.5206E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+9    	1.0721E+04    3.1852E+12    3.1852E+12    2.5692E+11    2.5259E+12    1.0187E+11    0.0000E+00    5.0616E-01    5.0616E-01    3.5210E-01    3.5210E-01    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    0.0000E+00    1.0000E+01  1.0000E-02  
+
+HYDROMEMBERCOEFF
+CoeffID	CdN	CmN	CpN	MCFC
+1	1	1	1	1
+
+0.1 SPRINGDAMPK
+
+NLSPRINGDAMPERS
+ElemID	Type	Coefficient & Displacement/Velocity Sets (for NL springs, dampers)
+1	spring	1.000	15915789.0
+2	spring	1.000	29921683.5
+3	spring	1.000	43927578.0
+4	spring	1.000	57933472.5
+5	spring	1.000	71939367.0
+6	spring	1.000	85945261.5
+7	spring	1.000	99951156.0
+8	spring	1.000	113957050.5
+9	spring	1.000	127962949.5
+10	spring	1.000	141968844.0
+
+SUBCONSTRAINTS
+ID	JntID	Jnt2ID	TrP	Fixed	Spring	DoF_tX	DoF_tY	DoF_tZ	DoF_rX	DoF_rY	DoF_rZ
+1	1	0	1	0	0	1	1	1	1	1	1
+2	10	0	0	1	1	1	1	0	0	0	0
+3	11	0	0	1	2	1	1	0	0	0	0
+4	12	0	0	1	3	1	1	0	0	0	0
+5	13	0	0	1	4	1	1	0	0	0	0
+6	14	0	0	1	5	1	1	0	0	0	0
+7	15	0	0	1	6	1	1	0	0	0	0
+8	16	0	0	1	7	1	1	0	0	0	0
+9	17	0	0	1	8	1	1	0	0	0	0
+10	18	0	0	1	9	1	1	0	0	0	0
+11	19	0	0	1	10	1	1	0	0	0	0
+12	19	0	0	1	0	0	0	1	0	0	1
+
+SUBMEMBERS
+MemID	Jnt1ID	Jnt2ID	ElmID	ElmRot	HyCoID	IsBuoy 	MaGrID	FldArea	ElmDsc	Name (optional)
+1	1	2	9	0	1	1	0	0	10
+2	2	3	8	0	1	1	0	0	10
+3	3	4	7	0	1	1	0	0	10
+4	4	5	6	0	1	1	0	0	10
+5	5	6	5	0	1	1	0	0	10
+6	6	7	4	0	1	1	0	0	10
+7	7	8	3	0	1	1	0	0	10
+8	8	9	2	0	1	1	0	0	10
+9	9	10	1	0	1	1	0	0	10
+10	10	11	1	0	1	1	0	0	10
+11	11	12	1	0	1	1	0	0	10
+12	12	13	1	0	1	1	0	0	10
+13	13	14	1	0	1	1	0	0	10
+14	14	15	1	0	1	1	0	0	10
+15	15	16	1	0	1	1	0	0	10
+16	16	17	1	0	1	1	0	0	10
+17	17	18	1	0	1	1	0	0	10
+18	18	19	1	0	1	1	0	0	10
+
+RGBCOLOR
+R	G	B
+255	200	15

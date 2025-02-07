@@ -1,0 +1,67 @@
+----------------------------------------QBlade Blade Definition File------------------------------------------------
+Generated with : QBlade CE v2.0.8.3_beta windows
+Archive Format: 310035
+Time : 18:03:10
+Date : 07.02.2025
+
+----------------------------------------Object Name-----------------------------------------------------------------
+IEA_15MW_RWT                                       OBJECTNAME         - the name of the blade object
+
+----------------------------------------Parameters------------------------------------------------------------------
+HAWT                                               ROTORTYPE          - the rotor type
+false                                              INVERTEDFOILS      - invert the airfoils? (only VAWT) [bool]
+3                                                  NUMBLADES          - number of blades
+
+----------------------------------------Blade Data------------------------------------------------------------------
+POS_[m]             CHORD_[m]           TWIST_[deg]         OFFSET_X_[m]        OFFSET_Y_[m]        P_AXIS [-]          POLAR_FILE          
+3.97000             5.20000             15.59               -0.02277            -0.00635            0.50000             Polars/IEA-15-240-RWT_AF00_Coords_IEA-15-240-RWT_AeroDyn15_Polar_00.dat.plr
+6.35775             5.20884             15.59               0.05008             0.03237             0.50000             Polars/IEA-15-240-RWT_AF01_Coords_IEA-15-240-RWT_AeroDyn15_Polar_01.dat.plr
+8.74551             5.23789             15.41               0.13975             0.08025             0.50000             Polars/IEA-15-240-RWT_AF02_Coords_IEA-15-240-RWT_AeroDyn15_Polar_02.dat.plr
+11.13326            5.29333             14.95               0.24156             0.13413             0.50000             Polars/IEA-15-240-RWT_AF03_Coords_IEA-15-240-RWT_AeroDyn15_Polar_03.dat.plr
+13.52101            5.36734             14.26               0.35167             0.19001             0.50000             Polars/IEA-15-240-RWT_AF04_Coords_IEA-15-240-RWT_AeroDyn15_Polar_04.dat.plr
+15.90877            5.45209             13.40               0.46379             0.24356             0.50000             Polars/IEA-15-240-RWT_AF05_Coords_IEA-15-240-RWT_AeroDyn15_Polar_05.dat.plr
+18.29652            5.54003             12.42               0.57126             0.29111             0.50000             Polars/IEA-15-240-RWT_AF06_Coords_IEA-15-240-RWT_AeroDyn15_Polar_06.dat.plr
+20.68428            5.62182             11.39               0.67372             0.33035             0.50000             Polars/IEA-15-240-RWT_AF07_Coords_IEA-15-240-RWT_AeroDyn15_Polar_07.dat.plr
+23.07203            5.69253             10.37               0.77146             0.36098             0.50000             Polars/IEA-15-240-RWT_AF08_Coords_IEA-15-240-RWT_AeroDyn15_Polar_08.dat.plr
+25.45978            5.74261             9.40                0.85736             0.37977             0.50000             Polars/IEA-15-240-RWT_AF09_Coords_IEA-15-240-RWT_AeroDyn15_Polar_09.dat.plr
+27.84754            5.76484             8.55                0.92657             0.38595             0.50000             Polars/IEA-15-240-RWT_AF10_Coords_IEA-15-240-RWT_AeroDyn15_Polar_10.dat.plr
+30.23529            5.75612             7.83                0.97649             0.38277             0.50000             Polars/IEA-15-240-RWT_AF11_Coords_IEA-15-240-RWT_AeroDyn15_Polar_11.dat.plr
+32.62304            5.70310             7.19                1.00648             0.37499             0.50000             Polars/IEA-15-240-RWT_AF12_Coords_IEA-15-240-RWT_AeroDyn15_Polar_12.dat.plr
+35.01080            5.60468             6.55                1.01782             0.36341             0.50000             Polars/IEA-15-240-RWT_AF13_Coords_IEA-15-240-RWT_AeroDyn15_Polar_13.dat.plr
+37.39855            5.47156             5.93                1.01583             0.34964             0.50000             Polars/IEA-15-240-RWT_AF14_Coords_IEA-15-240-RWT_AeroDyn15_Polar_14.dat.plr
+39.78631            5.32278             5.35                1.00483             0.33479             0.50000             Polars/IEA-15-240-RWT_AF15_Coords_IEA-15-240-RWT_AeroDyn15_Polar_15.dat.plr
+42.17406            5.16648             4.80                0.98867             0.31957             0.50000             Polars/IEA-15-240-RWT_AF16_Coords_IEA-15-240-RWT_AeroDyn15_Polar_16.dat.plr
+44.56181            5.01942             4.30                0.97153             0.30515             0.50000             Polars/IEA-15-240-RWT_AF17_Coords_IEA-15-240-RWT_AeroDyn15_Polar_17.dat.plr
+46.94957            4.88581             3.85                0.95645             0.28944             0.50000             Polars/IEA-15-240-RWT_AF18_Coords_IEA-15-240-RWT_AeroDyn15_Polar_18.dat.plr
+49.33732            4.76796             3.45                0.94510             0.26778             0.50000             Polars/IEA-15-240-RWT_AF19_Coords_IEA-15-240-RWT_AeroDyn15_Polar_19.dat.plr
+51.72507            4.65457             3.08                0.93496             0.23640             0.50000             Polars/IEA-15-240-RWT_AF20_Coords_IEA-15-240-RWT_AeroDyn15_Polar_20.dat.plr
+54.11283            4.54103             2.73                0.92440             0.19201             0.50000             Polars/IEA-15-240-RWT_AF21_Coords_IEA-15-240-RWT_AeroDyn15_Polar_21.dat.plr
+56.50058            4.42818             2.41                0.91250             0.13687             0.50000             Polars/IEA-15-240-RWT_AF22_Coords_IEA-15-240-RWT_AeroDyn15_Polar_22.dat.plr
+58.88834            4.31696             2.11                0.89867             0.07422             0.50000             Polars/IEA-15-240-RWT_AF23_Coords_IEA-15-240-RWT_AeroDyn15_Polar_23.dat.plr
+61.27609            4.20788             1.83                0.88328             0.00584             0.50000             Polars/IEA-15-240-RWT_AF24_Coords_IEA-15-240-RWT_AeroDyn15_Polar_24.dat.plr
+63.66384            4.10165             1.56                0.86630             -0.06528            0.50000             Polars/IEA-15-240-RWT_AF25_Coords_IEA-15-240-RWT_AeroDyn15_Polar_25.dat.plr
+66.05160            3.99871             1.30                0.84766             -0.13965            0.50000             Polars/IEA-15-240-RWT_AF26_Coords_IEA-15-240-RWT_AeroDyn15_Polar_26.dat.plr
+68.43935            3.89941             1.06                0.82732             -0.22538            0.50000             Polars/IEA-15-240-RWT_AF27_Coords_IEA-15-240-RWT_AeroDyn15_Polar_27.dat.plr
+70.82710            3.80317             0.84                0.80651             -0.32477            0.50000             Polars/IEA-15-240-RWT_AF28_Coords_IEA-15-240-RWT_AeroDyn15_Polar_28.dat.plr
+73.21486            3.70939             0.64                0.78446             -0.43822            0.50000             Polars/IEA-15-240-RWT_AF29_Coords_IEA-15-240-RWT_AeroDyn15_Polar_29.dat.plr
+75.60261            3.61711             0.44                0.76113             -0.56226            0.50000             Polars/IEA-15-240-RWT_AF30_Coords_IEA-15-240-RWT_AeroDyn15_Polar_30.dat.plr
+77.99036            3.52563             0.24                0.73647             -0.69444            0.50000             Polars/IEA-15-240-RWT_AF31_Coords_IEA-15-240-RWT_AeroDyn15_Polar_31.dat.plr
+80.37812            3.43408             0.04                0.71081             -0.83163            0.50000             Polars/IEA-15-240-RWT_AF32_Coords_IEA-15-240-RWT_AeroDyn15_Polar_32.dat.plr
+82.76587            3.34193             -0.17               0.68429             -0.97203            0.50000             Polars/IEA-15-240-RWT_AF33_Coords_IEA-15-240-RWT_AeroDyn15_Polar_33.dat.plr
+85.15363            3.24868             -0.41               0.65694             -1.11376            0.50000             Polars/IEA-15-240-RWT_AF34_Coords_IEA-15-240-RWT_AeroDyn15_Polar_34.dat.plr
+87.54138            3.15611             -0.68               0.62945             -1.26262            0.50000             Polars/IEA-15-240-RWT_AF35_Coords_IEA-15-240-RWT_AeroDyn15_Polar_35.dat.plr
+89.92913            3.06458             -1.00               0.60198             -1.42086            0.50000             Polars/IEA-15-240-RWT_AF36_Coords_IEA-15-240-RWT_AeroDyn15_Polar_36.dat.plr
+92.31689            2.97299             -1.32               0.57471             -1.58654            0.50000             Polars/IEA-15-240-RWT_AF37_Coords_IEA-15-240-RWT_AeroDyn15_Polar_37.dat.plr
+94.70464            2.88071             -1.62               0.54774             -1.75901            0.50000             Polars/IEA-15-240-RWT_AF38_Coords_IEA-15-240-RWT_AeroDyn15_Polar_38.dat.plr
+97.09239            2.78697             -1.88               0.52123             -1.93659            0.50000             Polars/IEA-15-240-RWT_AF39_Coords_IEA-15-240-RWT_AeroDyn15_Polar_39.dat.plr
+99.48015            2.69103             -2.09               0.49422             -2.11808            0.50000             Polars/IEA-15-240-RWT_AF40_Coords_IEA-15-240-RWT_AeroDyn15_Polar_40.dat.plr
+101.86790           2.59197             -2.16               0.46614             -2.30310            0.50000             Polars/IEA-15-240-RWT_AF41_Coords_IEA-15-240-RWT_AeroDyn15_Polar_41.dat.plr
+104.25566           2.48932             -2.18               0.43670             -2.49226            0.50000             Polars/IEA-15-240-RWT_AF42_Coords_IEA-15-240-RWT_AeroDyn15_Polar_42.dat.plr
+106.64341           2.38392             -2.16               0.40670             -2.68871            0.50000             Polars/IEA-15-240-RWT_AF43_Coords_IEA-15-240-RWT_AeroDyn15_Polar_43.dat.plr
+109.03116           2.27592             -2.10               0.37649             -2.89208            0.50000             Polars/IEA-15-240-RWT_AF44_Coords_IEA-15-240-RWT_AeroDyn15_Polar_44.dat.plr
+111.41892           2.16547             -2.02               0.34634             -3.10228            0.50000             Polars/IEA-15-240-RWT_AF45_Coords_IEA-15-240-RWT_AeroDyn15_Polar_45.dat.plr
+113.80667           2.05263             -1.90               0.31610             -3.31892            0.50000             Polars/IEA-15-240-RWT_AF46_Coords_IEA-15-240-RWT_AeroDyn15_Polar_46.dat.plr
+116.19442           1.93775             -1.72               0.28548             -3.54230            0.50000             Polars/IEA-15-240-RWT_AF47_Coords_IEA-15-240-RWT_AeroDyn15_Polar_47.dat.plr
+118.58218           1.81966             -1.51               0.25466             -3.77083            0.50000             Polars/IEA-15-240-RWT_AF48_Coords_IEA-15-240-RWT_AeroDyn15_Polar_48.dat.plr
+120.96993           0.50000             -1.24               0.06592             -4.00143            0.50000             Polars/IEA-15-240-RWT_AF49_Coords_IEA-15-240-RWT_AeroDyn15_Polar_49.dat.plr
+
