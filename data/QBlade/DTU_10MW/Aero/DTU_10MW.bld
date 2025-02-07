@@ -1,11 +1,11 @@
 ----------------------------------------QBlade Blade Definition File------------------------------------------------
 Generated with : QBlade CE v2.0.8.3_beta windows
 Archive Format: 310035
-Time : 16:13:16
-Date : 05.02.2025
+Time : 14:16:15
+Date : 07.02.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-DTU 10MW - Blade                                   OBJECTNAME         - the name of the blade object
+DTU_10MW                                           OBJECTNAME         - the name of the blade object
 
 ----------------------------------------Parameters------------------------------------------------------------------
 HAWT                                               ROTORTYPE          - the rotor type
