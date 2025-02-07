@@ -56,9 +56,9 @@ class XFoil:
 
         # Queue XFoil commands
         self.process.stdin.write("OPER\n")
-        self.process.stdin.write(f"ITER {max_iter}\n")
         self.process.stdin.write(f"Visc {re}\n")
         self.process.stdin.write(f"Mach {mach}\n")
+        self.process.stdin.write(f"ITER {max_iter}\n")
         self.process.stdin.write(f"ALFA {alpha}\n")
         self.process.stdin.write(f"DUMP {path}\n")
         self.process.stdin.write("\n")
