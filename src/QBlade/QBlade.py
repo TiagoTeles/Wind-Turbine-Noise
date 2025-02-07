@@ -43,7 +43,7 @@ class QBlade:
             "getTurbineOperation_at_num": {"argtypes": [POINTER(c_double * 41), c_int], "restype": c_void_p},
             "setPowerLawWind": {"argtypes": [c_double, c_double, c_double, c_double, c_double], "restype": c_void_p},
             "runFullSimulation": {"argtypes": None, "restype": c_void_p},
-            "setAutoClearTemp": {"argtypes": [c_bool], "restype": c_void_p},
+            "setAurTemp": {"argtypes": [c_bool], "restype": c_void_p},
         }
 
         # Load the library
