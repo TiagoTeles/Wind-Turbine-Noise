@@ -106,7 +106,7 @@ class Turbine:
 
     def __init__(self, path):
         """
-        Parse the Turbine object.
+        Parse the Turbine file.
         
         Arguments:
             path: str -- The path to the .trb file.
@@ -124,7 +124,6 @@ class Turbine:
             print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Parse data in file
         # Object name
         self.name = parse(f, "OBJECTNAME", 0, str)
 
