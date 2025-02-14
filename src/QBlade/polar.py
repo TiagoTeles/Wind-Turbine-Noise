@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-07
+Date:     2025-02-14
 License:  GNU GPL 3.0
 
 Store polar data.
@@ -30,13 +30,13 @@ class Polar:
         __init__ -- parse the polar file
 
     Attributes:
-        path : str -- the path to the .plr file
-        name : str -- the name of the polar
         airfoil_path : str -- the path to the .afl file
         airfoil_thickness : float -- the thickness of the airfoil
-        is_decomposed : bool -- whether the polar is decomposed
-        reynolds : float -- the Reynolds number
         data : pd.DataFrame -- the AOA, CL, CD, and CM data
+        is_decomposed : bool -- whether the polar is decomposed
+        name : str -- the name of the polar
+        path : str -- the path to the .plr file
+        reynolds : float -- the Reynolds number
     """
 
     def __init__(self, path):
@@ -56,10 +56,10 @@ class Polar:
         if os.path.isfile(path):
             f = open(path, "r", encoding="utf-8")
         else:
-            print(f"No polar file found at {path}!")
+            print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Parse data in the file
+        # Parse data in file
         self.name              = parse(f,    "POLARNAME", 0,   str)
         self.airfoil_path      = parse(f,     "FOILNAME", 0,   str)
         self.airfoil_thickness = parse(f,    "THICKNESS", 0, float)
@@ -75,3 +75,23 @@ class Polar:
 
         # Close file
         f.close()
+
+if __name__ == "__main__":
+
+    # Parse File
+    polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
+
+    # Print Contents
+    print("Polar Name:", polar.name)
+    print("Airfoil Path:", polar.airfoil_path)
+    print("Airfoil Thickness:", polar.airfoil_thickness)
+    print("is Decomposed:", polar.is_decomposed)
+    print("Reynolds Number:", polar.reynolds)
+    print("Polar AOA:")
+    print(polar.data['AOA'])
+    print("Polar CL:")
+    print(polar.data['CL'])
+    print("Polar CD:")
+    print(polar.data['CD'])
+    print("Polar CM:")
+    print(polar.data['CM'])
