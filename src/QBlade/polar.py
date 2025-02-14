@@ -18,6 +18,7 @@ Exceptions:
 
 import os
 import sys
+import numpy as np
 import pandas as pd
 
 from misc import parse
@@ -45,7 +46,7 @@ class Polar:
         Parse the polar file.
 
         Arguments:
-            path : str -- the path to the .plr file
+            path : str -- path to the .plr file
 
         Returns:
             None
@@ -67,12 +68,13 @@ class Polar:
         self.is_decomposed     = parse(f, "ISDECOMPOSED", 0,  bool)
         self.reynolds          = parse(f,     "REYNOLDS", 1, float)
 
-        # Format parsed data
-        self.airfoil_path = os.path.join(os.path.dirname(path), self.airfoil_path.replace("/", "\\"))
-        self.airfoil_thickness /= 100.0
-
         # Read AOA, CL, CD, and CM
         self.data = pd.read_csv(f, delimiter=r"\s+", skiprows=2)
+
+        # Format parsed data
+        self.airfoil_path = os.path.join(os.path.dirname(path), self.airfoil_path.replace("/", "\\"))
+        self.airfoil_thickness /= 100
+        self.data['AOA'] = np.radians(self.data['AOA'])
 
         # Close file
         f.close()
@@ -84,15 +86,15 @@ if __name__ == "__main__":
 
     # Print Contents
     print("Polar Name:", polar.name)
-    print("Airfoil Path:", polar.airfoil_path)
-    print("Airfoil Thickness:", polar.airfoil_thickness)
+    print("Airfoil File Path:", polar.airfoil_path)
+    print("Airfoil Thickness:", polar.airfoil_thickness, "[-]")
     print("is Decomposed:", polar.is_decomposed)
-    print("Reynolds Number:", polar.reynolds)
-    print("Polar AOA:")
+    print("Reynolds Number:", polar.reynolds, "[-]")
+    print("Polar AOA: [rad]")
     print(polar.data['AOA'])
-    print("Polar CL:")
+    print("Polar CL: [-]")
     print(polar.data['CL'])
-    print("Polar CD:")
+    print("Polar CD: [-]")
     print(polar.data['CD'])
-    print("Polar CM:")
+    print("Polar CM: [-]")
     print(polar.data['CM'])
