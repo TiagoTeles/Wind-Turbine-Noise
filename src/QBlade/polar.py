@@ -22,6 +22,7 @@ import pandas as pd
 
 from misc import parse
 
+
 class Polar:
     """ 
     A class to store the polar data.
