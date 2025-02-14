@@ -1,9 +1,48 @@
+""" 
+Author:   T. Moreira da Fonte Fonseca Teles
+Email:    tmoreiradafont@tudelft.nl
+Date:     2025-02-14
+License:  GNU GPL 3.0
+
+Store turbine data.
+
+Classes:
+    Turbine
+
+Functions:
+    None
+
+Exceptions:
+    RuntimeError
+"""
+
 from ctypes import CDLL, c_bool, c_char_p, c_double, c_int, c_void_p, POINTER
 from typing import Any, Dict
 
 class QBlade:
+    """
+    Class to interact with the QBlade shared library.
+
+    Attributes:
+        functions : Dict -- dictionary of functions with argument types and return types.
+        lib_path : str -- path to the shared library.
+        lib : ctypes.CDLL -- The shared library.
+    
+    Methods:
+        __init__: Initialize and load the QBlade shared library.
+        load_library: Load the shared library and dynamically bind all functions.
+        unload_library: Close the QBlade instance
+    """
     def __init__(self, shared_lib_path: str):
-        """Initialize and load the QBlade shared library."""
+        """
+        Initialize and load the QBlade shared library.
+        
+        Arguments:
+            shared_lib_path: Path to the shared library.
+        
+        Returns:
+            None
+        """
         self.lib_path = shared_lib_path
         self.lib = None
 
@@ -50,7 +89,15 @@ class QBlade:
         self.load_library()
 
     def load_library(self):
-        """Load the shared library and dynamically bind all functions."""
+        """
+        Load the shared library and dynamically bind all functions.
+        
+        Arguments:
+            None
+            
+        Returns:
+            None
+        """
 
         # Load the shared library
         try:
@@ -80,7 +127,15 @@ class QBlade:
             raise RuntimeError(f"Failed to set library path: {e}") from  e
 
     def unload_library(self):
-        """Close the QBlade instance if it exists."""
+        """
+        Close the QBlade instance if it exists.
+        
+        Arguments:
+            None
+            
+        Returns:
+            None
+        """
 
         # Close QBlade instance
         try:
