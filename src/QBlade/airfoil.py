@@ -29,9 +29,9 @@ class Airfoil:
         __init__ -- parse the airfoil file
         
     Attributes:
-        airfoil_name : str -- the name of the airfoil
-        coordinates : pd.DataFrame -- the x and y coordinates of the airfoil
-        path : str -- the path to the .afl file
+        airfoil_name : str -- name of the airfoil
+        coordinates : pd.DataFrame -- x and y coordinates of the airfoil
+        path : str -- path to the .afl file
     """
 
     def __init__(self, path):
@@ -39,7 +39,7 @@ class Airfoil:
         Parse the airfoil file.
 
         Arguments:
-            path : str -- the path to the .afl file
+            path : str -- path to the .afl file
 
         Returns:
             None
