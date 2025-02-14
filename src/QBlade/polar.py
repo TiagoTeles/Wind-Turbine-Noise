@@ -81,10 +81,10 @@ class Polar:
 
 if __name__ == "__main__":
 
-    # Parse File
+    # Parse file
     polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
 
-    # Print Contents
+    # Print contents
     print("Polar Name:", polar.name)
     print("Airfoil File Path:", polar.airfoil_path)
     print("Airfoil Thickness:", polar.airfoil_thickness, "[-]")
