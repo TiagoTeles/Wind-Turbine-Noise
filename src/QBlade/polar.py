@@ -31,13 +31,13 @@ class Polar:
         __init__ -- parse the polar file
 
     Attributes:
-        airfoil_path : str -- the path to the .afl file
-        airfoil_thickness : float -- the thickness of the airfoil
-        data : pd.DataFrame -- the AOA, CL, CD, and CM data
+        airfoil_path : str -- path to the .afl file
+        airfoil_thickness : float -- thickness of the airfoil
+        data : pd.DataFrame -- AOA, CL, CD, and CM data
         is_decomposed : bool -- whether the polar is decomposed
-        name : str -- the name of the polar
-        path : str -- the path to the .plr file
-        reynolds : float -- the Reynolds number
+        name : str -- name of the polar
+        path : str -- path to the .plr file
+        reynolds : float -- Reynolds number
     """
 
     def __init__(self, path):
