@@ -66,11 +66,11 @@ class Airfoil:
 if __name__ == "__main__":
 
     # Parse File
-    test_airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
+    airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
 
     # Print Contents
-    print("Airfoil Name:", test_airfoil.airfoil_name)
+    print("Airfoil Name:", airfoil.airfoil_name)
     print("Airfoil X Coordinates:")
-    print(test_airfoil.coordinates['x'])
+    print(airfoil.coordinates['x'])
     print("Airfoil Y Coordinates:")
-    print(test_airfoil.coordinates['y'])
+    print(airfoil.coordinates['y'])
