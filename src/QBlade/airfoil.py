@@ -58,7 +58,7 @@ class Airfoil:
         self.name = f.readline().strip("\n")
 
         # Read x and y coordinates
-        self.coordinates = pd.read_csv(f, names=['x', 'y'], sep=r"\s+")
+        self.coordinates = pd.read_csv(f, names=['x', 'y'], delimiter=r"\s+")
 
         # Close file
         f.close()
