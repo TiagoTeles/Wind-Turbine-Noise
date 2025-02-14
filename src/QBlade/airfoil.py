@@ -29,7 +29,7 @@ class Airfoil:
         __init__ -- parse the airfoil file
         
     Attributes:
-        airfoil_name : str -- name of the airfoil object
+        name : str -- name of the airfoil object
         coordinates : pd.DataFrame -- coordinates of the airfoil [-]
         path : str -- path to the .afl file
     """
@@ -55,7 +55,7 @@ class Airfoil:
             sys.exit(1)
 
         # Parse data in file
-        self.airfoil_name = f.readline().strip("\n")
+        self.name = f.readline().strip("\n")
 
         # Read x and y coordinates
         self.coordinates = pd.read_csv(f, names=['x', 'y'], sep=r"\s+")
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
 
     # Print contents
-    print("Airfoil Name:", airfoil.airfoil_name)
+    print("Airfoil Name:", airfoil.name)
     print("Airfoil X Coordinates: [-]")
     print(airfoil.coordinates['x'])
     print("Airfoil Y Coordinates: [-]")
