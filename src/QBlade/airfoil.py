@@ -22,17 +22,16 @@ import pandas as pd
 
 
 class Airfoil:
-    """ 
-    
+    """
     A class to store the airfoil data. 
     
     Methods:
         __init__ -- parse the airfoil file
         
     Attributes:
-        path : str -- the path to the .afl file
         airfoil_name : str -- the name of the airfoil
         coordinates : pd.DataFrame -- the x and y coordinates of the airfoil
+        path : str -- the path to the .afl file
     """
 
     def __init__(self, path):
@@ -52,7 +51,7 @@ class Airfoil:
         if os.path.isfile(path):
             f = open(path, "r", encoding="utf-8")
         else:
-            print(f"No airfoil file found at {path}!")
+            print(f"No file found at {path}!")
             sys.exit(1)
 
         # Parse data in file
@@ -63,3 +62,15 @@ class Airfoil:
 
         # Close file
         f.close()
+
+if __name__ == "__main__":
+
+    # Parse File
+    test_airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
+
+    # Print Contents
+    print("Airfoil Name:", test_airfoil.airfoil_name)
+    print("Airfoil X Coordinates:")
+    print(test_airfoil.coordinates['x'])
+    print("Airfoil Y Coordinates:")
+    print(test_airfoil.coordinates['y'])
