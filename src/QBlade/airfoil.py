@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-07
+Date:     2025-02-14
 License:  GNU GPL 3.0
 
 Store airfoil data.
@@ -30,7 +30,7 @@ class Airfoil:
         
     Attributes:
         airfoil_name : str -- name of the airfoil
-        coordinates : pd.DataFrame -- x and y coordinates of the airfoil
+        coordinates : pd.DataFrame -- x and y coordinates of the airfoil [-]
         path : str -- path to the .afl file
     """
 
@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     # Print Contents
     print("Airfoil Name:", airfoil.airfoil_name)
-    print("Airfoil X Coordinates:")
+    print("Airfoil X Coordinates: [-]")
     print(airfoil.coordinates['x'])
-    print("Airfoil Y Coordinates:")
+    print("Airfoil Y Coordinates: [-]")
     print(airfoil.coordinates['y'])
