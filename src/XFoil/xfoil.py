@@ -16,6 +16,7 @@ Exceptions:
     None
 """
 
+import numpy as np
 import os
 import subprocess as sp
 import sys
@@ -31,16 +32,16 @@ class XFoil:
         run -- run XFoil at a given Re, M, and Alpha
     
     Attributes:
-        path : str -- the path to the XFoil executable
-        process : subprocess.Popen -- the XFoil process
+        path : str -- path to the XFoil executable
+        process : subprocess.Popen -- XFoil process
     """
 
     def __init__(self, path):
         """
         Spawn an XFoil process.
 
-        Parameters:
-            path : str -- the path to the XFoil executable
+        Arguments:
+            path : str -- path to the XFoil executable
 
         Returns:
             None
@@ -58,8 +59,8 @@ class XFoil:
         """
         Load an airfoil from a file.
 
-        Parameters:
-            path : str -- the path to the airfoil file
+        Arguments:
+            path : str -- path to the airfoil file
 
         Returns:
             None
@@ -71,42 +72,56 @@ class XFoil:
             print(f"No airfoil file found at {path}!")
             sys.exit(1)
 
-    def run(self, re, mach, alpha, path, it=100):
+    def run(self, re, mach, alpha, path, xtr_top=1.0, xtr_bot=1.0, n_crit=9.0, it=10):
         """
         Run XFoil at a given Re, M, and Alpha.
 
-        Parameters:
-            re : float -- the Reynolds number
-            mach : float -- the Mach number
-            alpha : float -- the angle of attack
-            path : str -- the path to the output file
-            it : int -- the maximum number of iterations (default 100)
+        Arguments:
+            re : float -- Reynolds number, [-]
+            mach : float -- Mach number, [-]
+            alpha : float -- angle of attack, [rad]
+            path : str -- path to the output file
+            xtr_top : float -- transition point on the top surface (default 1.0), [-]
+            xtr_bot : float -- transition point on the bottom surface (default 1.0), [-]
+            n_crit : float -- critical amplification factor (default 9.0), [-]
+            it : int -- maximum number of iterations (default 100), [-]
 
         Returns:
             stdout -- the standard output stream
             stderr -- the standard error stream
         """
 
-        # Create the output directory if it doesn't exist
+        # Set Re, Ma, and ITER in OPER environment
+        self.process.stdin.write("OPER\n")
+        self.process.stdin.write(f"Visc {re}\n")
+        self.process.stdin.write(f"Mach {mach}\n")
+        self.process.stdin.write(f"ITER {it}\n")
+
+        # Set Xtr_top, Xtr_bot, and N_crit in VPAR environment
+        self.process.stdin.write("VPAR\n")
+        self.process.stdin.write(f"XTR {xtr_top} {xtr_bot}\n")
+        self.process.stdin.write(f"N {n_crit}\n")
+        self.process.stdin.write("\n")
+
+        # Run analysis at a given alpha
+        self.process.stdin.write(f"Alfa {np.radians(alpha)}\n")
+
+        # Save results to a file
         if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
 
-        # Queue XFoil commands
-        self.process.stdin.write("OPER\n")
-        self.process.stdin.write(f"ITER {it}\n")
-        self.process.stdin.write(f"Visc {re}\n")
-        self.process.stdin.write(f"Mach {mach}\n")
-        self.process.stdin.write(f"ALFA {alpha}\n")
         self.process.stdin.write(f"DUMP {path}\n")
         self.process.stdin.write("\n")
+
+        # Quit XFoil
         self.process.stdin.write("QUIT\n")
 
-        # Run XFoil
+        # Run XFoil commands
         stdout, stderr = self.process.communicate()
 
         # Check for failed convergence
         if "Type \"!\" to continue iterating" in stdout:
-            print("XFoil convergence failed")
+            print("XFoil convergence failed!")
             os.remove(path)
             sys.exit(1)
 
