@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-14
+Date:     2025-02-17
 License:  GNU GPL 3.0
 
 Store turbine data.
@@ -24,21 +24,21 @@ class QBlade:
     Class to interact with the QBlade shared library.
 
     Attributes:
-        functions : Dict -- dictionary of functions with argument types and return types.
-        lib_path : str -- path to the shared library.
-        lib : ctypes.CDLL -- The shared library.
+        functions : Dict -- dictionary of functions with argument types and return types
+        lib_path : str -- path to the shared library
+        lib : ctypes.CDLL -- shared library
     
     Methods:
-        __init__: Initialize and load the QBlade shared library.
-        load_library: Load the shared library and dynamically bind all functions.
-        unload_library: Close the QBlade instance
+        __init__: initialize and load the QBlade shared library
+        load_library: load the shared library and dynamically bind all functions
+        unload_library: close QBlade instance
     """
     def __init__(self, shared_lib_path: str):
         """
         Initialize and load the QBlade shared library.
         
         Arguments:
-            shared_lib_path: Path to the shared library.
+            shared_lib_path : str -- path to the shared library
         
         Returns:
             None
@@ -102,7 +102,7 @@ class QBlade:
         # Load the shared library
         try:
             self.lib = CDLL(self.lib_path)
-            print(f"Successfully loaded library from: {self.lib_path}")
+            print(f"Successfully loaded library at {self.lib_path}!")
 
         except Exception as e:
             raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}") from e
@@ -121,7 +121,7 @@ class QBlade:
         # Call setLibraryPath after the library is loaded
         try:
             self.setLibraryPath(self.lib_path.encode("utf-8"))
-            print(f"Library path set to: {self.lib_path}")
+            print(f"Library path set to {self.lib_path}!")
 
         except Exception as e:
             raise RuntimeError(f"Failed to set library path: {e}") from  e
@@ -140,13 +140,13 @@ class QBlade:
         # Close QBlade instance
         try:
             self.closeInstance()
-            print("QBlade instance closed.")
+            print("QBlade instance closed!")
 
         except Exception as e:
-            print(f"Warning: Failed to close QBlade instance: {e}")
+            raise RuntimeError(f"Failed to close QBlade instance: {e}") from e
 
         # Clean up resources and unload the library
         if self.lib:
             del self.lib
             self.lib = None
-            print("Library unloaded successfully.")
+            print("Library unloaded successfully!")
