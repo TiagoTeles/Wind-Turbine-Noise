@@ -1,7 +1,7 @@
 # Wind Turbine Noise
 
 ## About
-This repository contains software used during my master's thesis at blueOASIS. The goal of this master's thesis is to characterise the underwater acoustic signature of a floating offshore wind turbine under various operational conditions by using industry-oriented engineering models.
+This GitHub repository contains software used during my master's thesis at blueOASIS. Titled "Acoustic Characterisation of Floating Offshore Wind Turbines", the goal of this thesis is to characterise the underwater acoustic signature of a floating offshore wind turbine under various operational conditions by using industry-oriented engineering models.
 
 ## Authors
 The following people have contributed to this project:
