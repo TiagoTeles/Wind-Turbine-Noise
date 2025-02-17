@@ -1,11 +1,11 @@
 ----------------------------------------QBlade Turbine Definition File----------------------------------------------
 Generated with : QBlade CE v2.0.8.3_beta windows
 Archive Format: 310035
-Time : 18:01:59
-Date : 07.02.2025
+Time : 15:12:03
+Date : 17.02.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-NREL_5MW_OC3_MONO_RWT                              OBJECTNAME         - the name of the turbine object
+NREL_5MW_RWT                                       OBJECTNAME         - the name of the turbine object
 
 ----------------------------------------Rotor Definition------------------------------------------------------------
 Aero/NREL_5MW.bld                                  BLADEFILE          - the path of the blade file that is used in this turbine definition
@@ -93,7 +93,7 @@ true                                               BEMTIPLOSS         - use BEM 
 0.00                                               BEMSPEEDUP         - initial BEM convergence acceleration time [s]
 
 ----------------------------------------Structural Model-------------------------------------------------------------
-Structure/OC3_Mono_Main_PY.str                     STRUCTURALFILE     - the input file for the structural model (leave blank if unused)
+Structure/NREL5MW_Main.str                         STRUCTURALFILE     - the input file for the structural model (leave blank if unused)
 false                                              GEOMSTIFFNESS      - enable geometric stiffness [bool]
 false                                              AEROPANELLOADS     - enable distributed aero panel loads and gradients [bool]
 
@@ -103,12 +103,8 @@ TUBCon_1.3.9_64Bit                                 CONTROLLERFILE     - the cont
 Control/TUBCon_Params_V1.3.9_NREL5MW.xml           PARAMETERFILE      - the controller parameter file name (leave blank if unused)
 
 TURB_INFO
-v1.0------DM------04.02.23 DM
-first version of the model, based on 
-v1.1.5 and v1.1.6 from https://github.com/IEAWindTask37/IEA-15-240-RWT
-
-v1.3------DM------21.05.2024
+v1.2-------DM------21.05.2024
 now using Timoshenko instead of Euler-Bernoulli beam
-updated format of NLSPRINGDAMPER table to QB 2.0.7 format
+
 
 END_TURB_INFO
