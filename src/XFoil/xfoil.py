@@ -33,6 +33,7 @@ class XFoil:
         run -- run XFoil at a given Re, M, and Alpha
     
     Attributes:
+        airfoil : str -- airfoil file path
         path : str -- path to the XFoil executable
         process : subprocess.Popen -- XFoil process
     """
@@ -49,6 +50,7 @@ class XFoil:
         """
 
         self.path = path
+        self.airfoil = None
 
         if os.path.isfile(path):
             self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, text=True)
@@ -66,6 +68,8 @@ class XFoil:
         Returns:
             None
         """
+
+        self.airfoil = path
 
         if os.path.isfile(path):
             self.process.stdin.write(f"LOAD {path}\n")
@@ -123,6 +127,7 @@ class XFoil:
         # Check for failed convergence
         if "Type \"!\" to continue iterating" in stdout:
             print("XFoil convergence failed!")
+            print(f"Airfoil: {self.airfoil}, Re: {re}, Ma: {mach}, Alpha: {alpha}")
             os.remove(path)
             sys.exit(1)
 
