@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-07
+Date:     2025-02-17
 License:  GNU GPL 3.0
 
 Run the XFoil executable.
@@ -16,10 +16,11 @@ Exceptions:
     None
 """
 
-import numpy as np
 import os
 import subprocess as sp
 import sys
+
+import numpy as np
 
 
 class XFoil:
