@@ -26,11 +26,11 @@ from misc import read
 
 
 POLAR_DICT = {
-    "POLARNAME":    {"type":   str, "offset": 0}, # Polar name
-    "FOILNAME":     {"type":   str, "offset": 0}, # Path to the .afl file
-    "THICKNESS":    {"type": float, "offset": 0}, # Airfoil thickness, [-]
-    "ISDECOMPOSED": {"type":  bool, "offset": 0}, # Is the polar is decomposed?
-    "REYNOLDS":     {"type": float, "offset": 1}, # Reynolds number, [-]
+    "POLARNAME":    {"type":   str, "pos": 0}, # Polar name
+    "FOILNAME":     {"type":   str, "pos": 0}, # Path to the .afl file
+    "THICKNESS":    {"type": float, "pos": 0}, # Airfoil thickness, [-]
+    "ISDECOMPOSED": {"type":  bool, "pos": 0}, # Is the polar is decomposed?
+    "REYNOLDS":     {"type": float, "pos": 1}, # Reynolds number, [-]
     }
 
 class Polar:
@@ -87,7 +87,7 @@ class Polar:
 
         # Read attributes
         for key, value in POLAR_DICT.items():
-            self.attributes[key] = read(f, key, value["type"], value["offset"])
+            self.attributes[key] = read(f, key, value["type"], value["pos"])
 
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
         self.attributes["THICKNESS"] /= 100
