@@ -30,7 +30,7 @@ POLAR_DICT = {
     "FOILNAME":     {"type":   str}, # Path to the .afl file
     "THICKNESS":    {"type": float}, # Airfoil thickness, [-]
     "ISDECOMPOSED": {"type":  bool}, # Is the polar is decomposed?
-    "REYNOLDS":     {"type": float}, # Reynolds number, [-]
+    "REYNOLDS":     {"type":  None}, # Reynolds number (not implemented), [-] 
     }
 
 class Polar:
