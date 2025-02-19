@@ -26,11 +26,11 @@ from misc import read
 
 
 POLAR_DICT = {
-    "POLARNAME":    {"type":   str, "pos": 0}, # Polar name
-    "FOILNAME":     {"type":   str, "pos": 0}, # Path to the .afl file
-    "THICKNESS":    {"type": float, "pos": 0}, # Airfoil thickness, [-]
-    "ISDECOMPOSED": {"type":  bool, "pos": 0}, # Is the polar is decomposed?
-    "REYNOLDS":     {"type": float, "pos": 1}, # Reynolds number, [-]
+    "POLARNAME":    {"type":   str}, # Polar name
+    "FOILNAME":     {"type":   str}, # Path to the .afl file
+    "THICKNESS":    {"type": float}, # Airfoil thickness, [-]
+    "ISDECOMPOSED": {"type":  bool}, # Is the polar is decomposed?
+    "REYNOLDS":     {"type": float}, # Reynolds number, [-]
     }
 
 class Polar:
@@ -87,7 +87,7 @@ class Polar:
 
         # Read attributes
         for key, value in POLAR_DICT.items():
-            self.attributes[key] = read(f, key, value["type"], value["pos"])
+            self.attributes[key] = read(f, key, value["type"])
 
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
         self.attributes["THICKNESS"] /= 100
@@ -104,14 +104,14 @@ class Polar:
     def write(self):
         pass
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     # Create a Polar instance
-#     polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
+    # Create a Polar instance
+    polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
 
-#     # Print attributes
-#     for key, value in polar.attributes.items():
-#         print(f"{key}: {value}")
+    # Print attributes
+    for key, value in polar.attributes.items():
+        print(f"{key}: {value}")
 
-#     # Print data
-#     print(polar.data)
+    # Print data
+    print(polar.data)
