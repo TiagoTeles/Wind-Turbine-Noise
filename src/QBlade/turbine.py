@@ -108,10 +108,10 @@ class Turbine:
 
     Attributes:
         attributes : dict -- dictionary of attributes
-        blade: Blade -- Blade object
-        control : Control -- Control object
+        blade: Blade -- blade object
+        control : Control -- control object
         path : str -- path to the .trb file
-        structure : Structure -- Structure object
+        structure : Structure -- structure object
     """
 
     def __init__(self, path):

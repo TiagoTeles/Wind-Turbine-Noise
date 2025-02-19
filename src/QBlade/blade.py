@@ -44,11 +44,11 @@ class Blade():
         write -- write to the .bld file
 
     Attributes:
-        airfoils : list -- list of Airfoil objects
+        airfoils : list -- list of airfoil objects
         attributes : dict -- dictionary of attributes
         data : pd.DataFrame -- pos [m], chord [m], twist [rad], offset_x [m], offset_y [m], p_axis [-], and polar_path
         path : str -- path to the .bld file
-        polars : list -- list of Polar objects
+        polars : list -- list of polar objects
     """
 
     def __init__(self, path):
