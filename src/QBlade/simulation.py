@@ -83,8 +83,8 @@ SIMULATION_DICT = {
     "SUB_CURR_U":      {"type": float}, # Sub surface current velocity, [m/s]
     "SUB_CURR_DIR":    {"type": float}, # Sub surface current direction, [rad]
     "SUB_CURR_EXP":    {"type": float}, # Sub surface current exponent, [-]
-    "SHORE_CURR_U":    {"type": float}, # Near shore current velocity [m/s]
-    "SHORE_CURR_DIR":  {"type": float}, # Near shore current direction [rad]
+    "SHORE_CURR_U":    {"type": float}, # Near shore current velocity, [m/s]
+    "SHORE_CURR_DIR":  {"type": float}, # Near shore current direction, [rad]
     "MOORINGSYSTEM":   {"type":   str}, # Path to the global mooring system file (leave blank if unused)
     "DWMSUMTYPE":      {"type":   int}, # Dynamic wake meandering wake summation type (0=DOMINANT; 1=QUADRATIC; 2=LINEAR)
     "DENSITYAIR":      {"type": float}, # Air density, [kg/m^3]
