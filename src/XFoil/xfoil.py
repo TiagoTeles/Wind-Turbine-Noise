@@ -109,7 +109,7 @@ class XFoil:
         self.process.stdin.write("\n")
 
         # Run analysis at a given alpha
-        self.process.stdin.write(f"Alfa {np.radians(alpha)}\n")
+        self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
         # Save results to a file
         if not os.path.exists(os.path.dirname(path)):
@@ -132,3 +132,9 @@ class XFoil:
             sys.exit(1)
 
         return stdout, stderr
+
+if __name__ == "__main__":
+
+    xfoil = XFoil("bin\\XFoil\\xfoil.exe")
+    xfoil.load_airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
+    stdout, stderr = xfoil.run(1E6, 0.2, 0, ".\\FFA_W3_241_1E6_0.2_0.dat")
