@@ -95,8 +95,8 @@ class Polar:
         # Read AOA, CL, CD, and CM
         f.seek(0)
 
-        self.data = pd.read_csv(f, names=["AOA", "CL", "CD", "CM"], skiprows=17, delimiter=r"\s+")
-        self.data["AOA"] = np.radians(self.data["AOA"])
+        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm"], skiprows=17, delimiter=r"\s+")
+        self.data["AoA"] = np.radians(self.data["AoA"])
 
         # Close file
         f.close()
