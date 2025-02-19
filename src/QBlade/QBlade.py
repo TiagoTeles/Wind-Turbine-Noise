@@ -153,3 +153,12 @@ class QBlade:
             del self.lib
             self.lib = None
             print("Library unloaded successfully!")
+
+# if __name__ == "__main__":
+
+#     # Create a QBlade instance
+#     qblade = QBlade("bin\\QBlade\\QBlade.dll")
+#     qblade.createInstance(1, 32)
+
+#     # Unload the library
+#     qblade.unload_library()

@@ -104,6 +104,8 @@ class Polar:
         pass
 
 # if __name__ == "__main__":
+
+#     # Create a Polar instance
 #     polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
 
 #     # Print attributes

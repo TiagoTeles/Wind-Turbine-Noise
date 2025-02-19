@@ -88,6 +88,8 @@ class Airfoil:
         pass
 
 # if __name__ == "__main__":
+
+#     # Create an Airfoil instance
 #     airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
 
 #     # Print attributes
