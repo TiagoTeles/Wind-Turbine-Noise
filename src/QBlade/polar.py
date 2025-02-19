@@ -7,7 +7,7 @@ License:  GNU GPL 3.0
 Store data from .plr files.
 
 Classes:
-    Polar 
+    Polar
 
 Functions:
     None
@@ -26,11 +26,11 @@ from misc import read
 
 
 POLAR_DICT = {
-    "POLARNAME":    {"type":   str, "index": 0}, # Polar name
-    "FOILNAME":     {"type":   str, "index": 0}, # Path to the .afl file
-    "THICKNESS":    {"type": float, "index": 0}, # Airfoil thickness, [-]
-    "ISDECOMPOSED": {"type":  bool, "index": 0}, # Is the polar is decomposed?
-    "REYNOLDS":     {"type": float, "index": 1}, # Reynolds number, [-]
+    "POLARNAME":    {"type":   str, "offset": 0}, # Polar name
+    "FOILNAME":     {"type":   str, "offset": 0}, # Path to the .afl file
+    "THICKNESS":    {"type": float, "offset": 0}, # Airfoil thickness, [-]
+    "ISDECOMPOSED": {"type":  bool, "offset": 0}, # Is the polar is decomposed?
+    "REYNOLDS":     {"type": float, "offset": 1}, # Reynolds number, [-]
     }
 
 class Polar:
@@ -54,7 +54,7 @@ class Polar:
 
         Arguments:
             path : str -- path to the .plr file
-        
+
         Returns:
             None
         """
@@ -87,7 +87,7 @@ class Polar:
 
         # Read attributes
         for key, value in POLAR_DICT.items():
-            self.attributes[key] = read(f, key, value["type"], value["index"])
+            self.attributes[key] = read(f, key, value["type"], value["offset"])
 
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
         self.attributes["THICKNESS"] /= 100
