@@ -132,7 +132,7 @@ class Blade():
 
 # if __name__ == "__main__":
 
-#     # Create a Polar instance
+#     # Create a Blade instance
 #     blade = Blade("data\\turbines\\DTU_10MW\\Aero\\DTU_10MW.bld")
 
 #     # Print attributes
