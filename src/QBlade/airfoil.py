@@ -21,6 +21,7 @@ import sys
 
 import pandas as pd
 
+
 class Airfoil:
     """
     A class to store the airfoil data. 

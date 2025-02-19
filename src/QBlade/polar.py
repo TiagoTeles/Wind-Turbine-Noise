@@ -24,6 +24,7 @@ import pandas as pd
 
 from misc import read
 
+
 POLAR_DICT = {
     "POLARNAME":    {"type":   str, "index": 0}, # Polar name
     "FOILNAME":     {"type":   str, "index": 0}, # Path to the .afl file
