@@ -1,13 +1,13 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-14
+Date:     2025-02-19
 License:  GNU GPL 3.0
 
-Store polar data.
+Store data from .plr files.
 
 Classes:
-    Polar
+    Polar 
 
 Functions:
     None
@@ -18,83 +18,97 @@ Exceptions:
 
 import os
 import sys
+
 import numpy as np
 import pandas as pd
 
-from misc import parse
+from misc import read
 
+POLAR_DICT = {
+    "POLARNAME":    {"type":   str, "index": 0}, # Polar name
+    "FOILNAME":     {"type":   str, "index": 0}, # Path to the .afl file
+    "THICKNESS":    {"type": float, "index": 0}, # Airfoil thickness, [-]
+    "ISDECOMPOSED": {"type":  bool, "index": 0}, # Is the polar is decomposed?
+    "REYNOLDS":     {"type": float, "index": 1}, # Reynolds number, [-]
+    }
 
 class Polar:
     """ 
     A class to store the polar data.
 
     Methods:
-        __init__ -- parse the polar file
+        __init__ -- initialise the polar class
+        read -- read the .plr file
+        write -- write to the .plr file
 
     Attributes:
-        airfoil_path : str -- path to the .afl file
-        airfoil_thickness : float -- airfoil thickness [-]
+        attributes : dict -- dictionary of attributes
         data : pd.DataFrame -- AOA [rad], CL [-], CD [-], and CM [-]
-        is_decomposed : bool -- whether the polar is decomposed
-        name : str -- name of the polar object
         path : str -- path to the .plr file
-        reynolds : float -- Reynolds number [-]
     """
 
     def __init__(self, path):
         """
-        Parse the polar file.
+        Initialises the Polar class.
 
         Arguments:
             path : str -- path to the .plr file
+        
+        Returns:
+            None
+        """
+
+        self.attributes = {}
+
+        # Check if file exists
+        if os.path.isfile(path):
+            self.path = path
+        else:
+            print(f"No file found at {path}!")
+            sys.exit(1)
+
+        # Read file
+        self.read()
+
+    def read(self):
+        """
+        Read the .plr file.
+
+        Arguments:
+            None
 
         Returns:
             None
         """
 
-        self.path = path
-
         # Open file
-        if os.path.isfile(path):
-            f = open(path, "r", encoding="utf-8")
-        else:
-            print(f"No file found at {path}!")
-            sys.exit(1)
+        f = open(self.path, "r", encoding="utf-8")
 
-        # Parse data in file
-        self.name              = parse(f,    "POLARNAME", 0,   str)
-        self.airfoil_path      = parse(f,     "FOILNAME", 0,   str)
-        self.airfoil_thickness = parse(f,    "THICKNESS", 0, float)
-        self.is_decomposed     = parse(f, "ISDECOMPOSED", 0,  bool)
-        self.reynolds          = parse(f,     "REYNOLDS", 1, float)
+        # Read attributes
+        for key, value in POLAR_DICT.items():
+            self.attributes[key] = read(f, key, value["type"], value["index"])
+
+        self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
+        self.attributes["THICKNESS"] /= 100
 
         # Read AOA, CL, CD, and CM
-        self.data = pd.read_csv(f, delimiter=r"\s+", skiprows=2)
+        f.seek(0)
 
-        # Format parsed data
-        self.airfoil_path = os.path.join(os.path.dirname(path), self.airfoil_path.replace("/", "\\"))
-        self.airfoil_thickness /= 100
-        self.data['AOA'] = np.radians(self.data['AOA'])
+        self.data = pd.read_csv(f, names=["AOA", "CL", "CD", "CM"], skiprows=17, delimiter=r"\s+")
+        self.data["AOA"] = np.radians(self.data["AOA"])
 
         # Close file
         f.close()
 
-if __name__ == "__main__":
+    def write(self):
+        pass
 
-    # Parse file
-    polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
+# if __name__ == "__main__":
+#     polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
 
-    # Print contents
-    print("Polar Name:", polar.name)
-    print("Airfoil File Path:", polar.airfoil_path)
-    print("Airfoil Thickness:", polar.airfoil_thickness, "[-]")
-    print("is Decomposed:", polar.is_decomposed)
-    print("Reynolds Number:", polar.reynolds, "[-]")
-    print("Polar AOA: [rad]")
-    print(polar.data['AOA'])
-    print("Polar CL: [-]")
-    print(polar.data['CL'])
-    print("Polar CD: [-]")
-    print(polar.data['CD'])
-    print("Polar CM: [-]")
-    print(polar.data['CM'])
+#     # Print attributes
+#     for key, value in polar.attributes.items():
+#         print(f"{key}: {value}")
+
+#     # Print data
+#     print(polar.data)

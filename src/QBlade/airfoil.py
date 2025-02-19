@@ -1,13 +1,13 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-14
+Date:     2025-02-19
 License:  GNU GPL 3.0
 
-Store airfoil data.
+Store data from .afl files.
 
 Classes:
-    Airfoil
+    Airfoil 
 
 Functions:
     None
@@ -18,25 +18,27 @@ Exceptions:
 
 import os
 import sys
-import pandas as pd
 
+import pandas as pd
 
 class Airfoil:
     """
     A class to store the airfoil data. 
-    
+
     Methods:
-        __init__ -- parse the airfoil file
-        
+        __init__ -- initialise the airfoil class
+        read -- read the .afl file
+        write -- write to the .afl file
+
     Attributes:
-        name : str -- name of the airfoil object
-        coordinates : pd.DataFrame -- coordinates of the airfoil [-]
+        attributes : dictionary -- dictionary of attributes
+        data : pd.DataFrame -- x/c [-], y/c [-]
         path : str -- path to the .afl file
     """
 
     def __init__(self, path):
         """
-        Parse the airfoil file.
+        Initialises the Airfoil class.
 
         Arguments:
             path : str -- path to the .afl file
@@ -45,32 +47,51 @@ class Airfoil:
             None
         """
 
-        self.path = path
+        self.attributes = {}
 
-        # Open file
+        # Check if file exists
         if os.path.isfile(path):
-            f = open(path, "r", encoding="utf-8")
+            self.path = path
         else:
             print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Parse data in file
-        self.name = f.readline().strip("\n")
+        # Read file
+        self.read()
 
-        # Read x and y coordinates
-        self.coordinates = pd.read_csv(f, names=['x', 'y'], delimiter=r"\s+")
+    def read(self):
+        """
+        Read the .afl file.
+
+        Arguments:
+            None
+
+        Returns:
+            None
+        """
+
+        # Open file
+        f = open(self.path, "r", encoding="utf-8")
+
+        # Read attributes
+        self.attributes["AIRFOILNAME"] = f.readline().strip("\n")
+
+        # Read x/c and y/c
+        f.seek(0)
+
+        self.data = pd.read_csv(f, names=["x/c", "y/c"], skiprows=1, delimiter=r"\s+")
 
         # Close file
         f.close()
 
-if __name__ == "__main__":
+    def write(self):
+        pass
 
-    # Parse file
-    airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
+# if __name__ == "__main__":
+#     airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
 
-    # Print contents
-    print("Airfoil Name:", airfoil.name)
-    print("Airfoil X Coordinates: [-]")
-    print(airfoil.coordinates['x'])
-    print("Airfoil Y Coordinates: [-]")
-    print(airfoil.coordinates['y'])
+#     # Print attributes
+#     print(f"AIRFOILNAME: {airfoil.attributes['AIRFOILNAME']}")
+
+#     # Print data
+#     print(airfoil.data)
