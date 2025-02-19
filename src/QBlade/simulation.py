@@ -218,11 +218,11 @@ class Simulation:
     def write(self):
         pass
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    # Create a Simulation instance
-    simulation = Simulation("data\\simulations\\DTU_10MW_RWT.sim")
+#     # Create a Simulation instance
+#     simulation = Simulation("data\\simulations\\DTU_10MW_RWT.sim")
 
-    # Print attributes
-    for key, value in simulation.attributes.items():
-        print(f"{key}: {value}")
+#     # Print attributes
+#     for key, value in simulation.attributes.items():
+#         print(f"{key}: {value}")
