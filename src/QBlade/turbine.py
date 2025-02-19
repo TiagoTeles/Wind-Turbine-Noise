@@ -109,9 +109,7 @@ class Turbine:
     Attributes:
         attributes : dict -- dictionary of attributes
         blade: Blade -- blade object
-        control : Control -- control object
         path : str -- path to the .trb file
-        structure : Structure -- structure object
     """
 
     def __init__(self, path):
@@ -137,10 +135,8 @@ class Turbine:
         # Read file
         self.read()
 
-        # Add Aero, Structure, and Control objects
+        # Add blade object
         self.blade = Blade(self.attributes["BLADEFILE"])
-        self.structure = None
-        self.control = None
 
     def read(self):
         """
