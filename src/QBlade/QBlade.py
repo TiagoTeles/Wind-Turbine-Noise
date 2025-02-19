@@ -19,6 +19,7 @@ Exceptions:
 from ctypes import CDLL, c_bool, c_char_p, c_double, c_int, c_void_p, POINTER
 from typing import Any, Dict
 
+
 class QBlade:
     """
     Class to interact with the QBlade shared library.
@@ -33,6 +34,7 @@ class QBlade:
         load_library: load the shared library and dynamically bind all functions
         unload_library: close QBlade instance
     """
+
     def __init__(self, shared_lib_path: str):
         """
         Initialize and load the QBlade shared library.
@@ -43,6 +45,7 @@ class QBlade:
         Returns:
             None
         """
+
         self.lib_path = shared_lib_path
         self.lib = None
 
