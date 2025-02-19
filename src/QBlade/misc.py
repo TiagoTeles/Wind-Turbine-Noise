@@ -1,32 +1,70 @@
+"""
+Author:   T. Moreira da Fonte Fonseca Teles
+Email:    tmoreiradafont@tudelft.nl
+Date:     2025-02-19
+License:  GNU GPL 3.0
+
+Helper functions for reading and writing files.
+
+Classes:
+    None
+
+Functions:
+    read
+
+Exceptions:
+    None
+"""
+
+import re
 import sys
 
-def parse(file, key, index, arg_type):
-    """ 
-    Searches for a key in a file and returns the value at a specified index.
+
+def read(file, key, arg_type):
+    """
+    Get the value of a key in a file.
 
     Arguments:
-        file -- the file to search in
-        key -- the string to search for
-        index -- the index of the value to return
-        arg_type -- the type of the value to return
+        file : file -- file object
+        key : str -- key to search for
+        arg_type : dict -- dictionary of keys
 
     Returns:
-        the value at the specified index with a specified key and type
+        value : Any -- value of the key
     """
 
+    # Go to file start
+    file.seek(0)
+
+    # Search for key
     for line in file:
-        if key in line:
+        if re.search(rf'\b{re.escape(key)}\b', line) is not None:
+
+            value = line[0:line.find(key)].strip()
+
             if arg_type == str:
-                return str(line.split()[index])
+                return str(value)
+
             elif arg_type == int:
-                return int(line.split()[index])
+                return int(value)
+
             elif arg_type == float:
-                return float(line.split()[index])
+                return float(value)
+
             elif arg_type == bool:
-                return line.split()[index] == "true"
+                return value == "true"
+
+            elif arg_type == None:
+                print(f"Skipping key: '{key}'!")
+                return None
+
             else:
                 print("Invalid argument type!")
                 sys.exit(1)
 
     print("Key not found!")
     sys.exit(1)
+
+
+def write(file, key, arg_type, index):
+    pass
