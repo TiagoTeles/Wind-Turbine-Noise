@@ -104,14 +104,14 @@ class Polar:
     def write(self):
         pass
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    # Create a Polar instance
-    polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
+#     # Create a Polar instance
+#     polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
 
-    # Print attributes
-    for key, value in polar.attributes.items():
-        print(f"{key}: {value}")
+#     # Print attributes
+#     for key, value in polar.attributes.items():
+#         print(f"{key}: {value}")
 
-    # Print data
-    print(polar.data)
+#     # Print data
+#     print(polar.data)
