@@ -1,4 +1,4 @@
-""" 
+"""
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
 Date:     2025-02-19
@@ -39,7 +39,7 @@ class Airfoil:
 
     def __init__(self, path):
         """
-        Initialises the Airfoil class.
+        Initialise the Airfoil class.
 
         Arguments:
             path : str -- path to the .afl file

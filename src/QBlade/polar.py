@@ -1,4 +1,4 @@
-""" 
+"""
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
 Date:     2025-02-19
@@ -34,7 +34,7 @@ POLAR_DICT = {
     }
 
 class Polar:
-    """ 
+    """
     A class to store the polar data.
 
     Methods:
@@ -50,7 +50,7 @@ class Polar:
 
     def __init__(self, path):
         """
-        Initialises the Polar class.
+        Initialise the Polar class.
 
         Arguments:
             path : str -- path to the .plr file

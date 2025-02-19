@@ -1,4 +1,4 @@
-""" 
+"""
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
 Date:     2025-02-19
@@ -35,7 +35,7 @@ BLADE_DICT = {
     }
 
 class Blade():
-    """ 
+    """
     A class to store the aerodynamic data.
 
     Methods:
@@ -53,7 +53,7 @@ class Blade():
 
     def __init__(self, path):
         """
-        Initialises the Blade class.
+        Initialise the Blade class.
 
         Arguments:
             path : str -- path to the .bld file
