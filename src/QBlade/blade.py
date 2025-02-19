@@ -28,10 +28,10 @@ from polar import Polar
 
 
 BLADE_DICT = {
-    "OBJECTNAME":    {"type":  str, "offset": 0}, # Name of the blade object
-    "ROTORTYPE":     {"type":  str, "offset": 0}, # Rotor type
-    "INVERTEDFOILS": {"type": bool, "offset": 0}, # Invert the airfoils?
-    "NUMBLADES":     {"type":  int, "offset": 0}, # Number of blades, [-]
+    "OBJECTNAME":    {"type":  str}, # Name of the blade object
+    "ROTORTYPE":     {"type":  str}, # Rotor type
+    "INVERTEDFOILS": {"type": bool}, # Invert the airfoils?
+    "NUMBLADES":     {"type":  int}, # Number of blades, [-]
     }
 
 class Blade():
@@ -113,7 +113,7 @@ class Blade():
 
         # Read attributes
         for key, value in BLADE_DICT.items():
-            self.attributes[key] = read(f, key, value["type"], value["offset"])
+            self.attributes[key] = read(f, key, value["type"])
 
         # Read pos, chord, twist, offset_x, offset_y, p_axis, and polar_path
         f.seek(0)
