@@ -133,8 +133,8 @@ class XFoil:
 
         return stdout, stderr
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    xfoil = XFoil("bin\\XFoil\\xfoil.exe")
-    xfoil.load_airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
-    stdout, stderr = xfoil.run(1E6, 0.2, 0, ".\\FFA_W3_241_1E6_0.2_0.dat")
+#     xfoil = XFoil("bin\\XFoil\\xfoil.exe")
+#     xfoil.load_airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
+#     stdout, stderr = xfoil.run(1E6, 0.2, 0, ".\\FFA_W3_241_1E6_0.2_0.dat")
