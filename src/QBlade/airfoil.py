@@ -85,9 +85,6 @@ class Airfoil:
         # Close file
         f.close()
 
-    def write(self):
-        pass
-
 # if __name__ == "__main__":
 
 #     # Create an Airfoil instance
