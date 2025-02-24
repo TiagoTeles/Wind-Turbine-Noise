@@ -22,9 +22,9 @@ import sys
 import numpy as np
 import pandas as pd
 
-from airfoil import Airfoil
-from misc import read
-from polar import Polar
+from QBlade.airfoil import Airfoil
+from QBlade.misc import read
+from QBlade.polar import Polar
 
 
 BLADE_DICT = {
