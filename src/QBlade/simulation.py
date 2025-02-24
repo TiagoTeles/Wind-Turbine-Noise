@@ -21,8 +21,8 @@ import sys
 
 import numpy as np
 
-from misc import read
-from turbine import Turbine
+from QBlade.misc import read
+from  QBlade.turbine import Turbine
 
 
 SIMULATION_DICT = {
@@ -147,7 +147,7 @@ class Simulation:
         self.read()
 
         # Add Turbine object
-        self.blade = Turbine(self.attributes["TURBFILE"])
+        self.turbine = Turbine(self.attributes["TURBFILE"])
 
     def read(self):
         """
