@@ -10,7 +10,7 @@ Classes:
     None
 
 Functions:
-    None
+    octave
 
 Exceptions:
     None
@@ -18,29 +18,40 @@ Exceptions:
 
 import numpy as np
 
+def octave(f_min, f_max, f_ref, base_10=False):
+    """
+    Determine the center, lower, and upper frequencies of the 1/3 octave band.
 
-# Settings
-BASE_2 = False  # Base 2 or 10?
-F_MIN = 20      # Minimum frequency, [Hz]
-F_MAX = 20000   # Maximum frequency, [Hz]
-F_REF = 1000    # Reference frequency, [Hz]
+    Arguments:
+        f_min : float -- Minimum frequency, [Hz]
+        f_max : float -- Maximum frequency, [Hz]
+        f_ref : float -- Reference frequency, [Hz]
+        base_10 : bool -- Use base 10?
 
-if BASE_2:
-    # Determine smallest and largest index
-    min_index = np.floor(3 * np.log2(F_MIN / F_REF) + 0.5)
-    max_index =  np.ceil(3 * np.log2(F_MAX / F_REF) - 0.5)
+    Returns:
+        f_center : np.array -- Center frequencies, [Hz]
+        f_lower : np.array -- Lower frequencies, [Hz]
+        f_upper : np.array -- Upper frequencies, [Hz]
+    """
 
-    # Determine center, lower and upper frequencies
-    f_center = F_REF * np.pow(2, np.arange(min_index, max_index+1) / 3)
-    f_lower = f_center / np.pow(2, 1/6)
-    f_upper = f_center * np.pow(2, 1/6)
+    if base_10:
+        # Determine smallest and largest index
+        min_index = np.floor(3 * np.log2(f_min / f_ref) + 0.5)
+        max_index =  np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
 
-else:
-    # Determine smallest and largest index
-    min_index = np.floor(10 * np.log10(F_MIN / F_REF) + 0.5)
-    max_index =  np.ceil(10 * np.log10(F_MAX / F_REF) - 0.5)
+        # Determine center, lower and upper frequencies
+        f_center = f_ref * np.pow(2, np.arange(min_index, max_index+1) / 3)
+        f_lower = f_center / np.pow(2, 1/6)
+        f_upper = f_center * np.pow(2, 1/6)
 
-    # Determine center, lower and upper frequencies
-    f_center = F_REF * np.pow(10, np.arange(min_index, max_index+1) / 10)
-    f_lower = f_center / np.pow(10, 1/20)
-    f_upper = f_center * np.pow(10, 1/20)
+    else:
+        # Determine smallest and largest index
+        min_index = np.floor(10 * np.log10(f_min / f_ref) + 0.5)
+        max_index =  np.ceil(10 * np.log10(f_max / f_ref) - 0.5)
+
+        # Determine center, lower and upper frequencies
+        f_center = f_ref * np.pow(10, np.arange(min_index, max_index+1) / 10)
+        f_lower = f_center / np.pow(10, 1/20)
+        f_upper = f_center * np.pow(10, 1/20)
+
+        return f_center, f_lower, f_upper
