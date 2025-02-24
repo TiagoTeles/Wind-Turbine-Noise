@@ -21,8 +21,8 @@ import sys
 
 import numpy as np
 
-from blade import Blade
-from misc import read
+from QBlade.blade import Blade
+from QBlade.misc import read
 
 
 TURBINE_DICT = {
