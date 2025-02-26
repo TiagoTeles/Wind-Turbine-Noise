@@ -69,8 +69,8 @@ class XFoil:
             it : int -- maximum number of iterations (default 10), [-]
 
         Returns:
-            boundary_layer_top : pandas.DataFrame -- boundary layer data on the top surface
-            boundary_layer_bot : pandas.DataFrame -- boundary layer data on the bottom surface
+            bl_top : pandas.DataFrame -- boundary layer data on the top surface
+            bl_bot : pandas.DataFrame -- boundary layer data on the bottom surface
         """
 
         # Load airfoil file
@@ -96,16 +96,13 @@ class XFoil:
         self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
         # Save results to a file
-        output_path = os.path.join("tmp\\xfoil", os.path.basename(path))
+        output_path = os.path.join("tmp\\XFoil", os.path.basename(path))
 
         if not os.path.exists(os.path.dirname(output_path)):
             os.makedirs(os.path.dirname(output_path))
 
         self.process.stdin.write(f"DUMP {output_path}\n")
         self.process.stdin.write("\n")
-
-        # Quit XFoil
-        self.process.stdin.write("QUIT\n")
 
         # Run XFoil commands
         stdout, _ = self.process.communicate()
@@ -123,13 +120,12 @@ class XFoil:
         # Remove output file
         os.remove(output_path)
 
-        # Filter and sort boundary layer data
+        # Filter and sort data
         le_index = data.idxmin()["x/c"]
+        bl_top = data[data["x/c"] <= 1.0].iloc[:le_index+1][::-1]
+        bl_bot = data[data["x/c"] <= 1.0].iloc[le_index:]
 
-        boundary_layer_top = data[data["x/c"] <= 1.0].iloc[:le_index+1][::-1]
-        boundary_layer_bot = data[data["x/c"] <= 1.0].iloc[le_index:]
-
-        return boundary_layer_top, boundary_layer_bot
+        return bl_top, bl_bot
 
 # if __name__ == "__main__":
 
