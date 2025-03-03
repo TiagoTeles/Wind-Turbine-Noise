@@ -32,7 +32,7 @@ from QBlade.turbine import Turbine
 from aeroacoustics.octave import octave
 
 # Settings
-BASE_10 = False         # Use base 10?
+BASE_10 = True          # Use base 10?
 F_MIN = 20              # Minimum frequency, [Hz]
 F_MAX = 20000           # Maximum frequency, [Hz]
 F_REF = 1000            # Reference frequency, [Hz]
@@ -41,7 +41,7 @@ C_0 = 340.0             # Speed of sound, [m/s]        TODO: Base on temperature
 RHO_0 = 1.225           # Air density, [kg/m^3]        TODO: Use QBalde value?
 I = 0.1                 # Turbulence intensity, [-]    TODO: Find model
 L = 42                  # Turbulence length scale, [m] TODO: Find model
-BLADE = 1               # Blade id                     TODO: Does not work for usnteady case
+BLADE = 1               # Blade id                     TODO: Does not work for unsteady case
 TIMESTEP = -1           # Timestep index to use
 
 def amiet(f, b, c, U, alpha, r_e, L, I, c_0, rho_0):
@@ -176,7 +176,7 @@ def moriarty(blade, f, r, c, U):
         xc_outboard = airfoil_outboard.data["x/c"]
         yc_outboard = airfoil_outboard.data["y/c"]
 
-        xc_top_inboard  = xc_inboard[yc_inboard  > 0][::-1]
+        xc_top_inboard  = xc_inboard[yc_inboard  > 0][::-1] # WARNING: DOES NOT WORK LIKE THIS
         yc_top_inboard  = yc_inboard[yc_inboard  > 0][::-1]
         xc_top_outboard = xc_outboard[yc_outboard > 0][::-1]
         yc_top_outboard = yc_outboard[yc_outboard > 0][::-1]
@@ -250,7 +250,7 @@ def inflow_noise(f, turbine, results):
     # Determine the number of panels
     n_panels = turbine.attributes["NUMPANELS"]
 
-    # TODO: WRITE COMMENT
+    # Determine the blade properties
     chords = np.array(turbine.blade.data["chord"])
     radiuses = np.array(turbine.blade.data["pos"])
 
@@ -296,8 +296,8 @@ def inflow_noise(f, turbine, results):
 # if __name__ == "__main__":
 
 #     # Load data
-#     turbine = Turbine("temp\\DTU_10MW\\DTU_10MW_RWT.trb")
-#     results = pd.read_csv("temp\\results.txt", skiprows=2, delimiter="\t").iloc[TIMESTEP]
+#     turbine = Turbine("tmp\\QBlade\\DTU_10MW\\DTU_10MW_RWT.trb")
+#     results = pd.read_csv("tmp\\QBlade\\DTU_10MW_RWT.txt", skiprows=2, delimiter="\t").iloc[TIMESTEP]
 
 #     # Determine 1/3 band octave frequencies
 #     f, _, _ = octave(F_MIN, F_MAX, F_REF, BASE_10)
@@ -311,8 +311,10 @@ def inflow_noise(f, turbine, results):
 #     for i in range(spl.shape[1]):
 #         plt.plot(f, spl[:, i], label=f"Panel {i}")
 
-#     plt.xlim(F_MIN, 1000)
-#     plt.ylim(0, 80)
+#     plt.plot(f, 10 * np.log10(np.sum(np.pow(10, spl/10), axis=1)), label="Total")
+
+#     plt.xlim(F_MIN, F_MAX)
+#     plt.ylim(0, 100)
 #     plt.xlabel("Frequency, [Hz]")
 #     plt.ylabel("SPL, [dB]")
 #     plt.xscale("log")
