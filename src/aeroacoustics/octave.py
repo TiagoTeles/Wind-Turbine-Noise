@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-21
+Date:     2025-03-03
 License:  GNU GPL 3.0
 
 Calculate the 1/3 octave band.
@@ -18,7 +18,7 @@ Exceptions:
 
 import numpy as np
 
-def octave(f_min, f_max, f_ref, base_10=False):
+def octave(f_min, f_max, f_ref, base_10=True):
     """
     Determine the center, lower, and upper frequencies of the 1/3 octave band.
 
@@ -36,16 +36,6 @@ def octave(f_min, f_max, f_ref, base_10=False):
 
     if base_10:
         # Determine smallest and largest index
-        min_index = np.floor(3 * np.log2(f_min / f_ref) + 0.5)
-        max_index =  np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
-
-        # Determine center, lower and upper frequencies
-        f_center = f_ref * np.pow(2, np.arange(min_index, max_index+1) / 3)
-        f_lower = f_center / np.pow(2, 1/6)
-        f_upper = f_center * np.pow(2, 1/6)
-
-    else:
-        # Determine smallest and largest index
         min_index = np.floor(10 * np.log10(f_min / f_ref) + 0.5)
         max_index =  np.ceil(10 * np.log10(f_max / f_ref) - 0.5)
 
@@ -54,4 +44,14 @@ def octave(f_min, f_max, f_ref, base_10=False):
         f_lower = f_center / np.pow(10, 1/20)
         f_upper = f_center * np.pow(10, 1/20)
 
-        return f_center, f_lower, f_upper
+    else:
+        # Determine smallest and largest index
+        min_index = np.floor(3 * np.log2(f_min / f_ref) + 0.5)
+        max_index =  np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
+
+        # Determine center, lower and upper frequencies
+        f_center = f_ref * np.pow(2, np.arange(min_index, max_index+1) / 3)
+        f_lower = f_center / np.pow(2, 1/6)
+        f_upper = f_center * np.pow(2, 1/6)
+
+    return f_center, f_lower, f_upper
