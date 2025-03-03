@@ -2,6 +2,8 @@ import os
 import sys
 import shutil
 
+sys.path.append(os.path.dirname(sys.path[0]))
+
 from qblade import QBlade
 from simulation import Simulation
 
@@ -14,7 +16,7 @@ GROUP_SIZE = 32                         # OpenCL work-group size
 TURBINE_NAME = "DTU_10MW"                                   # Turbine name
 TURBINE_PATH = "data\\turbines\\DTU_10MW\\DTU_10MW_RWT.trb" # Turbine definition path
 SIMULATION_PATH = "data\\simulations\\DTU_10MW_RWT.sim"     # Simulation definition path
-WORKING_PATH = "temp"                                       # Working directory path
+WORKING_PATH = "tmp\\QBlade"                                # Working directory path
 N_TIMESTEP = 500                                            # Number of timesteps
 
 # Copy files to working directory
@@ -23,6 +25,12 @@ shutil.copyfile(SIMULATION_PATH, os.path.join(WORKING_PATH, TURBINE_NAME + ".sim
 
 # Read files
 simulation = Simulation(os.path.join(WORKING_PATH, TURBINE_NAME + ".sim"))
+
+simulation.turbine.write("BEMSPEEDUP", 100.0)
+simulation.turbine.write("STRUCTURALFILE", "")
+simulation.turbine.write("CONTROLLERFILE", "")
+simulation.turbine.write("PARAMETERFILE", "")
+simulation.turbine.write("CONTROLLERTYPE", 0)
 
 # Start QBlade
 if os.path.exists(DLL_PATH):
@@ -55,7 +63,7 @@ for i in range(N_TIMESTEP):
         break
 
 # Store the simulation results
-qblade.exportResults(0, "temp".encode("utf-8"), "results".encode("utf-8"), b"")
+qblade.exportResults(0, WORKING_PATH.encode("utf-8"), "DTU_10MW_RWT".encode("utf-8"), b"")
 
 # Unload the QBlade library
 qblade.unload_library()
