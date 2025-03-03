@@ -78,12 +78,13 @@ class Airfoil:
         self.attributes["AIRFOILNAME"] = f.readline().strip("\n")
 
         # Read x/c and y/c
-        f.seek(0)
-
         self.data = pd.read_csv(f, names=["x/c", "y/c"], skiprows=1, delimiter=r"\s+")
 
         # Close file
         f.close()
+
+    def write(self):
+        pass
 
 # if __name__ == "__main__":
 

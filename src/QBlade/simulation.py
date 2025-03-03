@@ -21,8 +21,8 @@ import sys
 
 import numpy as np
 
-from QBlade.misc import read
-from  QBlade.turbine import Turbine
+from QBlade.misc import read, write
+from QBlade.turbine import Turbine
 
 
 SIMULATION_DICT = {
@@ -215,8 +215,11 @@ class Simulation:
         # Close file
         f.close()
 
-    def write(self):
-        pass
+    def write(self, key, value):
+
+        f = open(self.path, "r+", encoding="utf-8")
+        write(f, key, value)
+        f.close()
 
 # if __name__ == "__main__":
 
