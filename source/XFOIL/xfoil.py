@@ -69,23 +69,34 @@ class XFoil:
         """
 
         # Select the ITNE environment
-        self.process.stdin.write("ITNE\n")
+        self.process.stdin.write("INTE\n")
 
         # Load the first airfoil file
-        self.process.stdin.write("F\n")
-        self.process.stdin.write(f"{path_0}\n")
+        if os.path.isfile(path_0):
+            self.process.stdin.write("F\n")
+            self.process.stdin.write(f"{path_0}\n")
+        else:
+            print(f"No airfoil file found at {path_0}!")
+            sys.exit(1)
 
         # Load the second airfoil file
-        self.process.stdin.write("F\n")
-        self.process.stdin.write(f"{path_1}\n")
+        if os.path.isfile(path_1):
+            self.process.stdin.write("F\n")
+            self.process.stdin.write(f"{path_1}\n")
+        else:
+            print(f"No airfoil file found at {path_1}!")
+            sys.exit(1)
 
         # Set the interpolation fraction
         self.process.stdin.write(f"{fraction}\n")
 
         # Save the interpolated airfoil file
-        self.process.stdin.write(f"Interpolated_Foil\n")
+        self.process.stdin.write("Interpolated_Foil\n")
         self.process.stdin.write("PCOP\n")
         self.process.stdin.write(f"SAVE {path_out}\n")
+
+        # Run the XFOIL commands
+        _, _ = self.process.communicate()
 
     def run(self, path, re, mach, alpha, xtr_top=1.0, xtr_bot=1.0, n_crit=9.0, it=10):
         """
