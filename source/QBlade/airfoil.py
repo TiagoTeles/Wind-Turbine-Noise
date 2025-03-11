@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-19
+Date:     2025-03-11
 License:  GNU GPL 3.0
 
 Store data from .afl files.
@@ -19,6 +19,7 @@ Exceptions:
 import os
 import sys
 
+import numpy as np
 import pandas as pd
 
 
@@ -29,7 +30,7 @@ class Airfoil:
     Methods:
         __init__ -- initialise the airfoil class
         read -- read the .afl file
-        write -- write to the .afl file
+        thickness -- determine the thickness of the airfoil
 
     Attributes:
         attributes : dictionary -- dictionary of attributes
@@ -50,14 +51,14 @@ class Airfoil:
 
         self.attributes = {}
 
-        # Check if file exists
+        # Check if the file exists
         if os.path.isfile(path):
             self.path = path
         else:
             print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Read file
+        # Read the file
         self.read()
 
     def read(self):
@@ -71,10 +72,10 @@ class Airfoil:
             None
         """
 
-        # Open file
+        # Open the file
         f = open(self.path, "r", encoding="utf-8")
 
-        # Read attributes
+        # Read the attributes
         self.attributes["AIRFOILNAME"] = f.readline().strip("\n")
 
         # Read x/c and y/c
@@ -83,16 +84,23 @@ class Airfoil:
         # Close file
         f.close()
 
-    def write(self):
-        pass
+    def thickness(self, xc):
+        """
+        Determine the thickness of the airfoil.
 
-# if __name__ == "__main__":
+        Arguments:
+            xc : float -- x/c, [-]
 
-#     # Create an Airfoil instance
-#     airfoil = Airfoil("data\\turbines\\DTU_10MW\\Aero\\Airfoils\\FFA_W3_241.afl")
+        Returns:
+            float -- thickness of the airfoil
+        """
 
-#     # Print attributes
-#     print(f"AIRFOILNAME: {airfoil.attributes['AIRFOILNAME']}")
+        # Calculate the thickness
+        le_index = self.data.idxmin()["x/c"]
+        top = self.data.iloc[:le_index + 1][::-1]
+        bot = self.data.iloc[le_index:]
 
-#     # Print data
-#     print(airfoil.data)
+        top_yc = np.interp(xc, top["x/c"], top["y/c"])
+        bot_yc = np.interp(xc, bot["x/c"], bot["y/c"])
+
+        return top_yc - bot_yc
