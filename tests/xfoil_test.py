@@ -57,14 +57,14 @@ class TestXFoil(unittest.TestCase):
         AIRFOIL_0_PATH = "tests\\data\\XFOIL\\NACA2412.dat"
         AIRFOIL_1_PATH = "tests\\data\\XFOIL\\NACA4412.dat"
         AIRFOIL_OUT_PATH = "tests\\data\\XFOIL\\test_airfoil.dat"
-        AIRFOIL_REF_PATH = "tests\\data\\XFOIL\\interpolated_airfoil.dat"
+        REFERENCE_PATH = "tests\\data\\XFOIL\\interpolated_airfoil.dat"
 
         # Interpolate airfoils
         xfoil = XFoil(XFOIL_PATH)
         xfoil.interpolate(AIRFOIL_0_PATH, AIRFOIL_1_PATH, AIRFOIL_OUT_PATH, 0.5)
 
         # Run test
-        self.assertTrue(filecmp.cmp(AIRFOIL_OUT_PATH, AIRFOIL_REF_PATH, shallow=False), \
+        self.assertTrue(filecmp.cmp(AIRFOIL_OUT_PATH, REFERENCE_PATH, shallow=False), \
                         "Interpolated airfoil does not match reference airfoil!")
 
         # Remove output file
@@ -96,8 +96,5 @@ class TestXFoil(unittest.TestCase):
         actual_top, actual_bot = xfoil.run(AIRFOIL_0_PATH, 1E6, 0.2, np.radians(10), it=100)
 
         # Run tests
-        self.assertTrue(actual_top.equals(reference_top), \
-                        "XFOIL output does not match reference output!")
-
-        self.assertTrue(actual_bot.equals(reference_bot), \
-                        "XFOIL output does not match reference output!")
+        pd.testing.assert_frame_equal(actual_top, reference_top)
+        pd.testing.assert_frame_equal(actual_bot, reference_bot)

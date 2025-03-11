@@ -51,35 +51,34 @@ class TestAirfoil(unittest.TestCase):
         """
 
         # File path
-        AIRFOIL_PATH = "tests\\data\\QBlade\\NACA2412.dat"
-        COORDINATES_PATH = "tests\\data\\QBlade\\coordinates.csv"
+        AIRFOIL_PATH = "tests\\data\\QBlade\\NACA2412.afl"
+        REFERENCE_PATH = "tests\\data\\QBlade\\coordinates.csv"
 
         # Reference coordinates
-        reference = pd.read_csv(COORDINATES_PATH, index_col=0)
+        reference = pd.read_csv(REFERENCE_PATH, index_col=0)
 
         # Create an Airfoil instance
         airfoil = Airfoil(AIRFOIL_PATH)
 
         # Run tests
-        self.assertTrue(airfoil.attributes["AIRFOILNAME"] == "NACA 2412", \
-                        "Airfoil name does not match reference name.")
+        self.assertEqual(airfoil.attributes["AIRFOILNAME"], "NACA 2412", \
+                         "Airfoil name does not match reference name.")
 
-        self.assertTrue(airfoil.data.equals(reference), \
-                        "Airfoil coordinates do not match reference coodinates!")
+        pd.testing.assert_frame_equal(airfoil.data, reference)
 
     def test_thickness(self):
         """"
         Test the thickness method.
-        
+
         Arguments:
             None
-        
+
         Returns:
             None
         """
 
         # File path
-        AIRFOIL_PATH = "tests\\data\\QBlade\\NACA2412.dat"
+        AIRFOIL_PATH = "tests\\data\\QBlade\\NACA2412.afl"
 
         # Reference thickness
         tc_01 = 0.034017165
