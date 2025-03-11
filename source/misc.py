@@ -12,6 +12,8 @@ Classes:
 Functions:
     octave
     E
+    translate
+    rotate
 
 Exceptions:
     None
@@ -73,3 +75,59 @@ def E(x):
     s_2, c_2 = sp.special.fresnel(np.sqrt(2*x/np.pi))
 
     return c_2 - 1j * s_2
+
+def translate(pos_x, pos_y, pos_z):
+    """
+    Returns the vector for a translation.
+
+    Parameters:
+        pos_x : float -- translation in the x direction, [m]
+        pos_y : float -- translation in the y direction, [m]
+        pos_z : float -- translation in the z direction, [m]
+    """
+
+    return np.array([pos_x, pos_y, pos_z])[:, np.newaxis]
+
+def rotate(rot_x, rot_y, rot_z, order):
+    """
+    Returns the transformation matrix for a rotation.
+
+    Parameters:
+        rot_x : float -- rotation angle about the x axis, [rad]
+        rot_y : float -- rotation angle about the y axis, [rad]
+        rot_z : float -- rotation angle about the z axis, [rad]
+        order : str -- order of rotation
+
+    Returns:
+        matrix : np.array -- 3x3 rotation matrix
+    """
+
+    m_rot_x = np.array([[1,             0,              0],
+                        [0, np.cos(rot_x), -np.sin(rot_x)],
+                        [0, np.sin(rot_x),  np.cos(rot_x)]])
+
+    m_rot_y = np.array([[ np.cos(rot_y), 0, np.sin(rot_y)],
+                        [            0,  1,             0],
+                        [-np.sin(rot_y), 0, np.cos(rot_y)]])
+
+    m_rot_z = np.array([[np.cos(rot_z), -np.sin(rot_z), 0],
+                        [np.sin(rot_z),  np.cos(rot_z), 0],
+                        [            0,              0, 1]])
+
+    if order == "xyz":
+        return m_rot_z @ m_rot_y @ m_rot_x
+
+    elif order == "xzy":
+        return m_rot_y @ m_rot_z @ m_rot_x
+
+    elif order == "yxz":
+        return m_rot_z @ m_rot_x @ m_rot_y
+
+    elif order == "yzx":
+        return m_rot_x @ m_rot_z @ m_rot_y
+
+    elif order == "zxy":
+        return m_rot_y @ m_rot_x @ m_rot_z
+
+    elif order == "zyx":
+        return m_rot_x @ m_rot_y @ m_rot_z

@@ -22,7 +22,9 @@ import sys
 import numpy as np
 import pandas as pd
 
-from QBlade.misc import read
+sys.path.append(os.path.dirname(sys.path[0]))
+
+from source.QBlade.misc import read
 
 
 POLAR_DICT = {
@@ -40,7 +42,6 @@ class Polar:
     Methods:
         __init__ -- initialise the polar class
         read -- read the .plr file
-        write -- write to the .plr file
 
     Attributes:
         attributes : dict -- dictionary of attributes
@@ -90,31 +91,13 @@ class Polar:
             self.attributes[key] = read(f, key, value["type"])
 
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
-        self.attributes["FOILNAME"] = os.path.join(os.path.dirname(self.path), self.attributes["FOILNAME"])
-        self.attributes["FOILNAME"] = os.path.relpath(self.attributes["FOILNAME"])
-
         self.attributes["THICKNESS"] /= 100
 
         # Read AOA, CL, CD, and CM
         f.seek(0)
 
-        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm"], skiprows=17, delimiter=r"\s+")
+        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm", "Cl_att", "Cl_sep", "F_st"], skiprows=17, delimiter=r"\s+")
         self.data["AoA"] = np.radians(self.data["AoA"])
 
         # Close file
         f.close()
-
-    def write(self):
-        pass
-
-if __name__ == "__main__":
-
-    # Create a Polar instance
-    polar = Polar("data\\turbines\\DTU_10MW\\Aero\\Polars\\FFA_W3_241_t24.1_dtu_10mw_Polar_RE1.00E+06.plr")
-
-    # Print attributes
-    for key, value in polar.attributes.items():
-        print(f"{key}: {value}")
-
-    # Print data
-    print(polar.data)

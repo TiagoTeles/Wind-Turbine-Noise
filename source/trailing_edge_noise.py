@@ -22,13 +22,12 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import scipy as sp
 
 sys.path.append(os.path.dirname(sys.path[0]))
 
-from octave import octave
-from QBlade.turbine import Turbine
-from XFoil.xfoil import XFoil
+from misc import octave, E
+from old.QBlade.turbine import Turbine
+from XFOIL.xfoil import XFoil
 
 
 BASE_10 = True          # Use base 10?
@@ -43,14 +42,6 @@ TIMESTEP = -1           # Timestep index to use
 XFOIL_PATH = "bin\\XFoil\\xfoil.exe"
 PROBE_TOP = 0.975
 PROBE_BOT = 0.950
-
-
-def E(x):
-
-    S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
-
-    return C_2 - 1j * S_2
-
 
 def roger_moreau(blade, f, x, y, z, r, U, Re, alpha, b, c, c_0, rho_0, P_REF, xfoil_path):
 
@@ -202,6 +193,7 @@ def roger_moreau(blade, f, x, y, z, r, U, Re, alpha, b, c, c_0, rho_0, P_REF, xf
 
     I = part_1 + H * part_2
 
+    # TODO: Check if 2 or 4
     S_pp = np.square(omega * z * c / (4 * np.pi * c_0 * np.square(S_0))) \
            * 2 * np.pi * b * np.square(np.abs(I)) * Pi_0
 
@@ -210,8 +202,7 @@ def roger_moreau(blade, f, x, y, z, r, U, Re, alpha, b, c, c_0, rho_0, P_REF, xf
     return SPL
 
 # TODO: COMPUTE SUBCRITICAL GUST AND APPLY CONTINUITY CONDITION AT CRITICAL GUST
-# TODO: IMPLEMENT CORRECTIONS FROM PAPER FROM PROF DAMIANO CASALINO
-# TODO: DETERMINE CORRECT FRESENL INTEGRAL
+# TODO: ALIGN TE SURFACE, AIRFOIL CHORD, or VELOCITY VECTOR WITH COORDINATE SYSTEM
 if __name__ == "__main__":
 
     # Load data

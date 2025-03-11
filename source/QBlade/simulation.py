@@ -21,8 +21,8 @@ import sys
 
 import numpy as np
 
-from QBlade.misc import read, write
-from QBlade.turbine import Turbine
+from old.QBlade.misc import read, write
+from old.QBlade.turbine import Turbine
 
 
 SIMULATION_DICT = {
