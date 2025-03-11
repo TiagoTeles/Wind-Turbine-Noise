@@ -54,10 +54,10 @@ class TestXFoil(unittest.TestCase):
 
         # File paths
         XFOIL_PATH = "bin\\XFoil\\xfoil.exe"
-        AIRFOIL_0_PATH = "tests\\data\\XFOIL\\airfoils\\NACA2412.dat"
-        AIRFOIL_1_PATH = "tests\\data\\XFOIL\\airfoils\\NACA4412.dat"
-        AIRFOIL_OUT_PATH = "tests\\data\\XFOIL\\airfoils\\test_airfoil.dat"
-        AIRFOIL_REF_PATH = "tests\\data\\XFOIL\\reference\\interpolated_airfoil.dat"
+        AIRFOIL_0_PATH = "tests\\data\\XFOIL\\NACA2412.dat"
+        AIRFOIL_1_PATH = "tests\\data\\XFOIL\\NACA4412.dat"
+        AIRFOIL_OUT_PATH = "tests\\data\\XFOIL\\test_airfoil.dat"
+        AIRFOIL_REF_PATH = "tests\\data\\XFOIL\\interpolated_airfoil.dat"
 
         # Interpolate airfoils
         xfoil = XFoil(XFOIL_PATH)
@@ -83,9 +83,9 @@ class TestXFoil(unittest.TestCase):
 
         # File paths
         XFOIL_PATH = "bin\\XFoil\\xfoil.exe"
-        AIRFOIL_0_PATH = "tests\\data\\XFOIL\\airfoils\\NACA2412.dat"
-        BL_TOP_REF_PATH = "tests\\data\\XFOIL\\reference\\boundary_layer_top.csv"
-        BL_BOT_REF_PATH = "tests\\data\\XFOIL\\reference\\boundary_layer_bot.csv"
+        AIRFOIL_0_PATH = "tests\\data\\XFOIL\\NACA2412.dat"
+        BL_TOP_REF_PATH = "tests\\data\\XFOIL\\boundary_layer_top.csv"
+        BL_BOT_REF_PATH = "tests\\data\\XFOIL\\boundary_layer_bot.csv"
 
         # Load reference output
         reference_top = pd.read_csv(BL_TOP_REF_PATH, index_col=0)
