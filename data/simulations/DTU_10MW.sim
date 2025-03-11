@@ -14,7 +14,7 @@ New Turbine Simulation                             OBJECTNAME         - the name
 multiple turbines can be added by adding multiple definitions encapsulated with TURB_X and END_TURB_X, where X must start at 1
 
 TURB_1
-    DTU_10MW/DTU_10MW_RWT.trb                      TURBFILE           - the turbine definition file that is used for this simulation
+    DTU_10MW_RWT/DTU_10MW_RWT.trb                  TURBFILE           - the turbine definition file that is used for this simulation
     DTU_10MW_RWT                                   TURBNAME           - the (unique) name of the turbine in the simulation (results will appear under this name)
     0.00                                           INITIAL_YAW        - the initial turbine yaw in [deg]
     0.00                                           INITIAL_PITCH      - the initial collective blade pitch in [deg]
