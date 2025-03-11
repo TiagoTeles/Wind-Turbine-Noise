@@ -26,6 +26,7 @@ sys.path.append(os.path.dirname(sys.path[0]))
 
 from source.misc import octave, E
 
+
 class TestMisc(unittest.TestCase):
     """
     A class to test miscellaneous functions.
