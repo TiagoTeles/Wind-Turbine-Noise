@@ -98,6 +98,6 @@ class TestXFoil(unittest.TestCase):
         # Run test
         self.assertTrue(actual_top.equals(reference_top), \
                         "XFOIL output does not match reference output!")
-        
+
         self.assertTrue(actual_bot.equals(reference_bot), \
                         "XFOIL output does not match reference output!")
