@@ -50,7 +50,7 @@ class TestMisc(unittest.TestCase):
             None
         """
 
-        # Reference values
+        # Reference frequencies
         reference = np.array([19.953, 25.119, 31.623, 39.811, 50.119, 63.096, 79.433, 100.00,
                               125.89, 158.49, 199.53, 251.19, 316.23, 398.11, 501.19, 630.96,
                               794.43, 1000.0, 1258.9, 1584.9, 1995.3, 2511.9, 3162.3, 3981.1,
@@ -59,6 +59,7 @@ class TestMisc(unittest.TestCase):
         # Actual values
         actual, _, _ = octave(20, 20000, 1000, True)
 
+        # Run test
         np.testing.assert_allclose(actual, reference, rtol=1e-3, \
                                    err_msg="Frequencies do not match reference frequencies!")
 
@@ -82,5 +83,6 @@ class TestMisc(unittest.TestCase):
         # Actual values
         actual = E(x)
 
+        # Run test
         np.testing.assert_allclose(actual, reference, atol=1E-3, \
                                    err_msg="Fresnel integrals do not match reference values!")

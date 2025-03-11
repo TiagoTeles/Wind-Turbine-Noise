@@ -95,7 +95,7 @@ class TestXFoil(unittest.TestCase):
         xfoil = XFoil(XFOIL_PATH)
         actual_top, actual_bot = xfoil.run(AIRFOIL_0_PATH, 1E6, 0.2, np.radians(10), it=100)
 
-        # Run test
+        # Run tests
         self.assertTrue(actual_top.equals(reference_top), \
                         "XFOIL output does not match reference output!")
 
