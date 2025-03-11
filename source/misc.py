@@ -38,7 +38,6 @@ def octave(f_min, f_max, f_ref, base_10=True):
     """
 
     if base_10:
-
         # Determine smallest and largest index
         min_index = np.floor(10 * np.log10(f_min / f_ref) + 0.5)
         max_index =  np.ceil(10 * np.log10(f_max / f_ref) - 0.5)
@@ -49,7 +48,6 @@ def octave(f_min, f_max, f_ref, base_10=True):
         f_upper = f_center * np.pow(10, 1/20)
 
     else:
-
         # Determine smallest and largest index
         min_index = np.floor(3 * np.log2(f_min / f_ref) + 0.5)
         max_index =  np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
