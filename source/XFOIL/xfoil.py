@@ -140,10 +140,10 @@ class XFoil:
         self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
         # Save the results to a file
-        path_out = os.path.join("tmp\\XFOIL", os.path.basename(path))
+        path_out = os.path.join("temp\\XFOIL", os.path.basename(path))
 
-        if not os.path.exists("tmp\\XFOIL"):
-            os.makedirs("tmp\\XFOIL")
+        if not os.path.exists("temp\\XFOIL"):
+            os.makedirs("temp\\XFOIL")
 
         self.process.stdin.write(f"DUMP {path_out}\n")
         self.process.stdin.write("\n")
