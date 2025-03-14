@@ -87,4 +87,6 @@ def sears(x):
         S : np.array -- Sears function, [-]
     """
 
-    return np.sqrt(1 / (2*np.pi*x + 1 / (1 + 2.4*x)))
+    S = np.sqrt(1 / (2*np.pi*x + 1 / (1 + 2.4*x)))
+
+    return S
