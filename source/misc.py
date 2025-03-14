@@ -65,12 +65,26 @@ def E(x):
     Determine the combination of Fresnel integrals defined in Roger and Moreau (2005).
 
     Arguments:
-        x : np.array -- argument, [-]
+        x : np.array -- function argument, [-]
 
     Returns:
-        E : np.array -- C_2 - i * S_2, [-]
+        E : np.array -- combination of Fresnel integrals, [-]
     """
 
     s_2, c_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
 
     return c_2 - 1j * s_2
+
+
+def sears(x):
+    """
+    Sears function approximation.
+
+    Arguments:
+        x : np.array -- function argument, [-]
+
+    Returns:
+        S : np.array -- Sears function, [-]
+    """
+
+    return np.sqrt(1 / (2*np.pi*x + 1 / (1 + 2.4*x)))
