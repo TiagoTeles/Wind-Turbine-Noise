@@ -1,11 +1,11 @@
 ----------------------------------------QBlade Simulation Definition File------------------------------------------
-Generated with : QBlade CE v2.0.8.3_beta windows
+Generated with : QBlade CE v2.0.8.5_beta windows
 Archive Format: 310035
-Time : 16:12:38
-Date : 14.02.2025
+Time : 14:15:05
+Date : 14.03.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-New Turbine Simulation                             OBJECTNAME         - the name of the simulation object
+DTU_10MW_RWT                                       OBJECTNAME         - the name of the simulation object
 
 ----------------------------------------Simulation Type-------------------------------------------------------------
 0                                                  ISOFFSHORE         - use a number: 0 = onshore; 1 = offshore
