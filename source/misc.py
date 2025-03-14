@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-05
+Date:     2025-03-14
 License:  GNU GPL 3.0
 
 Miscellaneous functions.
@@ -40,7 +40,7 @@ def octave(f_min, f_max, f_ref, base_10=True):
     if base_10:
         # Determine smallest and largest index
         min_index = np.floor(10 * np.log10(f_min / f_ref) + 0.5)
-        max_index =  np.ceil(10 * np.log10(f_max / f_ref) - 0.5)
+        max_index = np.ceil(10 * np.log10(f_max / f_ref) - 0.5)
 
         # Determine center, lower and upper frequencies
         f_center = f_ref * np.pow(10, np.arange(min_index, max_index+1) / 10)
@@ -50,7 +50,7 @@ def octave(f_min, f_max, f_ref, base_10=True):
     else:
         # Determine smallest and largest index
         min_index = np.floor(3 * np.log2(f_min / f_ref) + 0.5)
-        max_index =  np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
+        max_index = np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
 
         # Determine center, lower and upper frequencies
         f_center = f_ref * np.pow(2, np.arange(min_index, max_index+1) / 3)
@@ -58,6 +58,7 @@ def octave(f_min, f_max, f_ref, base_10=True):
         f_upper = f_center * np.pow(2, 1/6)
 
     return f_center, f_lower, f_upper
+
 
 def E(x):
     """
@@ -70,6 +71,6 @@ def E(x):
         E : np.array -- C_2 - i * S_2, [-]
     """
 
-    s_2, c_2 = sp.special.fresnel(np.sqrt(2*x/np.pi))
+    s_2, c_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
 
     return c_2 - 1j * s_2
