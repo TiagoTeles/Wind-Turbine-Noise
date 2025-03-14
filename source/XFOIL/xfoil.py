@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-05
+Date:     2025-03-14
 License:  GNU GPL 3.0
 
 Run the XFOIL executable.
@@ -68,7 +68,7 @@ class XFoil:
             None
         """
 
-        # Select the ITNE environment
+        # Select the INTE environment
         self.process.stdin.write("INTE\n")
 
         # Load the first airfoil file
@@ -165,7 +165,7 @@ class XFoil:
         os.remove(path_out)
 
         # Filter and sort the boundary layer data
-        le_index = data.idxmin()["x/c"]
+        le_index = data["x/c"].idxmin()
         bl_top = data[data["x/c"] <= 1.0].iloc[:le_index + 1][::-1]
         bl_bot = data[data["x/c"] <= 1.0].iloc[le_index:]
 
