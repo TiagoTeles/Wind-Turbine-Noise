@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-14
+Date:     2025-03-17
 License:  GNU GPL 3.0
 
 Miscellaneous functions.
@@ -12,6 +12,7 @@ Classes:
 Functions:
     octave
     E
+    sears
 
 Exceptions:
     None
@@ -38,21 +39,21 @@ def octave(f_min, f_max, f_ref, base_10=True):
     """
 
     if base_10:
-        # Determine smallest and largest index
+        # Determine the smallest and largest index
         min_index = np.floor(10 * np.log10(f_min / f_ref) + 0.5)
         max_index = np.ceil(10 * np.log10(f_max / f_ref) - 0.5)
 
-        # Determine center, lower and upper frequencies
+        # Determine the center, lower and upper frequencies
         f_center = f_ref * np.pow(10, np.arange(min_index, max_index+1) / 10)
         f_lower = f_center / np.pow(10, 1/20)
         f_upper = f_center * np.pow(10, 1/20)
 
     else:
-        # Determine smallest and largest index
+        # Determine the smallest and largest index
         min_index = np.floor(3 * np.log2(f_min / f_ref) + 0.5)
         max_index = np.ceil(3 * np.log2(f_max / f_ref) - 0.5)
 
-        # Determine center, lower and upper frequencies
+        # Determine the center, lower and upper frequencies
         f_center = f_ref * np.pow(2, np.arange(min_index, max_index+1) / 3)
         f_lower = f_center / np.pow(2, 1/6)
         f_upper = f_center * np.pow(2, 1/6)
@@ -62,7 +63,7 @@ def octave(f_min, f_max, f_ref, base_10=True):
 
 def E(x):
     """
-    Determine the combination of Fresnel integrals defined in Roger and Moreau (2005).
+    Determine the combination of Fresnel integrals used in Roger and Moreau (2005).
 
     Arguments:
         x : np.array -- function argument, [-]
@@ -71,14 +72,14 @@ def E(x):
         E : np.array -- combination of Fresnel integrals, [-]
     """
 
-    s_2, c_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
+    S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
 
-    return c_2 - 1j * s_2
+    return C_2 - 1j * S_2
 
 
 def sears(x):
     """
-    Sears function approximation.
+    Determine the approximate Sears function.
 
     Arguments:
         x : np.array -- function argument, [-]
@@ -87,6 +88,6 @@ def sears(x):
         S : np.array -- Sears function, [-]
     """
 
-    S = np.sqrt(1 / (2*np.pi*x + 1 / (1 + 2.4*x)))
+    S = np.sqrt(1 / (2 * np.pi * x + 1 / (1 + 2.4 * x)))
 
     return S
