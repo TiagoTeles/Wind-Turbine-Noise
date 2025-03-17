@@ -22,9 +22,10 @@ import sys
 import numpy as np
 import pandas as pd
 
-from old.QBlade.airfoil import Airfoil
-from old.QBlade.misc import read
-from old.QBlade.polar import Polar
+from QBlade.airfoil import Airfoil
+from QBlade.misc import read
+from QBlade.polar import Polar
+from xfoil import XFoil
 
 
 BLADE_DICT = {
@@ -33,6 +34,8 @@ BLADE_DICT = {
     "INVERTEDFOILS": {"type": bool}, # Invert the airfoils?
     "NUMBLADES":     {"type":  int}, # Number of blades, [-]
     }
+
+XFOIL_PATH = "bin\\XFoil\\xfoil.exe"
 
 class Blade():
     """
@@ -97,6 +100,12 @@ class Blade():
             print(f"No 'Polars' folder found at {polar_dir}!")
             sys.exit(1)
 
+        # Precompute interpolated airfoils
+        self.data.insert(6, "airfoil", None)
+
+        for i, pos in enumerate(self.data["pos"]):
+            self.data.loc[i, "airfoil"] = self.interpolate(pos)
+
     def read(self):
         """
         Read the .bld file.
@@ -121,8 +130,8 @@ class Blade():
         self.data = pd.read_csv(f, names=["pos", "chord", "twist", "offset_x", "offset_y", \
                                           "p_axis", "polar_path"], skiprows=16, delimiter=r"\s+")
 
+        self.data["polar_path"] = self.data["polar_path"].str.replace("/","\\")
         self.data["twist"] = np.radians(self.data["twist"])
-        self.data["polar_path"] = os.path.dirname(self.path) + os.sep + self.data["polar_path"].str.replace("/","\\")
 
         # Close file
         f.close()
@@ -130,14 +139,42 @@ class Blade():
     def write(self):
         pass
 
-# if __name__ == "__main__":
+    def interpolate(self, pos):
 
-#     # Create a Blade instance
-#     blade = Blade("data\\turbines\\DTU_10MW\\Aero\\DTU_10MW.bld")
+        if not os.path.exists(os.path.join(os.path.dirname(self.path), "Interpolated")):
+            os.makedirs(os.path.join(os.path.dirname(self.path), "Interpolated"))
 
-#     # Print attributes
-#     for key, value in blade.attributes.items():
-#         print(f"{key}: {value}")
+        # Determine the neighbouring airfoils
+        index_inboard  = self.data[self.data["pos"] <= pos].index.max()
+        index_outboard = self.data[self.data["pos"] >= pos].index.min()
 
-#     # Print data
-#     print(blade.data)
+        r_inboard  = self.data["pos"].iloc[index_inboard]
+        r_outboard = self.data["pos"].iloc[index_outboard]
+
+        polar_path_inboard  = self.data["polar_path"].iloc[index_inboard]
+        polar_path_outboard = self.data["polar_path"].iloc[index_outboard]
+
+        airfoil_path_inboard  = None
+        airfoil_path_outboard = None
+
+        for polar in self.polars:
+
+            if os.path.basename(polar_path_inboard) == os.path.basename(polar.path):
+                airfoil_path_inboard = polar.attributes["FOILNAME"]
+
+            if os.path.basename(polar_path_outboard) ==  os.path.basename(polar.path):
+                airfoil_path_outboard = polar.attributes["FOILNAME"]
+
+        if airfoil_path_inboard is None or airfoil_path_outboard is None:
+            print("Polar not found!")
+            sys.exit(1)
+
+        airfoil_path_inboard = os.path.relpath(os.path.join(os.path.dirname(polar_path_inboard), airfoil_path_inboard))
+        airfoil_path_outboard =  os.path.relpath(os.path.join(os.path.dirname(polar_path_outboard), airfoil_path_outboard))
+        airfoil_path_interpolated = os.path.join("Interpolated", f"{pos}.afl")
+        
+        # Interpolate the airfoil
+        xfoil = XFoil(XFOIL_PATH, os.path.dirname(self.path))
+        xfoil.interpolate(airfoil_path_inboard, airfoil_path_outboard, airfoil_path_interpolated, np.interp(pos, [r_inboard, r_outboard], [0, 1]))
+        
+        return Airfoil(os.path.join(os.path.dirname(self.path), airfoil_path_interpolated))

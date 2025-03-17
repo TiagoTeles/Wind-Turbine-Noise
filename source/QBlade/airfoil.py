@@ -84,23 +84,24 @@ class Airfoil:
         # Close file
         f.close()
 
-    def thickness(self, xc):
+    def thickness(self, x):
         """
         Determine the thickness of the airfoil.
 
         Arguments:
-            xc : float -- x/c, [-]
+            x : float -- x/c, [-]
 
         Returns:
-            float -- thickness of the airfoil
+            tc : float -- thickness of the airfoil
         """
 
-        # Calculate the thickness
-        le_index = self.data.idxmin()["x/c"]
+        # Seperate the airfoil into top and bottom surfaces
+        le_index = self.data["x/c"].idxmin()
         top = self.data.iloc[:le_index + 1][::-1]
         bot = self.data.iloc[le_index:]
 
-        top_yc = np.interp(xc, top["x/c"], top["y/c"])
-        bot_yc = np.interp(xc, bot["x/c"], bot["y/c"])
+        # Calculate the thickness
+        y_top = np.interp(x, top["x/c"], top["y/c"])
+        y_bot = np.interp(x, bot["x/c"], bot["y/c"])
 
-        return top_yc - bot_yc
+        return y_top - y_bot

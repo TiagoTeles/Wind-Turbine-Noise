@@ -34,22 +34,28 @@ class XFoil:
         run -- run XFOIL at a given Re, M, and Alpha
 
     Attributes:
+        cwd : str -- working directory
+        path : str -- path to the XFOIL executable
         process : subprocess.Popen -- XFOIL process
     """
 
-    def __init__(self, path):
+    def __init__(self, path, cwd):
         """
         Spawn an XFoil process.
 
         Arguments:
             path : str -- path to the XFOIL executable
+            cwd : str -- working directory
 
         Returns:
             None
         """
 
+        self.path = path
+        self.cwd = cwd
+
         if os.path.isfile(path):
-            self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, text=True)
+            self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, text=True, cwd=cwd)
         else:
             print(f"No XFOIL executable found at {path}!")
             sys.exit(1)
@@ -72,7 +78,7 @@ class XFoil:
         self.process.stdin.write("INTE\n")
 
         # Load the first airfoil file
-        if os.path.isfile(path_0):
+        if os.path.isfile(os.path.join(self.cwd, path_0)):
             self.process.stdin.write("F\n")
             self.process.stdin.write(f"{path_0}\n")
         else:
@@ -80,7 +86,7 @@ class XFoil:
             sys.exit(1)
 
         # Load the second airfoil file
-        if os.path.isfile(path_1):
+        if os.path.isfile(os.path.join(self.cwd, path_1)):
             self.process.stdin.write("F\n")
             self.process.stdin.write(f"{path_1}\n")
         else:
@@ -118,7 +124,7 @@ class XFoil:
         """
 
         # Load the airfoil file
-        if os.path.isfile(path):
+        if os.path.isfile(os.path.join(self.cwd, path)):
             self.process.stdin.write(f"LOAD {path}\n")
         else:
             print(f"No airfoil file found at {path}!")
@@ -140,10 +146,10 @@ class XFoil:
         self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
         # Save the results to a file
-        path_out = os.path.join("temp\\XFOIL", os.path.basename(path))
+        path_out = os.path.join("XFoil", os.path.basename(path).replace(".afl", ".dat"))
 
-        if not os.path.exists("temp\\XFOIL"):
-            os.makedirs("temp\\XFOIL")
+        if not os.path.exists(os.path.join(self.cwd, "XFoil")):
+            os.makedirs(os.path.join(self.cwd, "XFoil"))
 
         self.process.stdin.write(f"DUMP {path_out}\n")
         self.process.stdin.write("\n")
@@ -158,11 +164,11 @@ class XFoil:
             sys.exit(1)
 
         # Read the output file
-        data = pd.read_csv(path_out, sep=r"\s+", skiprows=1,
+        data = pd.read_csv(os.path.join(self.cwd, path_out), sep=r"\s+", skiprows=1,
                            names=["s/c", "x/c", "y/c", "U_e/U", "delta_star", "theta", "C_f", "H"])
 
         # Remove the output file
-        os.remove(path_out)
+        os.remove(os.path.join(self.cwd, path_out))
 
         # Filter and sort the boundary layer data
         le_index = data["x/c"].idxmin()

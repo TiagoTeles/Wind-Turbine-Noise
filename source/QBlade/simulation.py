@@ -1,13 +1,13 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-19
+Date:     2025-03-11
 License:  GNU GPL 3.0
 
-Store data from .trb files.
+Store data from .sim files.
 
 Classes:
-    Turbine
+    Simulation
 
 Functions:
     None
@@ -21,8 +21,8 @@ import sys
 
 import numpy as np
 
-from old.QBlade.misc import read, write
-from old.QBlade.turbine import Turbine
+from QBlade.misc import read, write
+from QBlade.turbine import Turbine
 
 
 SIMULATION_DICT = {
@@ -147,7 +147,8 @@ class Simulation:
         self.read()
 
         # Add Turbine object
-        self.turbine = Turbine(self.attributes["TURBFILE"])
+        turbine_path = os.path.join(os.path.dirname(self.path), self.attributes["TURBFILE"])
+        self.turbine = Turbine(turbine_path)
 
     def read(self):
         """
@@ -167,37 +168,14 @@ class Simulation:
         for key, value in SIMULATION_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
-        if self.attributes["TURBFILE"]:
-            self.attributes["TURBFILE"] = self.attributes["TURBFILE"].replace("/", "\\")
-            self.attributes["TURBFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["TURBFILE"])
-
-        if self.attributes["EVENTFILE"]:
-            self.attributes["EVENTFILE"] = self.attributes["EVENTFILE"].replace("/", "\\")
-            self.attributes["EVENTFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["EVENTFILE"])
-    
-        if self.attributes["LOADINGFILE"]:
-            self.attributes["LOADINGFILE"] = self.attributes["LOADINGFILE"].replace("/", "\\")
-            self.attributes["LOADINGFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["LOADINGFILE"])
-
-        if self.attributes["SIMFILE"]:
-            self.attributes["SIMFILE"] = self.attributes["SIMFILE"].replace("/", "\\")
-            self.attributes["SIMFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["SIMFILE"])
-
-        if self.attributes["MOTIONFILE"]:
-            self.attributes["MOTIONFILE"] = self.attributes["MOTIONFILE"].replace("/", "\\")
-            self.attributes["MOTIONFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["MOTIONFILE"])
-
-        if self.attributes["WNDNAME"]:
-            self.attributes["WNDNAME"] = self.attributes["WNDNAME"].replace("/", "\\")
-            self.attributes["WNDNAME"] = os.path.join(os.path.dirname(self.path), self.attributes["WNDNAME"])
-
-        if self.attributes["WAVEFILE"]:
-            self.attributes["WAVEFILE"] = self.attributes["WAVEFILE"].replace("/", "\\")
-            self.attributes["WAVEFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["WAVEFILE"])
-
-        if self.attributes["MOORINGSYSTEM"]:
-            self.attributes["MOORINGSYSTEM"] = self.attributes["MOORINGSYSTEM"].replace("/", "\\")
-            self.attributes["MOORINGSYSTEM"] = os.path.join(os.path.dirname(self.path), self.attributes["MOORINGSYSTEM"])
+        self.attributes["TURBFILE"]      = self.attributes["TURBFILE"].replace("/", "\\")
+        self.attributes["EVENTFILE"]     = self.attributes["EVENTFILE"].replace("/", "\\")
+        self.attributes["LOADINGFILE"]   = self.attributes["LOADINGFILE"].replace("/", "\\")
+        self.attributes["SIMFILE"]       = self.attributes["SIMFILE"].replace("/", "\\")
+        self.attributes["MOTIONFILE"]    = self.attributes["MOTIONFILE"].replace("/", "\\")
+        self.attributes["WNDNAME"]       = self.attributes["WNDNAME"].replace("/", "\\")
+        self.attributes["WAVEFILE"]      = self.attributes["WAVEFILE"].replace("/", "\\")
+        self.attributes["MOORINGSYSTEM"] = self.attributes["MOORINGSYSTEM"].replace("/", "\\")
 
         self.attributes["INITIAL_YAW"]     = np.radians(self.attributes["INITIAL_YAW"])
         self.attributes["INITIAL_PITCH"]   = np.radians(self.attributes["INITIAL_PITCH"])
@@ -217,15 +195,10 @@ class Simulation:
 
     def write(self, key, value):
 
+        # Set value in attributes
+        self.attributes[key] = value
+
+        # Set value in file
         f = open(self.path, "r+", encoding="utf-8")
         write(f, key, value)
         f.close()
-
-# if __name__ == "__main__":
-
-#     # Create a Simulation instance
-#     simulation = Simulation("data\\simulations\\DTU_10MW_RWT.sim")
-
-#     # Print attributes
-#     for key, value in simulation.attributes.items():
-#         print(f"{key}: {value}")

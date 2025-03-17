@@ -44,6 +44,7 @@ def intensity(z, z_0, model="ZHS"):
         gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
         I = gamma * np.log(30/z_0) / np.log(z/z_0)
 
+
     else:
         print("Unknown turbulence intensity model!")
         sys.exit(1)
@@ -113,8 +114,10 @@ def amiet(f, b, c, r_e, U, alpha, L, I, c_0, rho_0):
         spl_amiet : np.array -- flat plate SPL, [dB]
     """
 
-   # Determine the high-frequency SPL
-   # Use 78.4 instead of 58.4 due to units of rho_0 and c_0
+    # Determine the high-frequency SPL
+    # Use 78.4 instead of 58.4 due to units of rho_0 and c_0
+    # TODO: USE P_REF INSTEAD OF ASSUMING VALUE
+
     M = U / c_0
     K_x = (2*np.pi*f) / U
     K_e = 0.75 / L
@@ -177,7 +180,7 @@ def moriarty(f, c, tc_01, tc_10, U):
     return delta_spl
 
 
-def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, c_0, rho_0, z_0, spl_correction, I_model, L_model):
+def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, c_0, rho_0, z_g, z_0, spl_correction, I_model, L_model):
     """
     Determine the inflow noise.
 
@@ -194,6 +197,7 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, c_0, rho_0, z_0, spl_
         alpha : np.array -- angle of attack, [rad]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
+        z_g : float -- height above the ground, [m]
         z_0 : float -- surface roughness length, [m]
         spl_correction : bool -- apply SPL correction?
         I_model : str -- turbulence intensity model
@@ -204,8 +208,8 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, c_0, rho_0, z_0, spl_
     """
 
     # Determine the turbulence properties
-    I = intensity(z, z_0, I_model)
-    L = length_scale(z, z_0, L_model)
+    I = intensity(z_g, z_0, I_model)
+    L = length_scale(z_g, z_0, L_model)
 
     # Determine the retarded angles and distance
     r = np.sqrt(np.square(x) + np.square(y) + np.square(z))

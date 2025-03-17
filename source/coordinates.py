@@ -17,6 +17,8 @@ Exceptions:
     None
 """
 
+import sys
+
 import numpy as np
 
 
@@ -25,38 +27,81 @@ def translate(p_x, p_y, p_z):
     Returns the vector for a translation.
 
     Parameters:
-        p_x : float -- translation in the x direction, [m]
-        p_y : float -- translation in the y direction, [m]
-        p_z : float -- translation in the z direction, [m]
+        p_x : np.array -- translation in the x direction, [m]
+        p_y : np.array -- translation in the y direction, [m]
+        p_z : np.array -- translation in the z direction, [m]
+
+    Returns:
+        vector : np.array -- Nx3x1 translation vector
     """
 
-    return np.array([p_x, p_y, p_z])[:, np.newaxis]
+    if isinstance(p_x, np.ndarray):
+        N = p_x.shape
+
+    elif isinstance(p_y, np.ndarray):
+        N = p_y.shape
+
+    elif isinstance(p_z, np.ndarray):
+        N = p_z.shape
+
+    else:
+        N = 1
+
+    p_x = np.resize(p_x, N)
+    p_y = np.resize(p_y, N)
+    p_z = np.resize(p_z, N)
+
+    v_t = np.array([[p_x],
+                    [p_y],
+                    [p_z]])
+    
+    return np.transpose(v_t, (2, 0, 1))
 
 def rotate(r_x, r_y, r_z, order):
     """
     Returns the matrix for a rotation.
 
     Parameters:
-        r_x : float -- rotation angle about the x axis, [rad]
-        r_y : float -- rotation angle about the y axis, [rad]
-        r_z : float -- rotation angle about the z axis, [rad]
+        r_x : np.array -- rotation angle about the x axis, [rad]
+        r_y : np.array -- rotation angle about the y axis, [rad]
+        r_z : np.array -- rotation angle about the z axis, [rad]
         order : str -- order of rotation
 
     Returns:
-        matrix : np.array -- 3x3 rotation matrix
+        matrix : np.array -- Nx3x3 rotation matrix
     """
 
-    m_rot_x = np.array([[1,           0,            0],
-                        [0, np.cos(r_x), -np.sin(r_x)],
-                        [0, np.sin(r_x),  np.cos(r_x)]])
+    if isinstance(r_x, np.ndarray):
+        N = r_x.shape
 
-    m_rot_y = np.array([[ np.cos(r_y), 0, np.sin(r_y)],
-                        [          0,  1,           0],
-                        [-np.sin(r_y), 0, np.cos(r_y)]])
+    elif isinstance(r_y, np.ndarray):
+        N = r_y.shape
 
-    m_rot_z = np.array([[np.cos(r_z), -np.sin(r_z), 0],
-                        [np.sin(r_z),  np.cos(r_z), 0],
-                        [          0,            0, 1]])
+    elif isinstance(r_z, np.ndarray):
+        N = r_z.shape
+
+    else:
+        N = 1
+
+    r_x = np.resize(r_x, N)
+    r_y = np.resize(r_y, N)
+    r_z = np.resize(r_z, N)
+
+    m_rot_x = np.array([[ np.ones(N), np.zeros(N),  np.zeros(N)],
+                        [np.zeros(N), np.cos(r_x), -np.sin(r_x)],
+                        [np.zeros(N), np.sin(r_x),  np.cos(r_x)]])
+
+    m_rot_y = np.array([[ np.cos(r_y), np.zeros(N), np.sin(r_y)],
+                        [ np.zeros(N),  np.ones(N), np.zeros(N)],
+                        [-np.sin(r_y), np.zeros(N), np.cos(r_y)]])
+
+    m_rot_z = np.array([[np.cos(r_z), -np.sin(r_z), np.zeros(N)],
+                        [np.sin(r_z),  np.cos(r_z), np.zeros(N)],
+                        [np.zeros(N),  np.zeros(N),  np.ones(N)]])
+
+    m_rot_x = np.transpose(m_rot_x, (2, 0, 1))
+    m_rot_y = np.transpose(m_rot_y, (2, 0, 1))
+    m_rot_z = np.transpose(m_rot_z, (2, 0, 1))
 
     if order == "xyz":
         return m_rot_z @ m_rot_y @ m_rot_x
@@ -76,6 +121,10 @@ def rotate(r_x, r_y, r_z, order):
     elif order == "zyx":
         return m_rot_x @ m_rot_y @ m_rot_z
 
+    else:
+        print("Invalid order of rotation!")
+        sys.exit(1)
+
 def global_to_turbine(x_g, p_x, p_y, p_z, r_x, r_y, r_z):
     """
     Returns the turbine coordinates from the global coordinates.
@@ -93,7 +142,7 @@ def global_to_turbine(x_g, p_x, p_y, p_z, r_x, r_y, r_z):
         x_t : np.array -- position in the turbine coordinate system, [m]
     """
 
-    return rotate(r_x, r_y, r_z, "zyx").T @ (x_g - translate(p_x, p_y, p_z))
+    return np.transpose(rotate(r_x, r_y, r_z, "zyx"), (0, 2, 1)) @ (x_g - translate(p_x, p_y, p_z))
 
 def turbine_to_global(x_t, p_x, p_y, p_z, r_x, r_y, r_z):
     """
@@ -128,7 +177,7 @@ def turbine_to_nacelle(x_t, tower_height, shaft_tilt, yaw):
         x_n : np.array -- position in the nacelle coordinate system, [m]
     """
 
-    return rotate(0, shaft_tilt, yaw, "xyz").T @ (x_t - translate(0, 0, tower_height))
+    return np.transpose(rotate(0, shaft_tilt, yaw, "xyz"), (0, 2, 1)) @ (x_t - translate(0, 0, tower_height))
 
 def nacelle_to_turbine(x_n, tower_height, shaft_tilt, yaw):
     """
@@ -159,7 +208,7 @@ def nacelle_to_hub(x_n, overhang, azimuth):
         x_h : np.array -- position in the hub coordinate system, [m]
     """
 
-    return rotate(azimuth, 0, 0, "xyz").T @ (x_n - translate(-overhang, 0, 0))
+    return np.transpose(rotate(azimuth, 0, 0, "xyz"), (0, 2, 1)) @ (x_n - translate(-overhang, 0, 0))
 
 def hub_to_nacelle(x_h, overhang, azimuth):
     """
@@ -186,7 +235,7 @@ def hub_to_blade(x_h, cone, pitch):
         pitch : float -- collective blade pitch, [rad]
     """
 
-    return rotate(0, -cone, -pitch, "xzy").T @ x_h
+    return np.transpose(rotate(0, -cone, -pitch, "xzy"), (0, 2, 1)) @ x_h
 
 
 def blade_to_hub(x_b, cone, pitch):
@@ -222,7 +271,7 @@ def blade_to_airfoil(x_b, pos, chord, twist, offset_x, offset_y, p_axis):
         x_a : np.array -- position in the airfoil coordinate system, [m]
     """
 
-    return rotate(np.pi, 0, np.pi/2 - twist, "xyz").T @ (x_b - translate(offset_y, offset_x, pos)) \
+    return np.transpose(rotate(np.pi, 0, np.pi/2 - twist, "xyz"), (0, 2, 1)) @ (x_b - translate(offset_y, offset_x, pos)) \
            + translate(p_axis*chord, 0, 0)
 
 def airfoil_to_blade(x_a, pos, chord, twist, offset_x, offset_y, p_axis):

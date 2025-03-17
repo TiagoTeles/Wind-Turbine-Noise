@@ -21,8 +21,8 @@ import sys
 
 import numpy as np
 
-from old.QBlade.blade import Blade
-from old.QBlade.misc import read, write
+from QBlade.blade import Blade
+from QBlade.misc import read, write
 
 
 TURBINE_DICT = {
@@ -136,7 +136,8 @@ class Turbine:
         self.read()
 
         # Add blade object
-        self.blade = Blade(self.attributes["BLADEFILE"])
+        balde_path = os.path.join(os.path.dirname(self.path), self.attributes["BLADEFILE"])
+        self.blade = Blade(balde_path)
 
     def read(self):
         """
@@ -156,21 +157,10 @@ class Turbine:
         for key, value in TURBINE_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
-        if self.attributes["BLADEFILE"]:
-            self.attributes["BLADEFILE"] = self.attributes["BLADEFILE"].replace("/", "\\")
-            self.attributes["BLADEFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["BLADEFILE"])
-
-        if self.attributes["STRUCTURALFILE"]:
-            self.attributes["STRUCTURALFILE"] = self.attributes["STRUCTURALFILE"].replace("/", "\\")
-            self.attributes["STRUCTURALFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["STRUCTURALFILE"])
-
-        if self.attributes["CONTROLLERFILE"]:
-            self.attributes["CONTROLLERFILE"] = self.attributes["CONTROLLERFILE"].replace("/", "\\")
-            self.attributes["CONTROLLERFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["CONTROLLERFILE"])
-
-        if self.attributes["PARAMETERFILE"]:
-            self.attributes["PARAMETERFILE"] = self.attributes["PARAMETERFILE"].replace("/", "\\")
-            self.attributes["PARAMETERFILE"] = os.path.join(os.path.dirname(self.path), self.attributes["PARAMETERFILE"])
+        self.attributes["BLADEFILE"] = self.attributes["BLADEFILE"].replace("/", "\\")
+        self.attributes["STRUCTURALFILE"] = self.attributes["STRUCTURALFILE"].replace("/", "\\")
+        self.attributes["CONTROLLERFILE"] = self.attributes["CONTROLLERFILE"].replace("/", "\\")
+        self.attributes["PARAMETERFILE"] = self.attributes["PARAMETERFILE"].replace("/", "\\")
 
         self.attributes["SHAFTTILT"] = np.radians(self.attributes["SHAFTTILT"])
         self.attributes["ROTORCONE"] = np.radians(self.attributes["ROTORCONE"])
@@ -182,9 +172,14 @@ class Turbine:
 
     def write(self, key, value):
 
+        # Set value in attributes
+        self.attributes[key] = value
+
+        # Set value in file
         f = open(self.path, "r+", encoding="utf-8")
         write(f, key, value)
         f.close()
+
 
 
 # if __name__ == "__main__":
