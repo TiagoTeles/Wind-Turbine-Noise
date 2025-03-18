@@ -51,28 +51,26 @@ class XFoil:
             None
         """
 
-        # Initialize the attributes
+        # Initialise the attributes
         self.path = path
         self.cwd = cwd
 
         # Create the XFOIL process
-        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, cwd=cwd, text=True)
+        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd, 
+                                text=True)
 
-    def interpolate(self, path_1, path_2, path_out, fraction):
+    def interpolate(self, path_1, path_2, fraction):
         """
         Interpolate between two airfoil files.
 
         Arguments:
             path_1 : str -- input airfoil 1 file path
             path_2 : str -- input airfoil 2 file path
-            path_out : str -- output airfoil file path
             fraction : float -- interpolation fraction, [-]
 
         Returns:
-            None
+            path_out : str -- interpolated airfoil file path
         """
-
-        name = os.path.splitext(os.path.basename(path_out))[0]
 
         # Select the INTE environment
         self.process.stdin.write("INTE\n")
@@ -88,8 +86,18 @@ class XFoil:
         # Set the interpolation fraction
         self.process.stdin.write(f"{fraction}\n")
 
+        # Determine the output file name and path
+        name_1 = os.path.splitext(os.path.basename(path_1))[0]
+        name_2 = os.path.splitext(os.path.basename(path_2))[0]
+
+        name_out = f"{name_1}_{name_2}_f{fraction:.2f}"
+        path_out = os.path.join("Interpolated", name_out + ".afl")
+
         # Save the interpolated airfoil file
-        self.process.stdin.write(f"{name}\n")
+        if not os.path.exists(os.path.join(self.cwd, "Interpolated")):
+            os.makedirs(os.path.join(self.cwd, "Interpolated"))
+
+        self.process.stdin.write(f"{name_out}\n")
         self.process.stdin.write("PCOP\n")
         self.process.stdin.write(f"SAVE {path_out}\n")
 
@@ -106,7 +114,9 @@ class XFoil:
             sys.exit(1)
 
         elif "Output file exists." in stdout:
-            print("Interpolated airfoil already exists!")
+            print("Airfoil already exists! Skipping!")
+
+        return os.path.join(self.cwd, path_out)
 
     def run(self, path, re, mach, alpha, xtr_top=1.0, xtr_bot=1.0, n_crit=9.0, it=10):
         """
@@ -127,8 +137,6 @@ class XFoil:
             bl_bot : pandas.DataFrame -- boundary layer data on the bottom surface
         """
 
-        path_out = os.path.join("XFOIL", os.path.basename(path).replace(".afl", ".bl"))
-
         # Load the airfoil file
         self.process.stdin.write(f"LOAD {path}\n")
 
@@ -147,9 +155,15 @@ class XFoil:
         # Run the analysis at a given alpha
         self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
+        # Determine the output file name and path
+        name = os.path.splitext(os.path.basename(path))[0]
+        
+        name_out = f"{name}_Re{re:.0f}_Ma{mach:.2f}_AOA{alpha:.2f}"
+        path_out = os.path.join("Boundary_Layer", name_out + ".bl")
+
         # Save the results to a file
-        if not os.path.exists(os.path.join(self.cwd, "XFOIL")):
-            os.makedirs(os.path.join(self.cwd, "XFOIL"))
+        if not os.path.exists(os.path.join(self.cwd, "Boundary_Layer")):
+            os.makedirs(os.path.join(self.cwd, "Boundary_Layer"))
 
         self.process.stdin.write(f"DUMP {path_out}\n")
         self.process.stdin.write("\n")
@@ -168,7 +182,6 @@ class XFoil:
 
         elif "Type \"!\" to continue iterating" in stdout:
             print("XFOIL convergence failed!")
-            print(f"Airfoil: {path}, Re: {re}, Ma: {mach}, Alpha: {alpha}")
             sys.exit(1)
 
         # Read the output file
