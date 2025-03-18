@@ -48,3 +48,4 @@ P_REF = 2E-5                                                        # Reference 
 SPL_CORRECTION = True                                               # Apply inflow noise 10dB SPL correction?
 PROBE_TOP = 0.975                                                   # Probe location at the top surface, [-]
 PROBE_BOT = 0.950                                                   # Probe location at the bottom surface, [-]
+THICKNESS_CUTOFF = 0.3                                              # Thickness cutoff for the airfoil, [-]
