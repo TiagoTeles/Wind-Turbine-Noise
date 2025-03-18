@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-11
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
-Store data from .sim files.
+Store the data from .sim files.
 
 Classes:
     Simulation
@@ -135,18 +135,17 @@ class Simulation:
         """
 
         self.attributes = {}
+        self.path = path
 
-        # Check if file exists
-        if os.path.isfile(path):
-            self.path = path
-        else:
+        # Check if the file exists
+        if not os.path.isfile(path):
             print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Read file
+        # Read the file
         self.read()
 
-        # Add Turbine object
+        # Add the Turbine object
         turbine_path = os.path.join(os.path.dirname(self.path), self.attributes["TURBFILE"])
         self.turbine = Turbine(turbine_path)
 
@@ -161,13 +160,14 @@ class Simulation:
             None
         """
 
-        # Open file
+        # Open the file
         f = open(self.path, "r", encoding="utf-8")
 
-        # Read attributes
+        # Read the attributes
         for key, value in SIMULATION_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
+        # Format the attributes
         self.attributes["TURBFILE"]      = self.attributes["TURBFILE"].replace("/", "\\")
         self.attributes["EVENTFILE"]     = self.attributes["EVENTFILE"].replace("/", "\\")
         self.attributes["LOADINGFILE"]   = self.attributes["LOADINGFILE"].replace("/", "\\")
@@ -190,15 +190,15 @@ class Simulation:
         self.attributes["HORANGLE"]        = np.radians(self.attributes["HORANGLE"])
         self.attributes["VERTANGLE"]       = np.radians(self.attributes["VERTANGLE"])
 
-        # Close file
+        # Close the file
         f.close()
 
     def write(self, key, value):
 
-        # Set value in attributes
+        # Set the value in the attributes dictionary
         self.attributes[key] = value
 
-        # Set value in file
+        # Set the value in the .sim file
         f = open(self.path, "r+", encoding="utf-8")
         write(f, key, value)
         f.close()
