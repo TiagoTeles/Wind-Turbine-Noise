@@ -140,7 +140,7 @@ class Blade():
 
         Arguments:
             pos : float -- position along the blade, [m]
-        
+
         Returns:
             airfoil : Airfoil -- interpolated airfoil
         """
