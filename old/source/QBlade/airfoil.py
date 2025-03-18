@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-11
 License:  GNU GPL 3.0
 
-Store the data from .afl files.
+Store data from .afl files.
 
 Classes:
     Airfoil 
@@ -50,10 +50,11 @@ class Airfoil:
         """
 
         self.attributes = {}
-        self.path = path
 
         # Check if the file exists
-        if not os.path.isfile(path):
+        if os.path.isfile(path):
+            self.path = path
+        else:
             print(f"No file found at {path}!")
             sys.exit(1)
 
@@ -83,12 +84,12 @@ class Airfoil:
         # Close file
         f.close()
 
-    def thickness(self, xc):
+    def thickness(self, x):
         """
         Determine the thickness of the airfoil.
 
         Arguments:
-            xc : float -- x/c, [-]
+            x : float -- x/c, [-]
 
         Returns:
             tc : float -- thickness of the airfoil
@@ -100,7 +101,7 @@ class Airfoil:
         bot = self.data.iloc[le_index:]
 
         # Calculate the thickness
-        yc_top = np.interp(xc, top["x/c"], top["y/c"])
-        yc_bot = np.interp(xc, bot["x/c"], bot["y/c"])
+        y_top = np.interp(x, top["x/c"], top["y/c"])
+        y_bot = np.interp(x, bot["x/c"], bot["y/c"])
 
-        return yc_top - yc_bot
+        return y_top - y_bot
