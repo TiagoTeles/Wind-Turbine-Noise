@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-19
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
-Store data from .plr files.
+Store the data from .plr files.
 
 Classes:
     Polar
@@ -22,9 +22,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-sys.path.append(os.path.dirname(sys.path[0]))
-
-from source.QBlade.misc import read
+from QBlade.misc import read
 
 
 POLAR_DICT = {
@@ -32,7 +30,6 @@ POLAR_DICT = {
     "FOILNAME":     {"type":   str}, # Path to the .afl file
     "THICKNESS":    {"type": float}, # Airfoil thickness, [-]
     "ISDECOMPOSED": {"type":  bool}, # Is the polar is decomposed?
-    "REYNOLDS":     {"type":  None}, # Reynolds number (not implemented), [-] 
     }
 
 class Polar:
@@ -61,11 +58,10 @@ class Polar:
         """
 
         self.attributes = {}
+        self.path = path
 
-        # Check if file exists
-        if os.path.isfile(path):
-            self.path = path
-        else:
+        # Check if the file exists
+        if not os.path.isfile(path):
             print(f"No file found at {path}!")
             sys.exit(1)
 
@@ -83,20 +79,23 @@ class Polar:
             None
         """
 
-        # Open file
+        # Open the file
         f = open(self.path, "r", encoding="utf-8")
 
-        # Read attributes
+        # Read the attributes
         for key, value in POLAR_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
-
+        
+        # Format the attributes
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
         self.attributes["THICKNESS"] /= 100
 
-        # Read AOA, CL, CD, and CM
+        # Read the AOA, CL, CD, and CM
         f.seek(0)
-
-        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm", "Cl_att", "Cl_sep", "F_st"], skiprows=17, delimiter=r"\s+")
+        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm", "Cl_att", "Cl_sep", "F_st"], \
+                                skiprows=17, delimiter=r"\s+")
+        
+        # Format the AOA
         self.data["AoA"] = np.radians(self.data["AoA"])
 
         # Close file
