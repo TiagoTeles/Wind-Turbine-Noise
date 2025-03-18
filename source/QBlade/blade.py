@@ -25,6 +25,7 @@ import pandas as pd
 from QBlade.airfoil import Airfoil
 from QBlade.misc import read
 from QBlade.polar import Polar
+from settings import XFOIL_PATH
 from xfoil import XFoil
 
 
@@ -34,8 +35,6 @@ BLADE_DICT = {
     "INVERTEDFOILS": {"type": bool}, # Invert the airfoils?
     "NUMBLADES":     {"type":  int}, # Number of blades, [-]
     }
-
-XFOIL_PATH = "bin\\XFoil\\xfoil.exe"
 
 class Blade():
     """
