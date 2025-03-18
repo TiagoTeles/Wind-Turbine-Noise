@@ -1,10 +1,10 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-17
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
-Store turbine data.
+Manage the QBlade shared library.
 
 Classes:
     Turbine
@@ -30,14 +30,14 @@ class QBlade:
         lib : ctypes.CDLL -- shared library
     
     Methods:
-        __init__: initialize and load the QBlade shared library
+        __init__: initialise and load the QBlade shared library
         load_library: load the shared library and dynamically bind all functions
         unload_library: close QBlade instance
     """
 
     def __init__(self, shared_lib_path: str):
         """
-        Initialize and load the QBlade shared library.
+        Initialise and load the QBlade shared library.
         
         Arguments:
             shared_lib_path : str -- path to the shared library
@@ -49,7 +49,7 @@ class QBlade:
         self.lib_path = shared_lib_path
         self.lib = None
 
-        # Define all functions with argument types and return types
+        # Define all the functions with argument types and return types
         self.functions: Dict[str, Dict[str, Any]] = {
             "createInstance": {"argtypes": [c_int, c_int], "restype": c_void_p},
             "closeInstance": {"argtypes": None, "restype": c_void_p},
@@ -110,7 +110,7 @@ class QBlade:
         except Exception as e:
             raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}") from e
 
-        # Bind functions dynamically
+        # Bind the functions dynamically
         for func_name, config in self.functions.items():
             try:
                 func = getattr(self.lib, func_name)
@@ -140,7 +140,7 @@ class QBlade:
             None
         """
 
-        # Close QBlade instance
+        # Close the QBlade instance
         try:
             self.closeInstance()
             print("QBlade instance closed!")
@@ -153,12 +153,3 @@ class QBlade:
             del self.lib
             self.lib = None
             print("Library unloaded successfully!")
-
-# if __name__ == "__main__":
-
-#     # Create a QBlade instance
-#     qblade = QBlade("bin\\QBlade\\QBlade.dll")
-#     qblade.createInstance(1, 32)
-
-#     # Unload the library
-#     qblade.unload_library()
