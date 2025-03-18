@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-26
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
-Helper functions for reading and writing files.
+Helper functions for reading and writing QBlade files.
 
 Classes:
     None
@@ -47,9 +47,6 @@ def read(file, key, arg_type):
 
             elif arg_type == bool:
                 return value == "true"
-
-            elif arg_type is None:
-                return None
 
             else:
                 print("Invalid argument type!")
@@ -95,14 +92,11 @@ def write(file, key, value):
                 else:
                     new_value = "false"
 
-            elif value is None:
-                new_value = old_value
-
             else:
                 print("Invalid argument type!")
                 sys.exit(1)
 
-            # Add padding
+            # Add whitespace padding
             if len(old_value) > len(new_value):
                 new_value = new_value + " " * (len(old_value) - len(new_value))
             else:
