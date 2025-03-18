@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-19
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
-Store data from .bld files.
+Store the data from .bld files.
 
 Classes:
     Blade
@@ -44,12 +44,12 @@ class Blade():
     Methods:
         __init__ -- initialise the blade class
         read -- read the .bld file
-        write -- write to the .bld file
+        interpolate -- determine the interpolated airfoil
 
     Attributes:
         airfoils : list -- list of airfoil objects
         attributes : dict -- dictionary of attributes
-        data : pd.DataFrame -- pos [m], chord [m], twist [rad], offset_x [m], offset_y [m], p_axis [-], and polar_path
+        data : pd.DataFrame -- pos [m], chord [m], twist [rad], offset_x [m], offset_y [m], p_axis [-], and polar_file
         path : str -- path to the .bld file
         polars : list -- list of polar objects
     """
@@ -65,42 +65,40 @@ class Blade():
             None
         """
 
-        self.attributes = {}
-
         self.airfoils = []
+        self.attributes = {}
+        self.path = path
         self.polars = []
 
-        # Check if file exists
-        if os.path.isfile(path):
-            self.path = path
-        else:
+        # Check if the file exists
+        if not os.path.isfile(path):
             print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Read file
+        # Read the file
         self.read()
 
-        # Add airfoil objects
+        # Add the airfoil objects
         airfoil_dir = os.path.join(os.path.dirname(path), "Airfoils")
 
-        if os.path.isdir(airfoil_dir):
-            for f in os.listdir(airfoil_dir):
-                self.airfoils.append(Airfoil(os.path.join(airfoil_dir, f)))
-        else:
-            print(f"No 'Airfoils' folder found at {airfoil_dir}!")
+        for f in os.listdir(airfoil_dir):
+            self.airfoils.append(Airfoil(os.path.join(airfoil_dir, f)))
+
+        if not airfoil_dir:
+            print(f"No Airfoils found in {airfoil_dir}!")
             sys.exit(1)
 
-        # Add polar objects
+        # Add the polar objects
         polar_dir = os.path.join(os.path.dirname(path), "Polars")
 
-        if os.path.isdir(polar_dir):
-            for f in os.listdir(polar_dir):
-                self.polars.append(Polar(os.path.join(polar_dir, f)))
-        else:
-            print(f"No 'Polars' folder found at {polar_dir}!")
+        for f in os.listdir(polar_dir):
+            self.polars.append(Polar(os.path.join(polar_dir, f)))
+
+        if not polar_dir:
+            print(f"No Polars found in {polar_dir}!")
             sys.exit(1)
 
-        # Precompute interpolated airfoils
+        # Precompute the interpolated airfoils
         self.data.insert(6, "airfoil", None)
 
         for i, pos in enumerate(self.data["pos"]):
@@ -117,64 +115,80 @@ class Blade():
             None
         """
 
-        # Open file
+        # Open the file
         f = open(self.path, "r", encoding="utf-8")
 
-        # Read attributes
+        # Read the attributes
         for key, value in BLADE_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
-        # Read pos, chord, twist, offset_x, offset_y, p_axis, and polar_path
+        # Read the pos, chord, twist, offset_x, offset_y, p_axis, and polar_file
         f.seek(0)
 
         self.data = pd.read_csv(f, names=["pos", "chord", "twist", "offset_x", "offset_y", \
-                                          "p_axis", "polar_path"], skiprows=16, delimiter=r"\s+")
+                                          "p_axis", "polar_file"], skiprows=16, delimiter=r"\s+")
 
-        self.data["polar_path"] = self.data["polar_path"].str.replace("/","\\")
+        # Format the twist and polar_file
         self.data["twist"] = np.radians(self.data["twist"])
+        self.data["polar_file"] = self.data["polar_file"].str.replace("/","\\")
 
-        # Close file
+        # Close the file
         f.close()
 
-    def write(self):
-        pass
-
     def interpolate(self, pos):
+        """
+        Determine the interpolated airfoil.
 
-        if not os.path.exists(os.path.join(os.path.dirname(self.path), "Interpolated")):
-            os.makedirs(os.path.join(os.path.dirname(self.path), "Interpolated"))
+        Arguments:
+            pos : float -- position along the blade, [m]
+        
+        Returns:
+            airfoil : Airfoil -- interpolated airfoil
+        """
+
+        # Create the output directory
+        dir_out = os.path.join(os.path.dirname(self.path), "Interpolated")
+
+        if not os.path.exists(dir_out):
+            os.makedirs(dir_out)
 
         # Determine the neighbouring airfoils
-        index_inboard  = self.data[self.data["pos"] <= pos].index.max()
-        index_outboard = self.data[self.data["pos"] >= pos].index.min()
+        index_1 = self.data[self.data["pos"] <= pos].index.max()
+        index_2 = self.data[self.data["pos"] >= pos].index.min()
 
-        r_inboard  = self.data["pos"].iloc[index_inboard]
-        r_outboard = self.data["pos"].iloc[index_outboard]
+        r_1 = self.data["pos"].iloc[index_1]
+        r_2 = self.data["pos"].iloc[index_2]
 
-        polar_path_inboard  = self.data["polar_path"].iloc[index_inboard]
-        polar_path_outboard = self.data["polar_path"].iloc[index_outboard]
+        polar_path_1  = self.data["polar_file"].iloc[index_1]
+        polar_path_2 = self.data["polar_file"].iloc[index_2]
 
-        airfoil_path_inboard  = None
-        airfoil_path_outboard = None
+        airfoil_path_1  = None
+        airfoil_path_2 = None
 
         for polar in self.polars:
 
-            if os.path.basename(polar_path_inboard) == os.path.basename(polar.path):
-                airfoil_path_inboard = polar.attributes["FOILNAME"]
+            if os.path.basename(polar_path_1) == os.path.basename(polar.path):
+                airfoil_path_1 = polar.attributes["FOILNAME"]
 
-            if os.path.basename(polar_path_outboard) ==  os.path.basename(polar.path):
-                airfoil_path_outboard = polar.attributes["FOILNAME"]
+            if os.path.basename(polar_path_2) ==  os.path.basename(polar.path):
+                airfoil_path_2 = polar.attributes["FOILNAME"]
 
-        if airfoil_path_inboard is None or airfoil_path_outboard is None:
+        if airfoil_path_1 is None or airfoil_path_2 is None:
             print("Polar not found!")
             sys.exit(1)
 
-        airfoil_path_inboard = os.path.relpath(os.path.join(os.path.dirname(polar_path_inboard), airfoil_path_inboard))
-        airfoil_path_outboard =  os.path.relpath(os.path.join(os.path.dirname(polar_path_outboard), airfoil_path_outboard))
+        # Determine the absolute paths
+        cwd = os.path.dirname(self.path)
+
+        airfoil_path_1 = os.path.join("Airfoils", os.path.basename(airfoil_path_1))
+        airfoil_path_2 = os.path.join("Airfoils", os.path.basename(airfoil_path_2))
         airfoil_path_interpolated = os.path.join("Interpolated", f"{pos}.afl")
         
+        # Determine the interpolation fraction
+        fraction = np.interp(pos, [r_1, r_2], [0, 1])
+
         # Interpolate the airfoil
-        xfoil = XFoil(XFOIL_PATH, os.path.dirname(self.path))
-        xfoil.interpolate(airfoil_path_inboard, airfoil_path_outboard, airfoil_path_interpolated, np.interp(pos, [r_inboard, r_outboard], [0, 1]))
+        xfoil = XFoil(XFOIL_PATH, cwd)
+        xfoil.interpolate(airfoil_path_1, airfoil_path_2, airfoil_path_interpolated, fraction)
         
         return Airfoil(os.path.join(os.path.dirname(self.path), airfoil_path_interpolated))
