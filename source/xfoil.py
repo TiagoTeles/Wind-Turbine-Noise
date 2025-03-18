@@ -149,7 +149,7 @@ class XFoil:
 
         # Save the results to a file
         if not os.path.exists(os.path.join(self.cwd, "XFOIL")):
-            os.makedirs(os.path.join(self.cwd,"XFOIL"))
+            os.makedirs(os.path.join(self.cwd, "XFOIL"))
 
         self.process.stdin.write(f"DUMP {path_out}\n")
         self.process.stdin.write("\n")
