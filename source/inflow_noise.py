@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-14
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
 Calculate the inflow noise spectra.
@@ -43,7 +43,6 @@ def intensity(z, z_0, model="ZHS"):
     if model == "ZHS":
         gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
         I = gamma * np.log(30/z_0) / np.log(z/z_0)
-
 
     else:
         print("Unknown turbulence intensity model!")
@@ -105,8 +104,8 @@ def amiet(f, b, c, r_e, U, alpha, L, I, c_0, rho_0):
         r_e : np.array -- distance, [m]
         U : np.array -- velocity, [m/s]
         alpha : np.array -- angle of attack, [rad]
-        L : float -- turbulence length scale, [m]
-        I : float -- turbulence intensity, [-]
+        L : np.array -- turbulence length scale, [m]
+        I : np.array -- turbulence intensity, [-]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
 
@@ -116,16 +115,15 @@ def amiet(f, b, c, r_e, U, alpha, L, I, c_0, rho_0):
 
     # Determine the high-frequency SPL
     # Use 78.4 instead of 58.4 due to units of rho_0 and c_0
-    # TODO: USE P_REF INSTEAD OF ASSUMING VALUE
-
     M = U / c_0
-    K_x = (2*np.pi*f) / U
+    omega = 2 * np.pi * f
+    K_x = omega / U
     K_e = 0.75 / L
     K_x_hat = K_x / K_e
 
-    spl_h = 10 * np.log10(np.pow(M, 5) * (L*b)/(2*np.square(r_e)) \
-                          * np.square(I) * np.square(rho_0) * np.pow(c_0, 4) \
-                          * np.pow(K_x_hat, 3) / np.pow(1 + np.square(K_x_hat), 7/3)) + 78.4
+    spl_h = 10 * np.log10(np.pow(M, 5) * (L*b)/(2*np.square(r_e)) * np.square(I) \
+                          * np.square(rho_0) * np.pow(c_0, 4) * np.pow(K_x_hat, 3) \
+                          / np.pow(1 + np.square(K_x_hat), 7/3)) + 78.4
 
     # Determine the low-frequency correction
     K_x_line = K_x * c / 2
@@ -156,13 +154,6 @@ def moriarty(f, c, tc_01, tc_10, U):
     Returns:
         delta_spl : np.array -- SPL correction, [dB]
     """
-
-    # Determine the number of frequencies and panels
-    n_frequencies = f.size
-    n_panels = U.size
-
-    # Initialise the SPL matrix
-    delta_spl = np.zeros((n_frequencies, n_panels))
 
     # Check for high Strouhal numbers
     St = (2*np.pi*f) * c / U
