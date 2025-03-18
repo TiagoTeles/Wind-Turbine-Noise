@@ -145,12 +145,6 @@ class Blade():
             airfoil : Airfoil -- interpolated airfoil
         """
 
-        # Create the output directory
-        dir_out = os.path.join(os.path.dirname(self.path), "Interpolated")
-
-        if not os.path.exists(dir_out):
-            os.makedirs(dir_out)
-
         # Determine the neighbouring airfoils
         index_1 = self.data[self.data["pos"] <= pos].index.max()
         index_2 = self.data[self.data["pos"] >= pos].index.min()
@@ -177,17 +171,14 @@ class Blade():
             sys.exit(1)
 
         # Determine the absolute paths
-        cwd = os.path.dirname(self.path)
-
         airfoil_path_1 = os.path.join("Airfoils", os.path.basename(airfoil_path_1))
         airfoil_path_2 = os.path.join("Airfoils", os.path.basename(airfoil_path_2))
-        airfoil_path_interpolated = os.path.join("Interpolated", f"{pos}.afl")
-        
+
         # Determine the interpolation fraction
         fraction = np.interp(pos, [r_1, r_2], [0, 1])
 
         # Interpolate the airfoil
-        xfoil = XFoil(XFOIL_PATH, cwd)
-        xfoil.interpolate(airfoil_path_1, airfoil_path_2, airfoil_path_interpolated, fraction)
+        xfoil = XFoil(XFOIL_PATH, os.path.dirname(self.path))
+        path_out = xfoil.interpolate(airfoil_path_1, airfoil_path_2, fraction)
         
-        return Airfoil(os.path.join(os.path.dirname(self.path), airfoil_path_interpolated))
+        return Airfoil(path_out)
