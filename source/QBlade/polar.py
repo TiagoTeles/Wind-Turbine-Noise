@@ -94,7 +94,7 @@ class Polar:
         f.seek(0)
         self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm", "Cl_att", "Cl_sep", "F_st"], \
                                 skiprows=17, delimiter=r"\s+")
-        
+
         # Format the AOA
         self.data["AoA"] = np.radians(self.data["AoA"])
 
