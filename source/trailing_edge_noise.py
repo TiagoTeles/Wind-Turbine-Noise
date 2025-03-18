@@ -10,7 +10,11 @@ Classes:
     None
 
 Functions:
-    TBD TODO
+    delta_star -- Determine the boundary layer displacement thickness
+    f1 -- Determine Eq. 13 from (Roger and Moreau, 2005)
+    f2 -- Determine Eq. 14 from (Roger and Moreau, 2005)
+    farfield_PSD -- Determine the farfield PSD
+    trailing_edge_noise -- Determine the trailing edge noise
 
 Exceptions:
     None
