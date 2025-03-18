@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-02-19
+Date:     2025-03-18
 License:  GNU GPL 3.0
 
-Store data from .trb files.
+Store the data from .trb files.
 
 Classes:
     Turbine
@@ -49,7 +49,6 @@ TURBINE_DICT = {
     "AM_GB":            {"type": float}, # Am constant for the GORMONT-BERG dynamic stall model, [-]
     "TF_ATE":           {"type": float}, # Tf constant for the ATEFLAP dynamic stall model, [-]
     "TP_ATE":           {"type": float}, # Tp constant for the ATEFLAP dynamic stall model, [-]
-    "IAGPARAMS":        {"type":  None}, # Parameters for the IAG DS model (Not implemented)
     "UNSTEADYAERO":     {"type":  bool}, # Include unsteady non-circulatory aerodynamics?
     "2PLIFTDRAG":       {"type":  bool}, # Include the 2 point lift drag correction?
     "HIMMELSKAMP":      {"type":  bool}, # Include the Himmelskamp Stall delay? 
@@ -124,20 +123,19 @@ class Turbine:
         """
 
         self.attributes = {}
+        self.path = path
 
-        # Check if file exists
-        if os.path.isfile(path):
-            self.path = path
-        else:
+        # Check if the file exists
+        if not os.path.isfile(path):
             print(f"No file found at {path}!")
             sys.exit(1)
 
-        # Read file
+        # Read the file
         self.read()
 
-        # Add blade object
-        balde_path = os.path.join(os.path.dirname(self.path), self.attributes["BLADEFILE"])
-        self.blade = Blade(balde_path)
+        # Add the blade object
+        blade_path = os.path.join(os.path.dirname(self.path), self.attributes["BLADEFILE"])
+        self.blade = Blade(blade_path)
 
     def read(self):
         """
@@ -150,43 +148,33 @@ class Turbine:
             None
         """
 
-        # Open file
+        # Open the file
         f = open(self.path, "r", encoding="utf-8")
 
-        # Read attributes
+        # Read the attributes
         for key, value in TURBINE_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
-        self.attributes["BLADEFILE"] = self.attributes["BLADEFILE"].replace("/", "\\")
+        # Format the attributes
+        self.attributes["BLADEFILE"]      = self.attributes["BLADEFILE"].replace("/", "\\")
         self.attributes["STRUCTURALFILE"] = self.attributes["STRUCTURALFILE"].replace("/", "\\")
         self.attributes["CONTROLLERFILE"] = self.attributes["CONTROLLERFILE"].replace("/", "\\")
-        self.attributes["PARAMETERFILE"] = self.attributes["PARAMETERFILE"].replace("/", "\\")
+        self.attributes["PARAMETERFILE"]  = self.attributes["PARAMETERFILE"].replace("/", "\\")
 
         self.attributes["SHAFTTILT"] = np.radians(self.attributes["SHAFTTILT"])
         self.attributes["ROTORCONE"] = np.radians(self.attributes["ROTORCONE"])
         self.attributes["XTILT"]     = np.radians(self.attributes["XTILT"])
         self.attributes["YTILT"]     = np.radians(self.attributes["YTILT"])
 
-        # Close file
+        # Close the file
         f.close()
 
     def write(self, key, value):
 
-        # Set value in attributes
+        # Set the value in the attributes dictionary
         self.attributes[key] = value
 
-        # Set value in file
+        # Set the value in .trb file
         f = open(self.path, "r+", encoding="utf-8")
         write(f, key, value)
         f.close()
-
-
-
-# if __name__ == "__main__":
-
-#     # Create a Turbine instance
-#     turbine = Turbine("data\\turbines\\DTU_10MW\\DTU_10MW_RWT.trb")
-
-#     # Print attributes
-#     for key, value in turbine.attributes.items():
-#         print(f"{key}: {value}")
