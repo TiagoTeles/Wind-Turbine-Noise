@@ -61,8 +61,7 @@ def spectrum(f, spl, n_blades, x):
     plt.plot(f, spl_turbine, label="Turbine", lw=2, ls='-.')
 
     # Set the plot title
-    plt.title(f"SPL spectra of the turbine at a downwind distance of {x:0f} \
-              [m] from the rotor axis. Total SPL: {spl_total:.0f} dB")
+    plt.title(f"SPL spectra of the turbine at a downwind distance of {x:.0f} [m] from the rotor axis. Total SPL: {spl_total:.0f} dB")
 
     # Set axis labels
     plt.xlabel("Frequency, [Hz]")
@@ -82,7 +81,7 @@ def spectrum(f, spl, n_blades, x):
     plt.show()
 
 
-def directivity(spl, n_blades, n_azimuthal, n_observer, h, r):
+def directivity(spl, n_blades, n_azimuthal, n_angles, h, r):
     """
     Plot the directivity pattern about the z-axis.
 
@@ -102,13 +101,15 @@ def directivity(spl, n_blades, n_azimuthal, n_observer, h, r):
     spl_panel = 10 * np.log10(np.sum(np.pow(10, spl/10), axis=0))
 
     # Determine the SPL of each blade
-    spl_blade = 10 * np.log10(np.sum(np.pow(10, spl_panel/10), axis=1))
+    spl_blade = 10 * np.log10(np.sum(np.pow(10, spl_panel/10), axis=0))
 
     # Seperate the azimuthal and observer angle axis
-    spl_blade = spl_blade.reshape(n_azimuthal, n_observer)
+    spl_blade = spl_blade.reshape(n_angles, n_azimuthal)
 
     # Determine the SPL of the turbine
-    p2_turbine = np.pow(10, spl_blade/10) * np.square(P_REF)
+    p2_blade = np.pow(10, spl_blade/10) * np.square(P_REF)
+
+    p2_turbine = np.zeros(p2_blade.shape)
 
     for i in range(n_blades):
 
@@ -116,23 +117,22 @@ def directivity(spl, n_blades, n_azimuthal, n_observer, h, r):
         index = i * n_azimuthal // n_blades
         
         # Add the contribution of each blade
-        p2_turbine += np.roll(p2_turbine, (index, 0), axis=0)
+        p2_turbine += np.roll(p2_blade, index, axis=1)
     
     spl_turbine = 10 * np.log10(p2_turbine / np.square(P_REF))
 
     # Average the SPL over all azimuthal angles
-    spl_total = 10 * np.log10(np.mean(np.pow(10, spl_turbine/10), axis=0))
+    spl_total = 10 * np.log10(np.mean(np.pow(10, spl_turbine/10), axis=1))
 
     # Plot the directivity pattern
-    plt.polar(np.linspace(0, 2*np.pi, n_observer), spl_total)
+    plt.polar(np.linspace(0, 2*np.pi, n_angles), spl_total)
 
     # Set the plot title
-    plt.title(f"Directivity pattern of the turbine at an observer \
-              distance of {r:.0f} [m] and height of {h:.2f}.")
+    plt.title(f"Directivity pattern of the turbine at an observer distance of {r:.0f} [m] and height of {h:.2f} [m].")
 
     # Set axis labels
-    plt.xlabel(r"$\gamma$, [deg]")
-    plt.ylabel("SPL, [dB]")
+    # plt.xlabel(r"$\gamma$, [deg]")
+    # plt.ylabel("SPL, [dB]")
 
     # Set axis scales
     plt.xscale("linear")
@@ -140,19 +140,19 @@ def directivity(spl, n_blades, n_azimuthal, n_observer, h, r):
 
     # Set axis limits
     plt.xlim(0, 2*np.pi)
-    plt.ylim(0, np.max(spl_total))
+    plt.ylim(40, 80)
 
     # Show plot
     plt.show()
 
 
-def map(spl, n_blades, n_azimuthal, x):
+def map(spl, n_panels, n_azimuthal, x):
     """
     Plot the SPL of each panel at each azimuthal angle.
 
     Parameters:
         spl : np.array -- SPL array
-        n_blades : int -- number of blades, [-]
+        n_panels : int -- number of panels, [-]
         n_azimuthal : int -- number of azimuthal angles
         x : float -- observer distance, [m]
     
@@ -164,15 +164,15 @@ def map(spl, n_blades, n_azimuthal, x):
     spl_panel = 10 * np.log10(np.sum(np.pow(10, spl/10), axis=0))
 
     # Determine R and THETA for datapoint
-    r = np.linspace(0, 1, n_blades)
+    r = np.linspace(0, 1, n_panels)
     gamma = np.linspace(0, 2*np.pi, n_azimuthal)
-    
+
     R, THETA = np.meshgrid(r, gamma)
 
     # Plot the heatmap
     fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
-    cs = ax.contourf(THETA, R, spl_panel, levels=21, cmap="rainbow")
-    
+    cs = ax.contourf(THETA, R, spl_panel.T, levels=np.linspace(0, np.max(spl_panel), 21), cmap="rainbow")
+
     # Set the colorbar
     fig.colorbar(cs, label="SPL, [dB]")
 
@@ -181,8 +181,8 @@ def map(spl, n_blades, n_azimuthal, x):
               at a downwind distance of {x:0f} [m].")
 
     # Set axis labels
-    plt.xlabel("$\gamma$, [deg]")
-    plt.ylabel("r/R, [-]")
+    # plt.xlabel(r"$\gamma$, [deg]")
+    # plt.ylabel("r/R, [-]")
 
     # Set axis scales
     plt.xscale("linear")

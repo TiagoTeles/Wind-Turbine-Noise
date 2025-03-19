@@ -90,7 +90,7 @@ class XFoil:
         name_1 = os.path.splitext(os.path.basename(path_1))[0]
         name_2 = os.path.splitext(os.path.basename(path_2))[0]
 
-        name_out = f"{name_1}_{name_2}_f{fraction:.2f}"
+        name_out = f"{name_1}_f{fraction:.2f}"
         path_out = os.path.join("Interpolated", name_out + ".afl")
 
         # Save the interpolated airfoil file
@@ -157,8 +157,8 @@ class XFoil:
 
         # Determine the output file name and path
         name = os.path.splitext(os.path.basename(path))[0]
-        
-        name_out = f"{name}_Re{re:.0f}_Ma{mach:.2f}_AOA{alpha:.2f}"
+
+        name_out = f"Re{re:.2E}_Ma{mach:.2f}_AOA{alpha:.2f}"
         path_out = os.path.join("Boundary_Layer", name_out + ".bl")
 
         # Save the results to a file

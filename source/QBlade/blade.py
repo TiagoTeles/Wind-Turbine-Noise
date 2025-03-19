@@ -97,12 +97,6 @@ class Blade():
             print(f"No Polars found in {polar_dir}!")
             sys.exit(1)
 
-        # Precompute the interpolated airfoils
-        self.data.insert(6, "airfoil", None)
-
-        for i, pos in enumerate(self.data["pos"]):
-            self.data.loc[i, "airfoil"] = self.interpolate(pos)
-
     def read(self):
         """
         Read the .bld file.

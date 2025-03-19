@@ -10,11 +10,12 @@ Classes:
     None
 
 Functions:
-    delta_star -- Determine the boundary layer displacement thickness
-    f1 -- Determine Eq. 13 from (Roger and Moreau, 2005)
-    f2 -- Determine Eq. 14 from (Roger and Moreau, 2005)
-    farfield_PSD -- Determine the farfield PSD
-    trailing_edge_noise -- Determine the trailing edge noise
+    E
+    delta_star
+    f1
+    f2
+    farfield_PSD
+    trailing_edge_noise
 
 Exceptions:
     None
@@ -23,13 +24,27 @@ Exceptions:
 import os
 
 import numpy as np
+import scipy as sp
 
-from misc import E
 from settings import XFOIL_PATH
 from xfoil import XFoil
 
+def E(x):
+    """
+    Determine the combination of Fresnel integrals used in Roger and Moreau (2005).
 
-def delta_star(blade, Re, M, alpha, probe_top, probe_bot, cutoff, it):
+    Arguments:
+        x : np.array -- function argument, [-]
+
+    Returns:
+        E : np.array -- combination of Fresnel integrals, [-]
+    """
+
+    S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
+
+    return C_2 - 1j * S_2
+
+def delta_star(blade, r, Re, M, alpha, probe_top, probe_bot, cutoff, it):
     """
     Determine the boundary layer displacement thickness.
 
@@ -40,7 +55,7 @@ def delta_star(blade, Re, M, alpha, probe_top, probe_bot, cutoff, it):
         alpha : np.array -- angle of attack, [rad]
         probe_top : np.array -- probe location at the top surface, [-]
         probe_bot : np.array -- probe location at the bottom surface, [-]
-        cutoff : float -- thickness cutoff for the airfoil, [-]
+        cutoff : float -- radial cutoff for the airfoil, [-]
         it : int -- number of iterations for XFoil
 
     Returns:
@@ -54,22 +69,17 @@ def delta_star(blade, Re, M, alpha, probe_top, probe_bot, cutoff, it):
     # Iterate through each panel
     for i in range(Re.shape[1]):
 
-        airfoil = blade.data["airfoil"].iloc[i]
+        airfoil = blade.interpolate(r[:, i, :].squeeze())
 
-        if airfoil.thickness(0.5) < cutoff:
+        if r[:, i, :].squeeze() / blade.data["pos"].iloc[-1]  > cutoff:
             
             # Determine the path to the airfoil
             cwd = os.path.dirname(blade.path)
             path = os.path.relpath(airfoil.path, cwd)
 
-            # Determine Re, M, and alpha
-            Re = float(Re[0, i, 0])
-            M = float(M[0, i, 0])
-            alpha = float(alpha[0, i, 0])
-
             # Run XFoil
             xfoil = XFoil(XFOIL_PATH, cwd)
-            top, bot = xfoil.run(path, Re, M, alpha, it=it)
+            top, bot = xfoil.run(path, Re[:, i, :].squeeze(), M[:, i, :].squeeze(), alpha[:, i, :].squeeze(), it=it)
 
             # Determine the displacement thickness at the probe locations
             delta_star_top[:, i, :] = np.interp(probe_top, top["x/c"], top["delta_star"])
@@ -167,13 +177,14 @@ def farfield_PSD(omega, b, c, z, S_0, c_0, I, Pi_0):
     return S_pp
 
 
-def trailing_edge_noise(blade, f, x, y, z, U, Re, alpha, b, c, c_0, rho_0, p_ref, probe_top, probe_bot, cutoff, it):
+def trailing_edge_noise(blade, f, r, x, y, z, U, Re, alpha, b, c, c_0, rho_0, p_ref, probe_top, probe_bot, cutoff, it):
     """
     Determine the trailing edge noise.
 
     Arguments:
         blade : Blade -- blade object
         f : float -- frequency, [Hz]
+        r
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
@@ -187,7 +198,7 @@ def trailing_edge_noise(blade, f, x, y, z, U, Re, alpha, b, c, c_0, rho_0, p_ref
         p_ref : float -- reference pressure, [Pa]
         probe_top : float -- probe location at the top surface, [-]
         probe_bot : float -- probe location at the bottom surface, [-]
-        cutoff : float -- thickness cutoff for the airfoil, [-]
+        cutoff : float -- radial cutoff for the airfoil, [-]
         it : int -- number of iterations for XFoil
 
     Returns:
@@ -197,31 +208,31 @@ def trailing_edge_noise(blade, f, x, y, z, U, Re, alpha, b, c, c_0, rho_0, p_ref
     M = U / c_0
 
     # Determine the boundary layer displacement thicknesses
-    delta_star_top, delta_star_bot = delta_star(blade, Re, M, alpha, probe_top, probe_bot, cutoff, it)
-    delta_star = (delta_star_top + delta_star_bot)/2
+    delta_star_top, delta_star_bot = delta_star(blade, r, Re, M, alpha, probe_top, probe_bot, cutoff, it)
+    d_star = (delta_star_top + delta_star_bot)/2
 
     # Determine F (TODO: IS THIS THE BEST WAY TO CALCULATE F? IS THERE A NEWER MODEL)
     omega = 2 * np.pi * f
     K_x = omega / U
-    omega_tilde = K_x * delta_star
+    omega_tilde = K_x * d_star
 
     F = (33.28 * omega_tilde) / (1 - 5.489 * omega_tilde + 36.74 * np.square(omega_tilde) + 0.1505 * np.pow(omega_tilde, 5))
 
     # Determine the wall pressure spectrum
-    Phi_pp = np.square(0.5 * rho_0 * np.square(U)) * (delta_star / U) * 2E-5 * F
+    Phi_pp = np.square(0.5 * rho_0 * np.square(U)) * (d_star / U) * 2E-5 * F
 
     # Determine the radiation integral
     K = omega / U                                       # TODO: Why not U_c
     beta = np.sqrt(1 - np.square(M))
     K_line = K * (c/2)
     k = omega / c_0
+    S_0 = np.sqrt(np.square(x) + np.square(beta) * (np.square(y) + np.square(z)))
     K_2 = k * y / S_0
     mu_line = K_line * M / np.square(beta)
     alpha_c = 1 / 0.8
     K_1_line = K_line * alpha_c
     K_2_line = K_2 * (c/2)
     kappa_line = np.sqrt(np.square(mu_line) - np.square(K_2_line) / np.square(beta))
-    S_0 = np.sqrt(np.square(x) + np.square(beta) * (np.square(y) + np.square(z)))
     epsilon = np.pow(1 + 1 / (4 * mu_line), -0.5)
 
     if np.any(np.square(mu_line) - np.square(K_2_line) / np.square(beta) < 0):

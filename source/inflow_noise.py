@@ -10,6 +10,7 @@ Classes:
     None
 
 Functions:
+    sears
     intensity
     length_scale
     directivity
@@ -25,7 +26,21 @@ import sys
 
 import numpy as np
 
-from misc import sears
+
+def sears(x):
+    """
+    Determine the approximate Sears function.
+
+    Arguments:
+        x : np.array -- function argument, [-]
+
+    Returns:
+        S : np.array -- Sears function, [-]
+    """
+
+    S = np.sqrt(1 / (2 * np.pi * x + 1 / (1 + 2.4 * x)))
+
+    return S
 
 
 def intensity(z, z_0, model="ZHS"):

@@ -17,6 +17,7 @@ MAX_ITER = 100                                                      # Iteration 
 # Simulation settings
 TURBINE_PATH = "data\\turbines\\DTU_10MW_v1.3\\DTU_10MW_RWT.trb"    # Turbine path
 SIMULATION_PATH = "data\\simulations\\DTU_10MW_RWT.sim"             # Simulation path
+WORKING_DIR = "temp"                                                # Working directory
 N_TIMESTEP = 500                                                    # Number of timesteps, [-]
 TIMESTEP = -1                                                       # Timestep index
 BLADE = 1                                                           # Blade index
