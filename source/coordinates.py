@@ -12,6 +12,16 @@ Classes:
 Functions:
     translate
     rotate
+    global_to_turbine
+    turbine_to_global
+    turbine_to_nacelle
+    nacelle_to_turbine
+    nacelle_to_hub
+    hub_to_nacelle
+    hub_to_blade
+    blade_to_hub
+    blade_to_airfoil
+    airfoil_to_blade
 
 Exceptions:
     None
@@ -271,8 +281,9 @@ def blade_to_airfoil(x_b, pos, chord, twist, offset_x, offset_y, p_axis):
         x_a : np.array -- position in the airfoil coordinate system, [m]
     """
 
-    return np.transpose(rotate(np.pi, 0, np.pi/2 - twist, "xyz"), (0, 2, 1)) @ (x_b - translate(offset_y, offset_x, pos)) \
-           + translate(p_axis*chord, 0, 0)
+    return np.transpose(rotate(np.pi/2, 0, np.pi/2 - twist, "xyz"), (0, 2, 1)) \
+           @ (x_b - translate(offset_y, offset_x, pos)) + translate(p_axis*chord, 0, 0)
+
 
 def airfoil_to_blade(x_a, pos, chord, twist, offset_x, offset_y, p_axis):
     """
@@ -291,5 +302,5 @@ def airfoil_to_blade(x_a, pos, chord, twist, offset_x, offset_y, p_axis):
         x_b : np.array -- position in the blade coordinate system, [m]
     """
 
-    return rotate(np.pi, 0, np.pi/2 - twist, "xyz") @ (x_a - translate(p_axis*chord, 0, 0)) \
+    return rotate(np.pi/2, 0, np.pi/2 - twist, "xyz") @ (x_a - translate(p_axis*chord, 0, 0)) \
            + translate(offset_y, offset_x, pos)
