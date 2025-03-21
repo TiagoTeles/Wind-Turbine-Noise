@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-21
 License:  GNU GPL 3.0
 
 Miscellaneous functions.
@@ -11,12 +11,15 @@ Classes:
 
 Functions:
     octave
+    sears
+    E
 
 Exceptions:
     None
 """
 
 import numpy as np
+import scipy as sp
 
 
 def octave(f_min, f_max, f_ref, base_10=True):
@@ -56,3 +59,35 @@ def octave(f_min, f_max, f_ref, base_10=True):
         f_upper = f_center * np.pow(2, 1/6)
 
     return f_center, f_lower, f_upper
+
+
+def sears(x):
+    """
+    Determine the approximate Sears function.
+
+    Arguments:
+        x : np.array -- function argument, [-]
+
+    Returns:
+        S : np.array -- Sears function, [-]
+    """
+
+    S = np.sqrt(1 / (2 * np.pi * x + 1 / (1 + 2.4 * x)))
+
+    return S
+
+
+def E(x):
+    """
+    Determine the combination of Fresnel integrals.
+
+    Arguments:
+        x : np.array -- function argument, [-]
+
+    Returns:
+        E : np.array -- combination of Fresnel integrals, [-]
+    """
+
+    S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
+
+    return C_2 - 1j * S_2
