@@ -21,11 +21,11 @@ TIMESTEP = -1                                               # Timestep index
 BLADE = 1                                                   # Blade index
 
 # Universal constants
-G = 9.0665                                                  # Gravitational acceleration, [m/s^2]
+G = 9.81                                                    # Gravitational acceleration, [m/s^2]
 KAPPA = 0.41                                                # Von Karman constant, [-]
 
 # Environment properties
-C_0 = 340.0                                                 # Speed of sound, [m/s]
+C_0 = 340.3                                                 # Speed of sound, [m/s]
 RHO_0 = 1.225                                               # Air density, [kg/m^3]
 NU_0 = 1.48E-5                                              # Kinematic viscosity, [m^2/s]
 
