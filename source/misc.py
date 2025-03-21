@@ -13,6 +13,9 @@ Functions:
     octave
     sears
     E
+    surface_roughness
+    turbulence_intensity
+    turbulence_length
 
 Exceptions:
     None
@@ -91,3 +94,67 @@ def E(x):
     S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
 
     return C_2 - 1j * S_2
+
+def surface_roughness(z_ref, U_ref, g, kappa, nu):
+    """
+    Determine the surface roughness length.
+
+    Parameters:
+        z_ref : np.array -- reference height, [m]
+        U_ref : np.array -- reference velocity, [m/s]
+        g : np.array -- gravitational acceleration, [m/s^2]
+        kappa : np.array -- Von Karman constant, [-]
+        nu : np.array -- kinematic viscosity, [m^2/s]
+
+    Returns:
+        z_0 : np.array -- surface roughness length, [m]
+    """
+
+    # Determine the R and A
+    R = z_ref * (kappa * U_ref) / (0.11 * nu)
+    A = 0.018 * np.square(kappa * U_ref) / (g * z_ref)
+
+    # Determine b_n
+    b_n_nu = -1.47 + 0.93 * np.log(R)
+    b_n_alpha = 2.65 - 1.44 * np.log(A) - 0.015 * np.square(np.log(A))
+    b_n = np.pow(np.pow(b_n_nu, -12) + np.pow(b_n_alpha, -12), -1/12)
+
+    # Determine the roughness length
+    z_0 = z_ref / (np.exp(b_n) - 1)
+
+    return z_0
+
+
+def turbulence_intensity(z, z_0):
+    """
+    Determine the turbulence intensity.
+
+    Parameters:
+        z : np.array -- height above the ground, [m]
+        z_0 :  np.array -- surface roughness length, [m]
+
+    Returns:
+        I :  np.array -- turbulence intensity, [-]
+    """
+
+    gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
+    I = gamma * np.log(30/z_0) / np.log(z/z_0)
+
+    return I
+
+
+def turbulence_length(z, z_0):
+    """
+    Determine the turbulence length scale.
+
+    Parameters:
+        z : np.array -- height above the ground, [m]
+        z_0 :  np.array -- surface roughness length, [m]
+
+    Returns:
+        L :  np.array -- turbulence length scale, [m]
+    """
+
+    L = 25 * np.pow(z, 0.35) * np.pow(z_0, -0.063)
+
+    return L
