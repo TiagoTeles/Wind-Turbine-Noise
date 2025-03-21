@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-21
 License:  GNU GPL 3.0
 
 Helper functions for reading and writing QBlade files.
@@ -20,6 +20,7 @@ Exceptions:
 import re
 import sys
 
+
 def read(file, key, arg_type):
     """
     Get the value of a key in a file.
@@ -33,7 +34,7 @@ def read(file, key, arg_type):
         value : Any -- value of the key
     """
 
-    # Go to file start
+    # Go to the beginning of the file
     file.seek(0)
 
     # Search for the key
@@ -68,7 +69,7 @@ def write(file, key, value):
         None
     """
 
-    # Go to file start
+    # Go to the beginning of the file
     file.seek(0)
 
     # Search for the key
