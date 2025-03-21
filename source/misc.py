@@ -95,6 +95,7 @@ def E(x):
 
     return C_2 - 1j * S_2
 
+
 def surface_roughness(z_ref, U_ref, g, kappa, nu):
     """
     Determine the surface roughness length.
