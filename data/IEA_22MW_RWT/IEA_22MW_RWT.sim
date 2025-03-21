@@ -1,11 +1,11 @@
 ----------------------------------------QBlade Simulation Definition File------------------------------------------
 Generated with : QBlade CE v2.0.8.5_beta windows
 Archive Format: 310035
-Time : 15:55:30
+Time : 15:57:26
 Date : 17.03.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-IEA_15MW_MONO_RWT                                  OBJECTNAME         - the name of the simulation object
+IEA_22MW_RWT                                       OBJECTNAME         - the name of the simulation object
 
 ----------------------------------------Simulation Type-------------------------------------------------------------
 1                                                  ISOFFSHORE         - use a number: 0 = onshore; 1 = offshore
@@ -14,8 +14,8 @@ IEA_15MW_MONO_RWT                                  OBJECTNAME         - the name
 multiple turbines can be added by adding multiple definitions encapsulated with TURB_X and END_TURB_X, where X must start at 1
 
 TURB_1
-    IEA_15MW_MONO_RWT/IEA_15MW_MONO_RWT.trb        TURBFILE           - the turbine definition file that is used for this simulation
-    IEA_15MW_MONO_RWT                              TURBNAME           - the (unique) name of the turbine in the simulation (results will appear under this name)
+    IEA_22MW_RWT/IEA_22MW_RWT.trb                  TURBFILE           - the turbine definition file that is used for this simulation
+    IEA_22MW_RWT                                   TURBNAME           - the (unique) name of the turbine in the simulation (results will appear under this name)
     0.00                                           INITIAL_YAW        - the initial turbine yaw in [deg]
     0.00                                           INITIAL_PITCH      - the initial collective blade pitch in [deg]
     0.00                                           INITIAL_AZIMUTH    - the initial azimuthal rotor angle in [deg]
@@ -23,7 +23,7 @@ TURB_1
     5                                              RELAXSTEPS         - the number of initial static structural relaxation steps
     0.000000                                       RELAXTIMESTEP      - the timestep for the initial static structural relaxation steps [s]
     0                                              PRESCRIBETYPE      - rotor RPM prescribe type (0 = ramp-up; 1 = whole sim; 2 = no RPM prescibed) 
-    6.315                                          RPMPRESCRIBED      - the prescribed rotor RPM [-]
+    5.380                                          RPMPRESCRIBED      - the prescribed rotor RPM [-]
     5                                              STRITERATIONS      - number of iterations for the time integration (used when integrator is HHT or Euler)
     0                                              MODNEWTONITER      - use the modified newton iteration?
     1                                              INCLUDEAERO        - include aerodynamic forces?
@@ -41,7 +41,7 @@ TURB_1
 END_TURB_1
 
 ----------------------------------------Simulation Settings-------------------------------------------------------
-0.052784                                           TIMESTEP           - the timestep size in [s]
+0.061958                                           TIMESTEP           - the timestep size in [s]
 1000                                               NUMTIMESTEPS       - the number of timesteps
 20.000                                             RAMPUP             - the rampup time for the structural model
 0.000                                              ADDDAMP            - the initial time with additional damping
@@ -61,11 +61,11 @@ true                                               WINDAUTOSHIFT      - the wind
 0.000                                              SHEAREXP           - the shear exponent if using a power law profile, if a windfield is used these values are used to calculate the mean wake convection velocities
 0.010                                              ROUGHLENGTH        - the roughness length if using a log profile, if a windfield is used these values are used to calculate the mean wake convection velocities
 0.00                                               DIRSHEAR           - a value for the directional shear in deg/m
-129.39                                             REFHEIGHT          - the reference height, used to construct the BL profile
+149.39                                             REFHEIGHT          - the reference height, used to construct the BL profile
 
 ----------------------------------------Ocean Depth, Waves and Currents------------------------------------------- 
 the following parameters only need to be set if ISOFFSHORE = 1
-30.00                                              WATERDEPTH         - the water depth
+34.00                                              WATERDEPTH         - the water depth
                                                    WAVEFILE           - the path to the wave file, leave blank if unused
 1                                                  WAVESTRETCHING     - the type of wave stretching, 0 = vertical, 1 = wheeler, 2 = extrapolation, 3 = none
 10000.00                                           SEABEDSTIFF        - the vertical seabed stiffness [N/m^3]

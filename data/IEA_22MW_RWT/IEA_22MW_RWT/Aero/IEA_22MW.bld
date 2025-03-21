@@ -5,7 +5,7 @@ Time : 11:17:23
 Date : 05.03.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-IEA 22MW Offshore Wind Turbine in Fixed Bottom Configuration OBJECTNAME         - the name of the blade object
+IEA_22MW                                           OBJECTNAME         - the name of the blade object
 
 ----------------------------------------Parameters------------------------------------------------------------------
 HAWT                                               ROTORTYPE          - the rotor type

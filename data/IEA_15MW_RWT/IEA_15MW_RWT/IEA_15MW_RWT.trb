@@ -5,10 +5,10 @@ Time : 11:15:48
 Date : 05.03.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-IEA_15MW_MONO_RWT                                  OBJECTNAME         - the name of the turbine object
+IEA_15MW_RWT                                       OBJECTNAME         - the name of the turbine object
 
 ----------------------------------------Rotor Definition------------------------------------------------------------
-Aero/IEA_15MW_RWT.bld                              BLADEFILE          - the path of the blade file that is used in this turbine definition
+Aero/IEA_15MW.bld                                  BLADEFILE          - the path of the blade file that is used in this turbine definition
 0                                                  TURBTYPE           - the turbine type (0 = HAWT or 1 = VAWT)
 3                                                  NUMBLADES          - the number of blades (a Structural Model overrides this value)
 0                                                  ROTORCONFIG        - the rotor configuration (0 = UPWIND or 1 = DOWNWIND)

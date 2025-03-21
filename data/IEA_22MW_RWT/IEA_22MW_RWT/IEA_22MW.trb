@@ -5,10 +5,10 @@ Time : 11:17:24
 Date : 05.03.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
-IEA_22MW_Offshore_Wind_Turbine_in_Fixed_Bottom_Configuration_Turb OBJECTNAME         - the name of the turbine object
+IEA_22MW_RWT                                       OBJECTNAME         - the name of the turbine object
 
 ----------------------------------------Rotor Definition------------------------------------------------------------
-Aero/IEA_22MW_Offshore_Wind_Turbine_in_Fixed_Bottom_Configuration.bld BLADEFILE          - the path of the blade file that is used in this turbine definition
+Aero/IEA_22MW.bld                                  BLADEFILE          - the path of the blade file that is used in this turbine definition
 0                                                  TURBTYPE           - the turbine type (0 = HAWT or 1 = VAWT)
 3                                                  NUMBLADES          - the number of blades (a Structural Model overrides this value)
 0                                                  ROTORCONFIG        - the rotor configuration (0 = UPWIND or 1 = DOWNWIND)
