@@ -85,15 +85,14 @@ class Polar:
         # Read the attributes
         for key, value in POLAR_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
-        
+
         # Format the attributes
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
         self.attributes["THICKNESS"] /= 100
 
         # Read the AOA, CL, CD, and CM
         f.seek(0)
-        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm", "Cl_att", "Cl_sep", "F_st"], \
-                                skiprows=17, delimiter=r"\s+")
+        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm"], skiprows=17, delimiter=r"\s+")
 
         # Format the AOA
         self.data["AoA"] = np.radians(self.data["AoA"])
