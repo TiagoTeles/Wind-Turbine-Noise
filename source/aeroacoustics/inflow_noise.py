@@ -22,7 +22,7 @@ Exceptions:
 
 import numpy as np
 
-from misc import sears, turbulence_intensity, turbulence_length_scale
+from misc import sears
 
 
 def amiet(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
