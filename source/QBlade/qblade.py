@@ -1,13 +1,13 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-21
 License:  GNU GPL 3.0
 
 Manage the QBlade shared library.
 
 Classes:
-    Turbine
+    QBlade
 
 Functions:
     None
@@ -32,10 +32,10 @@ class QBlade:
     Methods:
         __init__: initialise and load the QBlade shared library
         load_library: load the shared library and dynamically bind all functions
-        unload_library: close QBlade instance
+        unload_library: close the QBlade instance
     """
 
-    def __init__(self, shared_lib_path: str):
+    def __init__(self, shared_lib_path):
         """
         Initialise and load the QBlade shared library.
         
@@ -105,7 +105,6 @@ class QBlade:
         # Load the shared library
         try:
             self.lib = CDLL(self.lib_path)
-            print(f"Successfully loaded library at {self.lib_path}!")
 
         except Exception as e:
             raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}") from e
@@ -124,7 +123,6 @@ class QBlade:
         # Call setLibraryPath after the library is loaded
         try:
             self.setLibraryPath(self.lib_path.encode("utf-8"))
-            print(f"Library path set to {self.lib_path}!")
 
         except Exception as e:
             raise RuntimeError(f"Failed to set library path: {e}") from  e
@@ -143,7 +141,6 @@ class QBlade:
         # Close the QBlade instance
         try:
             self.closeInstance()
-            print("QBlade instance closed!")
 
         except Exception as e:
             raise RuntimeError(f"Failed to close QBlade instance: {e}") from e
@@ -152,4 +149,3 @@ class QBlade:
         if self.lib:
             del self.lib
             self.lib = None
-            print("Library unloaded successfully!")
