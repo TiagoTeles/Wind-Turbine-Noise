@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-21
 License:  GNU GPL 3.0
 
-Store the data from .sim files.
+Store the data from .sim files and run QBlade.
 
 Classes:
     Simulation
@@ -22,6 +22,7 @@ import sys
 import numpy as np
 
 from QBlade.misc import read, write
+from QBlade.qblade import QBlade
 from QBlade.turbine import Turbine
 
 
@@ -110,17 +111,17 @@ SIMULATION_DICT = {
 
 class Simulation:
     """
-    A class to store the simulation data.
+    A class to store the simulation data and run QBlade.
 
     Methods:
         __init__ -- initialise the Simulation class
         read -- read the .sim file
-        write -- write to the .sim file
+        initialise -- initialise the QBlade simulation
+        run -- run the QBlade simulation
+        close -- close the QBlade simulation
 
     Attributes:
-        attributes : dict -- dictionary of attributes
-        path : str -- path to the .trb file
-        turbine : Turbine -- turbine object
+        qblade : QBlade -- QBlade library
     """
 
     def __init__(self, path):
@@ -135,7 +136,12 @@ class Simulation:
         """
 
         self.attributes = {}
-        self.path = path
+        self.cl_device = None
+        self.dll_path = None
+        self.group_size = None
+        self.n_timestep = None
+        self.qblade = None
+        self.sim_path = path
 
         # Check if the file exists
         if not os.path.isfile(path):
@@ -146,7 +152,7 @@ class Simulation:
         self.read()
 
         # Add the Turbine object
-        turbine_path = os.path.join(os.path.dirname(self.path), self.attributes["TURBFILE"])
+        turbine_path = os.path.join(os.path.dirname(self.sim_path), self.attributes["TURBFILE"])
         self.turbine = Turbine(turbine_path)
 
     def read(self):
@@ -161,44 +167,109 @@ class Simulation:
         """
 
         # Open the file
-        f = open(self.path, "r", encoding="utf-8")
+        f = open(self.sim_path, "r", encoding="utf-8")
 
         # Read the attributes
         for key, value in SIMULATION_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
         # Format the attributes
-        self.attributes["TURBFILE"]      = self.attributes["TURBFILE"].replace("/", "\\")
-        self.attributes["EVENTFILE"]     = self.attributes["EVENTFILE"].replace("/", "\\")
-        self.attributes["LOADINGFILE"]   = self.attributes["LOADINGFILE"].replace("/", "\\")
-        self.attributes["SIMFILE"]       = self.attributes["SIMFILE"].replace("/", "\\")
-        self.attributes["MOTIONFILE"]    = self.attributes["MOTIONFILE"].replace("/", "\\")
-        self.attributes["WNDNAME"]       = self.attributes["WNDNAME"].replace("/", "\\")
-        self.attributes["WAVEFILE"]      = self.attributes["WAVEFILE"].replace("/", "\\")
+        self.attributes["TURBFILE"] = self.attributes["TURBFILE"].replace("/", "\\")
+        self.attributes["EVENTFILE"] = self.attributes["EVENTFILE"].replace("/", "\\")
+        self.attributes["LOADINGFILE"] = self.attributes["LOADINGFILE"].replace("/", "\\")
+        self.attributes["SIMFILE"] = self.attributes["SIMFILE"].replace("/", "\\")
+        self.attributes["MOTIONFILE"] = self.attributes["MOTIONFILE"].replace("/", "\\")
+        self.attributes["WNDNAME"] = self.attributes["WNDNAME"].replace("/", "\\")
+        self.attributes["WAVEFILE"] = self.attributes["WAVEFILE"].replace("/", "\\")
         self.attributes["MOORINGSYSTEM"] = self.attributes["MOORINGSYSTEM"].replace("/", "\\")
 
-        self.attributes["INITIAL_YAW"]     = np.radians(self.attributes["INITIAL_YAW"])
-        self.attributes["INITIAL_PITCH"]   = np.radians(self.attributes["INITIAL_PITCH"])
+        self.attributes["INITIAL_YAW"] = np.radians(self.attributes["INITIAL_YAW"])
+        self.attributes["INITIAL_PITCH"] = np.radians(self.attributes["INITIAL_PITCH"])
         self.attributes["INITIAL_AZIMUTH"] = np.radians(self.attributes["INITIAL_AZIMUTH"])
-        self.attributes["GLOBROT_X"]       = np.radians(self.attributes["GLOBROT_X"])
-        self.attributes["GLOBROT_Y"]       = np.radians(self.attributes["GLOBROT_Y"])
-        self.attributes["GLOBROT_Z"]       = np.radians(self.attributes["GLOBROT_Z"])
-        self.attributes["DIRSHEAR"]        = np.radians(self.attributes["DIRSHEAR"])
-        self.attributes["SURF_CURR_DIR"]   = np.radians(self.attributes["SURF_CURR_DIR"])
-        self.attributes["SUB_CURR_DIR"]    = np.radians(self.attributes["SUB_CURR_DIR"])
-        self.attributes["SHORE_CURR_DIR"]  = np.radians(self.attributes["SHORE_CURR_DIR"])
-        self.attributes["HORANGLE"]        = np.radians(self.attributes["HORANGLE"])
-        self.attributes["VERTANGLE"]       = np.radians(self.attributes["VERTANGLE"])
+        self.attributes["GLOBROT_X"] = np.radians(self.attributes["GLOBROT_X"])
+        self.attributes["GLOBROT_Y"] = np.radians(self.attributes["GLOBROT_Y"])
+        self.attributes["GLOBROT_Z"] = np.radians(self.attributes["GLOBROT_Z"])
+        self.attributes["DIRSHEAR"] = np.radians(self.attributes["DIRSHEAR"])
+        self.attributes["SURF_CURR_DIR"] = np.radians(self.attributes["SURF_CURR_DIR"])
+        self.attributes["SUB_CURR_DIR"] = np.radians(self.attributes["SUB_CURR_DIR"])
+        self.attributes["SHORE_CURR_DIR"] = np.radians(self.attributes["SHORE_CURR_DIR"])
+        self.attributes["HORANGLE"] = np.radians(self.attributes["HORANGLE"])
+        self.attributes["VERTANGLE"] = np.radians(self.attributes["VERTANGLE"])
 
         # Close the file
         f.close()
 
-    def write(self, key, value):
+    def initialise(self, path, cl_device, group_size):
+        """
+        Initialise the QBlade simulation.
 
-        # Set the value in the attributes dictionary
-        self.attributes[key] = value
+        Arguments:
+            path : str -- path to the QBlade.dll file
+            cl_device : int -- OpenCL device
+            group_size : int -- OpenCL group size
 
-        # Set the value in the .sim file
-        f = open(self.path, "r+", encoding="utf-8")
-        write(f, key, value)
-        f.close()
+        Returns:
+            None
+        """
+
+        self.dll_path = path
+        self.cl_device = cl_device
+        self.group_size = group_size
+
+        # Load the QBlade library
+        self.qblade = QBlade(path)
+        self.qblade.createInstance(cl_device, group_size)
+
+        # Setup the simulation
+        self.qblade.loadSimDefinition(self.sim_path.encode("utf-8"))
+        self.qblade.initializeSimulation()
+
+    def run(self, n_timestep):
+        """
+        Run the QBlade simulation.
+
+        Arguments:
+            n_timestep : int -- number of timesteps
+
+        Returns:
+            None
+        """
+
+        self.n_timestep = n_timestep
+
+        # Run the simulation
+        for i in range(n_timestep):
+
+            # Advance the simulation one timestep
+            success = self.qblade.advanceTurbineSimulation()
+
+            # Ensure the simulation step was successful
+            if not success:
+                print(f"Simulation failed at timestep {i}!")
+                sys.exit(1)
+
+        # Save the simulation results
+        results_dir = os.path.dirname(self.sim_path)
+        results_name = os.path.splitext(os.path.basename(self.sim_path))[0]
+
+        self.qblade.exportResults(0, results_dir.encode("utf-8"), results_name.encode("utf-8"), b"")
+
+        # # Load the results
+        # results_path = os.path.join(results_dir, results_name + ".txt")
+
+        # return results
+
+    def close(self):
+        """
+        Close the QBlade simulation.
+
+        Arguments:
+            None
+
+        Returns:
+            None
+        """
+
+        # Unload the QBlade library
+        self.qblade.unload_library()
+        self.qblade = None
