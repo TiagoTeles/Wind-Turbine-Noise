@@ -20,15 +20,14 @@ N_TIMESTEP = 500                                            # Number of timestep
 TIMESTEP = -1                                               # Timestep index
 BLADE = 1                                                   # Blade index
 
-# Aeroacoustic settings
-RADIAL_CUTOFF = 0.4                                         # TBLTE noise radial cutoff, [-]
-SPL_CORRECTION = True                                       # Use inflow noise 10dB SPL correction?
-PROBE_TOP = 0.975                                           # Suction side probe location, [-]
-PROBE_BOT = 0.950                                           # Pressure side probe location, [-]
+# Universal constants
+G = 9.0665                                                  # Gravitational acceleration, [m/s^2]
+KAPPA = 0.41                                                # Von Karman constant, [-]
 
-# Atmospheric settings
+# Environment properties
 C_0 = 340.0                                                 # Speed of sound, [m/s]
 RHO_0 = 1.225                                               # Air density, [kg/m^3]
+NU_0 = 1.48E-5                                              # Kinematic viscosity, [m^2/s]
 
 # Acoustic settings
 P_REF = 2E-5                                                # Reference pressure, [Pa]
@@ -36,3 +35,9 @@ F_MIN = 20                                                  # Minimum frequency,
 F_MAX = 20000                                               # Maximum frequency, [Hz]
 F_REF = 1000                                                # Reference frequency, [Hz]
 BASE_10 = True                                              # Use base 10?
+
+# Aeroacoustic settings
+SPL_CORRECTION = True                                       # Use inflow noise 10dB SPL correction?
+RADIAL_CUTOFF = 0.4                                         # TBLTE noise radial cutoff, [-]
+PROBE_TOP = 0.975                                           # Suction side probe location, [-]
+PROBE_BOT = 0.950                                           # Pressure side probe location, [-]
