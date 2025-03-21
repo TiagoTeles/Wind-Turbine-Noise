@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-21
 License:  GNU GPL 3.0
 
 Store the data from .bld files.
@@ -80,22 +80,14 @@ class Blade():
         # Add the airfoil objects
         airfoil_dir = os.path.join(os.path.dirname(path), "Airfoils")
 
-        for f in os.listdir(airfoil_dir):
-            self.airfoils.append(Airfoil(os.path.join(airfoil_dir, f)))
-
-        if not airfoil_dir:
-            print(f"No Airfoils found in {airfoil_dir}!")
-            sys.exit(1)
+        for airfoil_name in os.listdir(airfoil_dir):
+            self.airfoils.append(Airfoil(os.path.join(airfoil_dir, airfoil_name)))
 
         # Add the polar objects
         polar_dir = os.path.join(os.path.dirname(path), "Polars")
 
-        for f in os.listdir(polar_dir):
-            self.polars.append(Polar(os.path.join(polar_dir, f)))
-
-        if not polar_dir:
-            print(f"No Polars found in {polar_dir}!")
-            sys.exit(1)
+        for polar_name in os.listdir(polar_dir):
+            self.polars.append(Polar(os.path.join(polar_dir, polar_name)))
 
     def read(self):
         """
@@ -130,7 +122,7 @@ class Blade():
 
     def interpolate(self, pos):
         """
-        Determine the interpolated airfoil.
+        Determine the airfoil shape at a given position.
 
         Arguments:
             pos : float -- position along the blade, [m]
@@ -142,9 +134,6 @@ class Blade():
         # Determine the neighbouring airfoils
         index_1 = self.data[self.data["pos"] <= pos].index.max()
         index_2 = self.data[self.data["pos"] >= pos].index.min()
-
-        r_1 = self.data["pos"].iloc[index_1]
-        r_2 = self.data["pos"].iloc[index_2]
 
         polar_path_1  = self.data["polar_file"].iloc[index_1]
         polar_path_2 = self.data["polar_file"].iloc[index_2]
@@ -169,10 +158,13 @@ class Blade():
         airfoil_path_2 = os.path.join("Airfoils", os.path.basename(airfoil_path_2))
 
         # Determine the interpolation fraction
-        fraction = np.interp(pos, [r_1, r_2], [0, 1])
+        pos_1 = self.data["pos"].iloc[index_1]
+        pos_2 = self.data["pos"].iloc[index_2]
+
+        fraction = np.interp(pos, [pos_1, pos_2], [0, 1])
 
         # Interpolate the airfoil
         xfoil = XFoil(XFOIL_PATH, os.path.dirname(self.path))
         path_out = xfoil.interpolate(airfoil_path_1, airfoil_path_2, fraction)
-        
+
         return Airfoil(path_out)
