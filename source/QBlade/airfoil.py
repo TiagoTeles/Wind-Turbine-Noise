@@ -94,7 +94,7 @@ class Airfoil:
             tc : float -- thickness of the airfoil
         """
 
-        # Seperate the airfoil into top and bottom surfaces
+        # Separate the airfoil into top and bottom surfaces
         le_index = self.data["x/c"].idxmin()
         top = self.data.iloc[:le_index + 1][::-1]
         bot = self.data.iloc[le_index:]
