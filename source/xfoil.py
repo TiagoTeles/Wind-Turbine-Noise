@@ -72,6 +72,11 @@ class XFoil:
             path_out : str -- interpolated airfoil file path
         """
 
+        # Check if the file paths are too long
+        if len(path_1) > 64 or len(path_2) > 64:
+            print("File paths are too long!")
+            sys.exit(1)
+
         # Select the INTE environment
         self.process.stdin.write("INTE\n")
 
@@ -90,12 +95,17 @@ class XFoil:
         name_1 = os.path.splitext(os.path.basename(path_1))[0]
         name_2 = os.path.splitext(os.path.basename(path_2))[0]
 
-        name_out = f"{name_1}_f{fraction:.2f}"
-        path_out = os.path.join("Interpolated", name_out + ".afl")
+        name_out = f"{name_1}_{name_2}_f{fraction:.2f}"
+        path_out = os.path.join("Airfoils", name_out + ".afl")
+
+        # Check if the file path is too long
+        if len(path_out) > 64:
+            print("File path is too long!")
+            sys.exit(1)
 
         # Save the interpolated airfoil file
-        if not os.path.exists(os.path.join(self.cwd, "Interpolated")):
-            os.makedirs(os.path.join(self.cwd, "Interpolated"))
+        if not os.path.exists(os.path.join(self.cwd, "Airfoils")):
+            os.makedirs(os.path.join(self.cwd, "Airfoils"))
 
         self.process.stdin.write(f"{name_out}\n")
         self.process.stdin.write("PCOP\n")
@@ -137,6 +147,11 @@ class XFoil:
             bl_bot : pandas.DataFrame -- boundary layer data on the bottom surface
         """
 
+        # Check if the file path is too long
+        if len(path) > 64:
+            print("File path is too long!")
+            sys.exit(1)
+
         # Load the airfoil file
         self.process.stdin.write(f"LOAD {path}\n")
 
@@ -156,14 +171,17 @@ class XFoil:
         self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
         # Determine the output file name and path
-        name = os.path.splitext(os.path.basename(path))[0]
+        name_out = f"Re{re:.2E}_M{mach:.2f}_AOA{alpha:.2f}"
+        path_out = os.path.join("BL", name_out + ".dat")
 
-        name_out = f"Re{re:.2E}_Ma{mach:.2f}_AOA{alpha:.2f}"
-        path_out = os.path.join("Boundary_Layer", name_out + ".bl")
+        # Check if the file path is too long
+        if len(path_out) > 64:
+            print("File path is too long!")
+            sys.exit(1)
 
         # Save the results to a file
-        if not os.path.exists(os.path.join(self.cwd, "Boundary_Layer")):
-            os.makedirs(os.path.join(self.cwd, "Boundary_Layer"))
+        if not os.path.exists(os.path.join(self.cwd, "BL")):
+            os.makedirs(os.path.join(self.cwd, "BL"))
 
         self.process.stdin.write(f"DUMP {path_out}\n")
         self.process.stdin.write("\n")
