@@ -20,8 +20,9 @@ import os
 import sys
 
 import numpy as np
+import pandas as pd
 
-from QBlade.misc import read, write
+from QBlade.misc import read
 from QBlade.qblade import QBlade
 from QBlade.turbine import Turbine
 
@@ -248,16 +249,110 @@ class Simulation:
                 print(f"Simulation failed at timestep {i}!")
                 sys.exit(1)
 
-        # Save the simulation results
+        # Determine the results path
         results_dir = os.path.dirname(self.sim_path)
         results_name = os.path.splitext(os.path.basename(self.sim_path))[0]
 
+        # Save the simulation results
         self.qblade.exportResults(0, results_dir.encode("utf-8"), results_name.encode("utf-8"), b"")
 
-        # # Load the results
-        # results_path = os.path.join(results_dir, results_name + ".txt")
+    def results(self, timestep, blade):
+        """
+        Read the simulation results.
 
-        # return results
+        Arguments:
+            timestep : int -- timestep index
+            blade : int -- blade index
+
+        Returns:
+            results : dict -- dictionary of simulation results
+        """
+        # Determine the results path
+        results_dir = os.path.dirname(self.sim_path)
+        results_name = os.path.splitext(os.path.basename(self.sim_path))[0]
+        results_path = os.path.join(results_dir, results_name + ".txt")
+
+        # Read the simulation results
+        data = pd.read_csv(results_path, skiprows=2, delimiter="\t").iloc[timestep]
+        results = {}
+
+        # Read the turbine attributes
+        pitch = np.radians(data[f"Pitch_Angle_Blade_{blade}_[deg]"])
+        yaw = np.radians(data["Yaw_Angle_[deg]"])
+
+        results["pitch"] = pitch
+        results["yaw"] = yaw
+
+        # Read the blade distributions
+        n_panels = self.turbine.attributes["NUMPANELS"]
+
+        aoa = np.zeros(n_panels)
+        pos = np.zeros(n_panels)
+        U = np.zeros(n_panels)
+        Re = np.zeros(n_panels)
+
+        for i in range(n_panels):
+            aoa[i] = np.radians(data[f"Angle_of_Attack_at_0.25c_Blade_{blade}_PAN_{i}_[deg]"])
+            pos[i] = data[f"Radius_Blade_{blade}_PAN_{i}_[m]"]
+            U[i] = data[f"Total_Velocity_Blade_{blade}_PAN_{i}_[m/s]"]
+            Re[i] = data[f"Reynolds_Number_Blade_{blade}_PAN_{i}_[-]"]
+
+        results["aoa"] = aoa
+        results["pos"] = pos
+        results["U"] = U
+        results["Re"] = Re
+
+        # Interpolate the blade distributions
+        radiuses = np.array(self.turbine.blade.data["pos"])
+        chords = np.array(self.turbine.blade.data["chord"])
+        twists    = np.array(self.turbine.blade.data["twist"])
+        offsets_x = np.array(self.turbine.blade.data["offset_x"])
+        offsets_y = np.array(self.turbine.blade.data["offset_y"])
+        p_axes   = np.array(self.turbine.blade.data["p_axis"])
+
+        chord = np.interp(pos, radiuses, chords)
+        twist = np.interp(pos, radiuses, twists)
+        offset_x = np.interp(pos, radiuses, offsets_x)
+        offset_y = np.interp(pos, radiuses, offsets_y)
+        p_axis = np.interp(pos, radiuses, p_axes)
+
+        results["chord"] = chord
+        results["twist"] = twist
+        results["offset_x"] = offset_x
+        results["offset_y"] = offset_y
+        results["p_axis"] = p_axis
+
+        # Determine the panel spanwise distributions
+        if self.turbine.attributes["DISCTYPE"] == 0:
+            spans = np.diff(radiuses)
+            span = np.interp(pos, radiuses, spans)
+
+        elif self.turbine.attributes["DISCTYPE"] == 1:
+            span = np.ones(n_panels) * (radiuses[-1] - radiuses[0]) / n_panels
+
+        elif self.turbine.attributes["DISCTYPE"] == 2:
+            r_virtual = np.concat((np.array([radiuses[0]]), pos, np.array([radiuses[-1]])))
+            span = (r_virtual[2:n_panels+2] - r_virtual[0:n_panels]) / 2
+
+        else:
+            print("Invalid DISCTYPE!")
+            sys.exit(1)
+
+        results["span"] = span
+
+        # Determine the airfoil thickness distributions
+        tc_01 = np.zeros(n_panels)
+        tc_10 = np.zeros(n_panels)
+
+        for i in range(n_panels):
+            airfoil = self.turbine.blade.interpolate(pos[i])
+            tc_01[i] = airfoil.thickness(0.01)
+            tc_10[i] = airfoil.thickness(0.10)
+
+        results["tc_01"] = tc_01
+        results["tc_10"] = tc_10
+
+        return results
 
     def close(self):
         """
