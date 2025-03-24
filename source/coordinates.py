@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-12
+Date:     2025-03-42
 License:  GNU GPL 3.0
 
-Coordinate transformations.
+Coordinate system transformations.
 
 Classes:
     None
@@ -42,11 +42,11 @@ def translate(p_x, p_y, p_z):
         p_z : np.array -- translation in the z direction, [m]
 
     Returns:
-        vector : np.array -- Nx3x1 translation vector
+        vector : np.array -- translation vector
     """
 
     if isinstance(p_x, np.ndarray):
-        N = p_x.shape
+        N = p_x.shape[0]
 
     elif isinstance(p_y, np.ndarray):
         N = p_y.shape
@@ -64,8 +64,9 @@ def translate(p_x, p_y, p_z):
     v_t = np.array([[p_x],
                     [p_y],
                     [p_z]])
-    
+
     return np.transpose(v_t, (2, 0, 1))
+
 
 def rotate(r_x, r_y, r_z, order):
     """
@@ -135,6 +136,7 @@ def rotate(r_x, r_y, r_z, order):
         print("Invalid order of rotation!")
         sys.exit(1)
 
+
 def global_to_turbine(x_g, p_x, p_y, p_z, r_x, r_y, r_z):
     """
     Returns the turbine coordinates from the global coordinates.
@@ -153,6 +155,7 @@ def global_to_turbine(x_g, p_x, p_y, p_z, r_x, r_y, r_z):
     """
 
     return np.transpose(rotate(r_x, r_y, r_z, "zyx"), (0, 2, 1)) @ (x_g - translate(p_x, p_y, p_z))
+
 
 def turbine_to_global(x_t, p_x, p_y, p_z, r_x, r_y, r_z):
     """
@@ -173,6 +176,7 @@ def turbine_to_global(x_t, p_x, p_y, p_z, r_x, r_y, r_z):
 
     return rotate(r_x, r_y, r_z, "zyx") @ x_t + translate(p_x, p_y, p_z)
 
+
 def turbine_to_nacelle(x_t, tower_height, shaft_tilt, yaw):
     """
     Returns the nacelle coordinates from the turbine coordinates.
@@ -188,6 +192,7 @@ def turbine_to_nacelle(x_t, tower_height, shaft_tilt, yaw):
     """
 
     return np.transpose(rotate(0, shaft_tilt, yaw, "xyz"), (0, 2, 1)) @ (x_t - translate(0, 0, tower_height))
+
 
 def nacelle_to_turbine(x_n, tower_height, shaft_tilt, yaw):
     """
@@ -205,6 +210,7 @@ def nacelle_to_turbine(x_n, tower_height, shaft_tilt, yaw):
 
     return rotate(0, shaft_tilt, yaw, "xyz") @ x_n + translate(0, 0, tower_height)
 
+
 def nacelle_to_hub(x_n, overhang, azimuth):
     """
     Returns the hub coordinates from the nacelle coordinates.
@@ -218,7 +224,9 @@ def nacelle_to_hub(x_n, overhang, azimuth):
         x_h : np.array -- position in the hub coordinate system, [m]
     """
 
-    return np.transpose(rotate(azimuth, 0, 0, "xyz"), (0, 2, 1)) @ (x_n - translate(-overhang, 0, 0))
+    return np.transpose(rotate(azimuth, 0, 0, "xyz"), (0, 2, 1)) \
+           @ (x_n - translate(-overhang, 0, 0))
+
 
 def hub_to_nacelle(x_h, overhang, azimuth):
     """
@@ -234,6 +242,7 @@ def hub_to_nacelle(x_h, overhang, azimuth):
     """
 
     return rotate(azimuth, 0, 0, "xyz") @ x_h + translate(-overhang, 0, 0)
+
 
 def hub_to_blade(x_h, cone, pitch):
     """
