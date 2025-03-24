@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-03-24
 License:  GNU GPL 3.0
 
 Plot the results of the aeroacoustic calculations.
@@ -21,16 +21,16 @@ Exceptions:
 import matplotlib.pyplot as plt
 import numpy as np
 
-from settings import *
 
-
-def spectrum(f, spl, n_blades, x):
+def spectrum(f, spl, f_min, f_max, n_blades, x):
     """
     Plot the SPL spectrum at the rotor axis.
 
     Parameters:
         f : np.array -- frequency array
         spl : np.array -- SPL array
+        f_min : float -- minimum frequency, [Hz]
+        f_max : float -- maximum frequency, [Hz]
         n_blades : int -- number of blades, [-]
         x : float -- observer distance, [m]
 
@@ -61,7 +61,8 @@ def spectrum(f, spl, n_blades, x):
     plt.plot(f, spl_turbine, label="Turbine", lw=2, ls='-.')
 
     # Set the plot title
-    plt.title(f"SPL spectra of the turbine at a downwind distance of {x:.0f} [m] from the rotor axis. Total SPL: {spl_total:.0f} dB")
+    plt.title(f"SPL spectra of the wind turbine at a downwind distance of {x:.0f} [m] from the "
+              + f"rotor axis.\n Total SPL: {spl_total:.0f} dB.")
 
     # Set axis labels
     plt.xlabel("Frequency, [Hz]")
@@ -72,7 +73,7 @@ def spectrum(f, spl, n_blades, x):
     plt.yscale("linear")
 
     # Set axis limits
-    plt.xlim(F_MIN, F_MAX)
+    plt.xlim(f_min, f_max)
     plt.ylim(0, spl_total)
 
     # Show plot
@@ -107,7 +108,7 @@ def directivity(spl, n_blades, n_azimuthal, n_angles, h, r):
     spl_blade = spl_blade.reshape(n_angles, n_azimuthal)
 
     # Determine the SPL of the turbine
-    p2_blade = np.pow(10, spl_blade/10) * np.square(P_REF)
+    p2_blade = np.pow(10, spl_blade/10)
 
     p2_turbine = np.zeros(p2_blade.shape)
 
@@ -119,7 +120,7 @@ def directivity(spl, n_blades, n_azimuthal, n_angles, h, r):
         # Add the contribution of each blade
         p2_turbine += np.roll(p2_blade, index, axis=1)
     
-    spl_turbine = 10 * np.log10(p2_turbine / np.square(P_REF))
+    spl_turbine = 10 * np.log10(p2_turbine)
 
     # Average the SPL over all azimuthal angles
     spl_total = 10 * np.log10(np.mean(np.pow(10, spl_turbine/10), axis=1))
@@ -130,23 +131,15 @@ def directivity(spl, n_blades, n_azimuthal, n_angles, h, r):
     # Set the plot title
     plt.title(f"Directivity pattern of the turbine at an observer distance of {r:.0f} [m] and height of {h:.2f} [m].")
 
-    # Set axis labels
-    # plt.xlabel(r"$\gamma$, [deg]")
-    # plt.ylabel("SPL, [dB]")
-
-    # Set axis scales
-    plt.xscale("linear")
-    plt.yscale("linear")
-
     # Set axis limits
     plt.xlim(0, 2*np.pi)
-    plt.ylim(40, 80)
+    plt.ylim(30, 70)
 
     # Show plot
     plt.show()
 
 
-def map(spl, n_panels, n_azimuthal, x):
+def map(spl, n_panels, n_azimuthal, x, z):
     """
     Plot the SPL of each panel at each azimuthal angle.
 
@@ -155,6 +148,7 @@ def map(spl, n_panels, n_azimuthal, x):
         n_panels : int -- number of panels, [-]
         n_azimuthal : int -- number of azimuthal angles
         x : float -- observer distance, [m]
+        z : float -- observer height, [m]
     
     Returns:
         None
@@ -171,26 +165,15 @@ def map(spl, n_panels, n_azimuthal, x):
 
     # Plot the heatmap
     fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
-    cs = ax.contourf(THETA, R, spl_panel.T, levels=np.linspace(0, np.max(spl_panel), 21), cmap="rainbow")
+    cs = ax.contourf(THETA, R, spl_panel.T, levels=np.linspace(0, np.max(spl_panel), 21), \
+                     cmap="rainbow")
 
     # Set the colorbar
     fig.colorbar(cs, label="SPL, [dB]")
 
     # Set the plot title
-    plt.title(f"SPL of one blade along an entire CCW rotation \
-              at a downwind distance of {x:0f} [m].")
-
-    # Set axis labels
-    # plt.xlabel(r"$\gamma$, [deg]")
-    # plt.ylabel("r/R, [-]")
-
-    # Set axis scales
-    plt.xscale("linear")
-    plt.yscale("linear")
-
-    # Set axis limits
-    plt.xlim(0, 2*np.pi)
-    plt.ylim(0, 1)
+    plt.title(f"SPL of one blade along an entire CCW rotation at a downwind distance of {x:.0f}" + \
+              f" [m] and height of {z:.2f} [m].")
 
     # Show plot
     plt.show()
