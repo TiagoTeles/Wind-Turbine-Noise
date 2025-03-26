@@ -41,3 +41,4 @@ SPL_CORRECTION = True                                       # Use inflow noise 1
 RADIAL_CUTOFF = 0.4                                         # TBLTE noise radial cutoff, [-]
 PROBE_TOP = 0.975                                           # Suction side probe location, [-]
 PROBE_BOT = 0.950                                           # Pressure side probe location, [-]
+SPEED_RATIO = 1.0/0.8                                       # U / U_c, [-]
