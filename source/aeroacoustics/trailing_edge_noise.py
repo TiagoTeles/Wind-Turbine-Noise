@@ -9,8 +9,7 @@ Calculate the TBLTE noise spectra.
 Classes:
     None
 
-# Functions:
-    delta_star
+Functions:
     wall_pressure
     correlation_length
     te_noise
@@ -19,7 +18,6 @@ Exceptions:
     None
 """
 
-import os
 import sys
 
 import numpy as np
@@ -27,65 +25,6 @@ import numpy as np
 from misc import E
 from settings import XFOIL_PATH
 from xfoil import XFoil
-
-
-def displacement_thickness(blade, pos, Re, M, alpha, cutoff, probe_top, probe_bot, it):
-    """
-    Determine the boundary layer displacement thickness.
-
-    Arguments:
-        blade : Blade -- blade object
-        pos : np.array -- position along the blade, [-]
-        Re : np.array -- Reynolds number, [-]
-        M : np.array -- Mach number, [-]
-        alpha : np.array -- angle of attack, [rad]
-        cutoff : float -- radial cutoff for the airfoil, [-]
-        probe_top : np.array -- probe location at the top surface, [-]
-        probe_bot : np.array -- probe location at the bottom surface, [-]
-        it : int -- number of iterations for XFoil
-
-    Returns:
-        delta_star_top : np.array -- top boundary layer displacement thickness, [m]
-        delta_star_bot : np.array -- bottom boundary layer displacement thickness, [m]
-    """
-
-    # Remove the unused axis
-    Re = np.squeeze(Re)
-    M = np.squeeze(M)
-    alpha = np.squeeze(alpha)
-
-    # Initialise the numpy arrays
-    delta_star_top = np.zeros(Re.shape)
-    delta_star_bot = np.zeros(Re.shape)
-
-    # Iterate through each panel
-    for i in range(pos):
-
-        airfoil = blade.interpolate(pos[i])
-
-        # Use a cutoff to ensure that XFoil converges
-        # For cutoff=0.4, SPL_cutoff = SPL_tip - 19.90 dB
-        if pos[i] / blade.data["pos"].iloc[-1]  > cutoff:
-
-            # Determine the path to the airfoil
-            cwd = os.path.dirname(blade.path)
-            path = os.path.relpath(airfoil.path, cwd)
-
-            # Run XFoil
-            xfoil = XFoil(XFOIL_PATH, cwd)
-            top, bot = xfoil.run(path, Re[i], M[i], np.degrees(alpha[i]), it=it)
-
-            # Determine the displacement thickness at the probe locations
-            delta_star_top[i] = np.interp(probe_top, top["x/c"], top["delta_star"])
-            delta_star_bot[i] = np.interp(probe_bot, bot["x/c"], bot["delta_star"])
-
-        else:
-
-            # Set the displacement thickness to zero
-            delta_star_top[i] = 0
-            delta_star_bot[i] = 0
-
-    return delta_star_top, delta_star_bot
 
 
 def wall_pressure(K_1, U, delta_star, rho_0):
@@ -140,32 +79,25 @@ def correlation_length(omega, K_1, K_2, U_c, delta_star, b_c):
     return l_y
 
 
-def te_noise(f, blade, pos, b, c, x, y, z, U, Re, alpha, alpha_c, b_c, p_ref, c_0, rho_0, cutoff, \
-             probe_top, probe_bot, it):
+def te_noise(f, b, c, x, y, z, U, delta_star_top, delta_star_bot, alpha_c, b_c, p_ref, c_0, rho_0):
     """
     Determine the trailing-edge noise spectra.
 
     Arguments:
         f : np.array -- frequency, [Hz]
-        blade : Blade -- blade object
-        pos : np.array -- position along the blade, [-]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
         U : np.array -- velocity, [m/s]
-        Re : np.array -- Reynolds number, [-]
-        alpha : np.array -- angle of attack, [rad]
+        delta_star_top : np.array -- top boundary layer displacement thickness, [m]
+        delta_star_bot : np.array -- bottom boundary layer displacement thickness, [m]
         alpha_c : np.array -- speed ratio, [-]
         b_c : np.array -- correlation coefficient, [-]
         p_ref : float -- reference pressure, [Pa]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
-        cutoff : float -- radial cutoff, [-]
-        probe_top : np.array -- probe location at the top surface, [-]
-        probe_bot : np.array -- probe location at the bottom surface, [-]
-        it : int -- number of iterations for XFoil, [-]
     """
 
     # Determine the Mach number
@@ -211,8 +143,6 @@ def te_noise(f, blade, pos, b, c, x, y, z, U, Re, alpha, alpha_c, b_c, p_ref, c_
     epsilon = np.pow(1 + 1 / (4 * mu_line), -0.5)
 
     # Determine the average boundary layer displacement thicknesses
-    delta_star_top, delta_star_bot = displacement_thickness(blade, pos, Re, M, alpha, cutoff, \
-                                                            probe_top, probe_bot, it)
     delta_star = (delta_star_top + delta_star_bot) / 2
 
     # Determine the first-order scattering term (neglect the term np.exp(-2 * 1j * C))
