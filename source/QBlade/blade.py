@@ -44,6 +44,7 @@ class Blade():
         __init__ -- initialise the blade class
         read -- read the .bld file
         interpolate -- determine the interpolated airfoil
+        displacement_thickness -- determine the displacement thickness
 
     Attributes:
         airfoils : list -- list of airfoil objects
@@ -168,3 +169,49 @@ class Blade():
         path_out = xfoil.interpolate(airfoil_path_1, airfoil_path_2, fraction)
 
         return Airfoil(path_out)
+
+
+    def displacement_thickness(self, pos, Re, M, alpha, cutoff, probe_top, probe_bot, it):
+        """
+        Determine the boundary layer displacement thickness.
+
+        Arguments:
+            pos : float -- position along the blade, [-]
+            Re : float -- Reynolds number, [-]
+            M : float -- Mach number, [-]
+            alpha : float -- angle of attack, [rad]
+            cutoff : float -- radial cutoff, [-]
+            probe_top : np.array -- probe location at the top surface, [-]
+            probe_bot : np.array -- probe location at the bottom surface, [-]
+            it : int -- number of iterations for XFoil, [-]
+
+        Returns:
+            delta_star_top : float -- top boundary layer displacement thickness, [m]
+            delta_star_bot : float-- bottom boundary layer displacement thickness, [m]
+        """
+
+        airfoil = self.interpolate(pos)
+
+        # Use a cutoff to ensure that XFoil converges
+        # For cutoff=0.4, SPL_cutoff = SPL_tip - 19.90 dB
+        if pos / self.data["pos"].iloc[-1] > cutoff:
+
+            # Determine the path to the airfoil
+            cwd = os.path.dirname(self.path)
+            path = os.path.relpath(airfoil.path, cwd)
+
+            # Run XFoil
+            xfoil = XFoil(XFOIL_PATH, cwd)
+            top, bot = xfoil.run(path, Re, M, alpha, it=it)
+
+            # Determine the displacement thickness at the probe locations
+            delta_star_top = np.interp(probe_top, top["x/c"], top["delta_star"])
+            delta_star_bot = np.interp(probe_bot, bot["x/c"], bot["delta_star"])
+
+        else:
+
+            # Set the displacement thickness to zero
+            delta_star_top = 0
+            delta_star_bot = 0
+
+        return delta_star_top, delta_star_bot
