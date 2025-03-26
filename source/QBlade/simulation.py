@@ -256,13 +256,18 @@ class Simulation:
         # Save the simulation results
         self.qblade.exportResults(0, results_dir.encode("utf-8"), results_name.encode("utf-8"), b"")
 
-    def results(self, timestep, blade):
+    def results(self, timestep, blade, c_0, cutoff, probe_top, probe_bot, it):
         """
         Read the simulation results.
 
         Arguments:
             timestep : int -- timestep index
             blade : int -- blade index
+            c_0 : float -- speed of sound, [m]
+            cutoff : float -- radial cutoff, [-]
+            probe_top : np.array -- probe location at the top surface, [-]
+            probe_bot : np.array -- probe location at the bottom surface, [-]
+            it : int -- number of iterations for XFoil, [-]
 
         Returns:
             results : dict -- dictionary of simulation results
@@ -351,6 +356,19 @@ class Simulation:
 
         results["tc_01"] = tc_01
         results["tc_10"] = tc_10
+
+        # Determine the airfoil displacement thickness distributions
+        delta_star_top = np.zeros(n_panels)
+        delta_star_bot = np.zeros(n_panels)
+
+        for i in range(n_panels):
+            airfoil = self.turbine.blade.interpolate(pos[i])
+
+            delta_star_top[i], delta_star_bot[i] = \
+                self.turbine.blade.displacement_thickness(pos[i], Re[i], U[i]/c_0, aoa[i], cutoff, probe_top, probe_bot, it)
+
+        results["delta_star_top"] = delta_star_top
+        results["delta_star_bot"] = delta_star_bot
 
         return results
 
