@@ -6,7 +6,7 @@ Date : 26.03.2025
 
 ----------------------------------------Object Names----------------------------------------------------------------
 NACA_63_418_Re1.000_M0.00_N9.0 360 M                                   POLARNAME          - the polar name
-NACA_63_418                                                            FOILNAME           - the airfoil name to which the polar(s) belong OR path to airfoil file
+../Airfoils/NACA_63_418.afl                                            FOILNAME           - the airfoil name to which the polar(s) belong OR path to airfoil file
 
 ----------------------------------------Parameters------------------------------------------------------------------
 18.0                                               THICKNESS          - the name of the blade
