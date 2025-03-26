@@ -11,6 +11,7 @@ import shutil
 import numpy as np
 
 from aeroacoustics.inflow_noise import inflow_noise
+from aeroacoustics.trailing_edge_noise import te_noise
 from coordinates import turbine_to_nacelle, nacelle_to_hub, hub_to_blade, blade_to_airfoil
 from misc import octave, surface_roughness, turbulence_intensity, turbulence_length
 from plot import spectrum, directivity, map
@@ -22,10 +23,10 @@ from settings import *
 X_SPECTRA = 100
 R_DIRECTIVITY = 100
 Z_DIRECTIVITY = 1.2
-X_BLADE = 100
+X_BLADE = 10
 Z_BLADE = 0.0
 N_MICROPHONES = 13
-N_AZIMUTH = 180
+N_AZIMUTH = 72
 
 # Create a temporary copy of the simulation
 print("Creating a temporary copy of the simulation...")
@@ -73,7 +74,7 @@ if not os.path.exists(results_path):
     simulation.close()
 
 # Read the simulation results
-results = simulation.results(TIMESTEP, BLADE)
+results = simulation.results(TIMESTEP, BLADE, C_0, RADIAL_CUTOFF, PROBE_TOP, PROBE_BOT, MAX_ITER)
 
 # Determine the SPL spectra
 print("Running the aeroacoustic analysis...")
@@ -91,6 +92,8 @@ results["tc_01"] = results["tc_01"][np.newaxis, :, np.newaxis]
 results["tc_10"] = results["tc_10"][np.newaxis, :, np.newaxis]
 results["U"] = results["U"][np.newaxis, :, np.newaxis]
 results["aoa"] = results["aoa"][np.newaxis, :, np.newaxis]
+results["delta_star_top"] = results["delta_star_top"][np.newaxis, :, np.newaxis]
+results["delta_star_bot"] = results["delta_star_bot"][np.newaxis, :, np.newaxis]
 
 x_n_spectra = np.array([[X_SPECTRA],
                         [0],
@@ -105,11 +108,16 @@ x = x_a_spectra[:, 0, :][np.newaxis, :, :]
 y = x_a_spectra[:, 1, :][np.newaxis, :, :]
 z = x_a_spectra[:, 2, :][np.newaxis, :, :]
 
-spl_inflow_spectra = inflow_noise(f, results["span"], results["chord"], results["tc_01"], \
-                                  results["tc_10"], x, y, z, results["U"], results["aoa"], \
+spl_inflow_spectra = inflow_noise(f, results["span"], results["chord"], results["tc_01"],
+                                  results["tc_10"], x, y, z, results["U"], results["aoa"],
                                   I, L, C_0, RHO_0, True)
 
+spl_te_spectra = te_noise(f, results["span"], results["chord"], x, y, z, results["U"], 
+                          results["delta_star_top"], results["delta_star_bot"], SPEED_RATIO, 
+                          CORRELATION_COEFFICIENT, P_REF, C_0, RHO_0)
+
 spectrum(f.squeeze(), spl_inflow_spectra, F_MIN, F_MAX, turbine.attributes["NUMBLADES"], X_SPECTRA)
+spectrum(f.squeeze(), spl_te_spectra, F_MIN, F_MAX, turbine.attributes["NUMBLADES"], X_SPECTRA)
 
 
 
@@ -123,7 +131,7 @@ azimuth = np.linspace(0, 2*np.pi, N_AZIMUTH, endpoint=False)
 
 x_t_directivity = np.array([R_DIRECTIVITY * np.cos(yaw),
                             R_DIRECTIVITY * np.sin(yaw),
-                            0 * np.ones(N_MICROPHONES)])
+                            Z_DIRECTIVITY * np.ones(N_MICROPHONES)])
 
 x_n_directivity = turbine_to_nacelle(x_t_directivity, turbine.attributes["TOWERHEIGHT"], \
                                turbine.attributes["SHAFTTILT"], results["yaw"])
@@ -143,14 +151,19 @@ x = x_a_directivity[:, 0, :][np.newaxis, :, :]
 y = x_a_directivity[:, 1, :][np.newaxis, :, :]
 z = x_a_directivity[:, 2, :][np.newaxis, :, :]
 
-spl_inflow_directivity = inflow_noise(f, results["span"], results["chord"], results["tc_01"], \
-                                      results["tc_10"], x, y, z, results["U"], results["aoa"], \
+spl_inflow_directivity = inflow_noise(f, results["span"], results["chord"], results["tc_01"],
+                                      results["tc_10"], x, y, z, results["U"], results["aoa"],
                                       I, L, C_0, RHO_0, False)
+
+spl_te_directivity = te_noise(f, results["span"], results["chord"], x, y, z, results["U"],
+                              results["delta_star_top"], results["delta_star_bot"], SPEED_RATIO,
+                              CORRELATION_COEFFICIENT, P_REF, C_0, RHO_0)
 
 directivity(spl_inflow_directivity, turbine.attributes["NUMBLADES"], \
              N_AZIMUTH, N_MICROPHONES, Z_DIRECTIVITY, R_DIRECTIVITY)
 
-
+directivity(spl_te_directivity, turbine.attributes["NUMBLADES"], \
+             N_AZIMUTH, N_MICROPHONES, Z_DIRECTIVITY, R_DIRECTIVITY)
 
 
 
@@ -177,8 +190,13 @@ x = x_a_blade[:, 0, :][np.newaxis, :, :]
 y = x_a_blade[:, 1, :][np.newaxis, :, :]
 z = x_a_blade[:, 2, :][np.newaxis, :, :]
 
-spl_inflow_blade = inflow_noise(f, results["span"], results["chord"], results["tc_01"], \
-                                results["tc_10"], x, y, z, results["U"], results["aoa"], \
+spl_inflow_blade = inflow_noise(f, results["span"], results["chord"], results["tc_01"],
+                                results["tc_10"], x, y, z, results["U"], results["aoa"],
                                 I, L, C_0, RHO_0, False)
 
-map(spl_inflow_blade, spl_inflow_blade.shape[1], spl_inflow_blade.shape[2], X_BLADE, Z_BLADE)
+spl_te_blade = te_noise(f, results["span"], results["chord"], x, y, z, results["U"],
+                        results["delta_star_top"], results["delta_star_bot"], SPEED_RATIO,
+                        CORRELATION_COEFFICIENT, P_REF, C_0, RHO_0)
+
+map(spl_inflow_blade, results["pos"].shape[0], spl_inflow_blade.shape[2], X_BLADE, Z_BLADE)
+map(spl_te_blade, results["pos"].shape[0], N_AZIMUTH, X_BLADE, Z_BLADE)
