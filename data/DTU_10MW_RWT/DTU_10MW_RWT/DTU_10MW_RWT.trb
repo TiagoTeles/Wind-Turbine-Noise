@@ -1,8 +1,8 @@
 ----------------------------------------QBlade Turbine Definition File----------------------------------------------
-Generated with : QBlade CE v2.0.8.5_beta windows
+Generated with : QBlade CE v2.0.8.6_beta windows
 Archive Format: 310035
-Time : 11:11:26
-Date : 05.03.2025
+Time : 16:19:47
+Date : 16.04.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
 DTU_10MW_RWT                                       OBJECTNAME         - the name of the turbine object
@@ -69,9 +69,9 @@ true                                               SHEDVORT           - include 
 2                                                  ZONE1FACTOR        - the wake zone 1 streamwise factor (integer) [-]
 2                                                  ZONE2FACTOR        - the wake zone 2 streamwise factor (integer) [-]
 2                                                  ZONE3FACTOR        - the wake zone 3 streamwise factor (integer) [-]
-2                                                  ZONE1FACTOR_S      - the wake zone 1 spanwise factor (integer) [-]
-2                                                  ZONE2FACTOR_S      - the wake zone 2 spanwise factor (integer) [-]
-2                                                  ZONE3FACTOR_S      - the wake zone 3 spanwise factor (integer) [-]
+1                                                  ZONE1FACTOR_S      - the wake zone 1 spanwise factor (integer) [-]
+1                                                  ZONE2FACTOR_S      - the wake zone 2 spanwise factor (integer) [-]
+1                                                  ZONE3FACTOR_S      - the wake zone 3 spanwise factor (integer) [-]
 
 ----------------------------------------Vortex Core Parameters------------------------------------------------------
 Only used if waketype = 0
