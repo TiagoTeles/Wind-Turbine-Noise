@@ -1,14 +1,14 @@
 ----------------------------------------QBlade Simulation Definition File------------------------------------------
 Generated with : QBlade CE v2.0.8.6_beta windows
 Archive Format: 310035
-Time : 16:19:47
-Date : 16.04.2025
+Time : 14:52:47
+Date : 21.04.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
 DTU_10MW_RWT                                       OBJECTNAME         - the name of the simulation object
 
 ----------------------------------------Simulation Type-------------------------------------------------------------
-1                                                  ISOFFSHORE         - use a number: 0 = onshore; 1 = offshore
+0                                                  ISOFFSHORE         - use a number: 0 = onshore; 1 = offshore
 
 ----------------------------------------Turbine Parameters---------------------------------------------------------
 multiple turbines can be added by adding multiple definitions encapsulated with TURB_X and END_TURB_X, where X must start at 1
