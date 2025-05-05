@@ -1,12 +1,12 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-05-05
 License:  GNU GPL 3.0
 """
 
 # QBlade settings
-QBLADE_PATH = "bin\\QBlade\\QBladeCE_2.0.8.5.dll"           # QBlade.dll path
+QBLADE_PATH = "bin\\QBlade\\QBladeCE_2.0.8.6.dll"           # QBlade.dll path
 QBLADE_CL_DEVICE = 0                                        # OpenCL device
 QBLADE_GROUP_SIZE = 32                                      # OpenCL work-group size
 
@@ -27,7 +27,7 @@ KAPPA = 0.41                                                # Von Karman constan
 # Environment properties
 C_0 = 340.3                                                 # Speed of sound, [m/s]
 RHO_0 = 1.225                                               # Air density, [kg/m^3]
-NU_0 = 1.48E-5                                              # Kinematic viscosity, [m^2/s]
+NU_0 = 1.46E-5                                              # Kinematic viscosity, [m^2/s]
 
 # Acoustic settings
 P_REF = 2E-5                                                # Reference pressure, [Pa]
@@ -37,7 +37,7 @@ F_REF = 1000                                                # Reference frequenc
 BASE_10 = True                                              # Use base 10?
 
 # Aeroacoustic settings
-SPL_CORRECTION = True                                       # Use inflow noise 10dB SPL correction?
+SPL_CORRECTION = False                                      # Use inflow noise 10dB SPL correction?
 RADIAL_CUTOFF = 0.4                                         # TBLTE noise radial cutoff, [-]
 PROBE_TOP = 0.975                                           # Suction side probe location, [-]
 PROBE_BOT = 0.950                                           # Pressure side probe location, [-]
