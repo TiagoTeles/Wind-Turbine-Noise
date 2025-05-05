@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-05-05
 License:  GNU GPL 3.0
 
 Miscellaneous functions.
@@ -11,23 +11,20 @@ Classes:
 
 Functions:
     octave
-    sears
-    E
-    surface_roughness
     turbulence_intensity
-    turbulence_length
+    turbulence_length_scale
+    surface_roughness_length
 
 Exceptions:
     None
 """
 
 import numpy as np
-import scipy as sp
 
 
 def octave(f_min, f_max, f_ref, base_10=True):
     """
-    Determine the center, lower, and upper frequencies of the 1/3 octave band.
+    Determine the center, lower, and upper frequencies of the 1/3 octave frequency bands.
 
     Arguments:
         f_min : float -- Minimum frequency, [Hz]
@@ -63,40 +60,42 @@ def octave(f_min, f_max, f_ref, base_10=True):
 
     return f_center, f_lower, f_upper
 
-
-def sears(x):
+def turbulence_intensity(z, z_0):
     """
-    Determine the approximate Sears function.
+    Determine the turbulence intensity.
 
-    Arguments:
-        x : np.array -- function argument, [-]
+    Parameters:
+        z : np.array -- height above the terrain, [m]
+        z_0 :  np.array -- surface roughness length, [m]
 
     Returns:
-        S : np.array -- Sears function, [-]
+        I :  np.array -- turbulence intensity, [-]
     """
 
-    S = np.sqrt(1 / (2 * np.pi * x + 1 / (1 + 2.4 * x)))
+    gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
+    I = gamma * np.log10(30/z_0) / np.log10(z/z_0)
 
-    return S
+    return I
 
 
-def E(x):
+def turbulence_length_scale(z, z_0):
     """
-    Determine the combination of Fresnel integrals.
+    Determine the turbulence length scale.
 
-    Arguments:
-        x : np.array -- function argument, [-]
+    Parameters:
+        z : np.array -- height above the terrain, [m]
+        z_0 :  np.array -- surface roughness length, [m]
 
     Returns:
-        E : np.array -- combination of Fresnel integrals, [-]
+        L :  np.array -- turbulence length scale, [m]
     """
 
-    S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
+    L = 25 * np.pow(z, 0.35) * np.pow(z_0, -0.063)
 
-    return C_2 - 1j * S_2
+    return L
 
 
-def surface_roughness(z_ref, U_ref, g, kappa, nu):
+def surface_roughness_length(z_ref, U_ref, g, kappa, nu):
     """
     Determine the surface roughness length.
 
@@ -112,8 +111,8 @@ def surface_roughness(z_ref, U_ref, g, kappa, nu):
     """
 
     # Determine the R and A
-    R = z_ref * (kappa * U_ref) / (0.11 * nu)
-    A = 0.018 * np.square(kappa * U_ref) / (g * z_ref)
+    R = z_ref / (0.11 * nu) * (kappa * U_ref)
+    A = 0.018 / (g * z_ref) * np.square(kappa * U_ref)
 
     # Determine b_n
     b_n_nu = -1.47 + 0.93 * np.log(R)
@@ -124,38 +123,3 @@ def surface_roughness(z_ref, U_ref, g, kappa, nu):
     z_0 = z_ref / (np.exp(b_n) - 1)
 
     return z_0
-
-
-def turbulence_intensity(z, z_0):
-    """
-    Determine the turbulence intensity.
-
-    Parameters:
-        z : np.array -- height above the ground, [m]
-        z_0 :  np.array -- surface roughness length, [m]
-
-    Returns:
-        I :  np.array -- turbulence intensity, [-]
-    """
-
-    gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
-    I = gamma * np.log(30/z_0) / np.log(z/z_0)
-
-    return I
-
-
-def turbulence_length(z, z_0):
-    """
-    Determine the turbulence length scale.
-
-    Parameters:
-        z : np.array -- height above the ground, [m]
-        z_0 :  np.array -- surface roughness length, [m]
-
-    Returns:
-        L :  np.array -- turbulence length scale, [m]
-    """
-
-    L = 25 * np.pow(z, 0.35) * np.pow(z_0, -0.063)
-
-    return L
