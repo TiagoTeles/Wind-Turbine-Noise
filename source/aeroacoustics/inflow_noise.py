@@ -1,19 +1,19 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-05-05
 License:  GNU GPL 3.0
 
-Calculate the inflow noise spectra.
+Calculate the inflow turbulence noise spectra.
 
 Classes:
     None
 
 Functions:
-    amiet
-    moriarty
+    amiet_model
+    moriarty_model
     retarded_coordinates
-    directivity
+    directivity_pattern
     inflow_noise
 
 Exceptions:
@@ -22,12 +22,10 @@ Exceptions:
 
 import numpy as np
 
-from misc import sears
 
-
-def amiet(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
+def amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
     """
-    Determine the SPL based on a flat plate.
+    Determine the flat plate SPL.
 
     Arguments:
         f : np.array -- frequency, [Hz]
@@ -69,7 +67,8 @@ def amiet(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
     beta = np.sqrt(1 - np.square(M))
 
     # Determine the Sears function
-    S = sears(K_x_line / np.square(beta))
+    S = np.sqrt(1 / (2 * np.pi * (K_x_line / np.square(beta)) \
+                     + 1 / (1 + 2.4 * (K_x_line / np.square(beta)))))
 
     # Determine the low-frequency correction
     LFC = 10 * np.square(S) * M * np.square(K_x_line) / np.square(beta)
@@ -83,9 +82,9 @@ def amiet(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
     return spl_amiet
 
 
-def moriarty(f, c, tc_01, tc_10, U):
+def moriarty_model(f, c, tc_01, tc_10, U):
     """
-    Calculate the SPL correction due to the airfoil thickness.
+    Determine the airfoil shape SPL correction.
     
     Args:
         f : np.array -- frequency, [Hz]
@@ -99,7 +98,7 @@ def moriarty(f, c, tc_01, tc_10, U):
     """
 
     # Determine the Strouhal number
-    St = 2*np.pi*f * c / U
+    St = (2*np.pi*f) * c / U
 
     # Check for high Strouhal numbers
     if np.any(St > 75):
@@ -152,7 +151,7 @@ def retarded_coordinates(x, y, z, M):
     return r_e, theta_e, phi_e
 
 
-def directivity(M, theta_e, phi_e):
+def directivity_pattern(M, theta_e, phi_e):
     """
     Determine the low-frequency directivity pattern.
 
@@ -172,7 +171,7 @@ def directivity(M, theta_e, phi_e):
     return D_L_line
 
 
-def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl_correction):
+def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl_correction=False):
     """
     Determine the inflow noise.
 
@@ -186,9 +185,9 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
         U : np.array -- velocity, [m/s]
+        alpha : np.array -- angle of attack, [rad]
         I : np.array -- turbulence intensity, [-]
         L : np.array -- turbulence length scale, [m]
-        alpha : np.array -- angle of attack, [rad]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
         spl_correction : bool -- apply SPL correction?
@@ -204,13 +203,13 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl
     r_e, theta_e, phi_e = retarded_coordinates(x, y, z, M)
 
     # Determine the flat plate SPL
-    spl_amiet = amiet(f, b, c, r_e, U, alpha, I, L, c_0, rho_0)
+    spl_amiet = amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0)
 
-    # Determine the SPL correction
-    delta_spl = moriarty(f, c, tc_01, tc_10, U)
+    # Determine the airfoil shape SPL correction
+    delta_spl = moriarty_model(f, c, tc_01, tc_10, U)
 
     # Determine the directivity pattern
-    D_L_line = directivity(M, theta_e, phi_e)
+    D_L_line = directivity_pattern(M, theta_e, phi_e)
 
     # Determine the inflow noise SPL
     spl = spl_amiet + delta_spl + 10 * np.log10(D_L_line)
