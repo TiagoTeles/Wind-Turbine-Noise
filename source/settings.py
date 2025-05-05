@@ -30,7 +30,8 @@ RHO_0 = 1.225                                               # Air density, [kg/m
 NU_0 = 1.46E-5                                              # Kinematic viscosity, [m^2/s]
 
 # Acoustic settings
-P_REF = 2E-5                                                # Reference pressure, [Pa]
+P_REF_AIR = 2E-5                                            # Reference pressure, [Pa]
+P_REF_WATER = 1E-6                                          # Reference pressure, [Pa]
 F_MIN = 20                                                  # Minimum frequency, [Hz]
 F_MAX = 20000                                               # Maximum frequency, [Hz]
 F_REF = 1000                                                # Reference frequency, [Hz]
