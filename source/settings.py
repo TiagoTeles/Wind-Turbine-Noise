@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-05-05
+Date:     2025-05-12
 License:  GNU GPL 3.0
 """
 
@@ -12,13 +12,13 @@ QBLADE_GROUP_SIZE = 32                                      # OpenCL work-group 
 
 # XFOIL settings
 XFOIL_PATH = "bin\\XFOIL\\xfoil.exe"                        # xfoil.exe path
-MAX_ITER = 100                                              # Iteration limit, [-]
+XFOIL_MAX_ITER = 100                                        # Iteration limit, [-]
 
 # Simulation settings
 SIMULATION_PATH = "data\\DTU_10MW_RWT\\DTU_10MW_RWT.sim"    # Simulation path
 N_TIMESTEP = 500                                            # Number of timesteps, [-]
-TIMESTEP = -1                                               # Timestep index
-BLADE = 1                                                   # Blade index
+TIMESTEP_ID = -1                                            # Timestep index
+BLADE_ID = 0                                                # Blade index
 
 # Universal constants
 G = 9.81                                                    # Gravitational acceleration, [m/s^2]
