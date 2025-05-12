@@ -46,8 +46,11 @@ def amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
     # Determine the Mach number
     M = U / c_0
 
+    # Determine the angular frequency
+    omega = 2 * np.pi * f
+
     # Determine the wavenumber in the chordwise direction
-    K_x = 2*np.pi*f / U
+    K_x = omega / U
 
     # Determine the wavenumber of energy-containing eddies
     K_e = 0.75 / L
@@ -97,8 +100,11 @@ def moriarty_model(f, c, tc_01, tc_10, U):
         delta_spl : np.array -- SPL correction, [dB]
     """
 
+    # Determine the angular frequency
+    omega = 2 * np.pi * f
+
     # Determine the Strouhal number
-    St = (2*np.pi*f) * c / U
+    St = omega * c / U
 
     # Check for high Strouhal numbers
     if np.any(St > 75):
