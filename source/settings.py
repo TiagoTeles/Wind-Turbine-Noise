@@ -40,7 +40,7 @@ BASE_10 = True                                              # Use base 10?
 # Aeroacoustic settings
 SPL_CORRECTION = False                                      # Use inflow noise 10dB SPL correction?
 RADIAL_CUTOFF = 0.4                                         # TBLTE noise radial cutoff, [-]
-PROBE_TOP = 0.975                                           # Suction side probe location, [-]
-PROBE_BOT = 0.950                                           # Pressure side probe location, [-]
-SPEED_RATIO = 1.0/0.7                                       # U / U_c, [-]
-CORRELATION_COEFFICIENT = 1.5                               # Correlation coefficient, [-]
+PROBE_POSITION_TOP = 0.975                                  # Suction side probe location, [-]
+PROBE_POSITION_BOT = 0.950                                  # Pressure side probe location, [-]
+CONVECTION_VELOCITY_COEFFICIENT = 1.0/0.7                   # U / U_c, [-]
+SPANWISE_CORRELATION_COEFFICIENT = 1.5                      # Correlation coefficient, [-]
