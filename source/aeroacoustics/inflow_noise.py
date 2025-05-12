@@ -13,7 +13,6 @@ Functions:
     amiet_model
     moriarty_model
     retarded_coordinates
-    directivity_pattern
     inflow_noise
 
 Exceptions:
@@ -23,7 +22,7 @@ Exceptions:
 import numpy as np
 
 
-def amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
+def amiet_model(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     """
     Determine the flat plate SPL.
 
@@ -32,6 +31,8 @@ def amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
         r_e : np.array -- retarded distance, [m]
+        theta_e : np.array -- chordwise retarded angle,
+        phi_e : np.array -- spanwise retarded angle, [rad]
         U : np.array -- velocity, [m/s]
         alpha : np.array -- angle of attack, [rad]
         I : np.array -- turbulence intensity, [-]
@@ -58,10 +59,14 @@ def amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0):
     # Determine the normalised wavenumber
     K_x_hat = K_x / K_e
 
+    # Determine the low-frequency directivity pattern
+    D_line = np.square(np.sin(theta_e)) * np.square(np.sin(phi_e)) \
+               / np.pow(1 + M * np.cos(theta_e), 4)
+
     # Determine the high-frequency SPL (P_REF = 2E-5 [Pa])
     spl_h = 10 * np.log10(np.pow(M, 5) * (L*b)/(2*np.square(r_e)) * np.square(I) \
                           * np.square(rho_0) * np.pow(c_0, 4) * np.pow(K_x_hat, 3) \
-                          / np.pow(1 + np.square(K_x_hat), 7/3)) + 78.4
+                          / np.pow(1 + np.square(K_x_hat), 7/3) * D_line) + 78.4
 
     # Determine the non-dimensional wavenumber
     K_x_line = K_x * c / 2
@@ -157,26 +162,6 @@ def retarded_coordinates(x, y, z, M):
     return r_e, theta_e, phi_e
 
 
-def directivity_pattern(M, theta_e, phi_e):
-    """
-    Determine the low-frequency directivity pattern.
-
-    Arguments:
-        M : np.array -- Mach number, [-]
-        theta_e : np.array -- chordwise directivity angle, [rad]
-        phi_e : np.array -- spanwise directivity angle, [rad]
-
-    Returns:
-        D_L_line : np.array -- directivity pattern, [-]
-    """
-
-    # Determine the low-frequency directivity pattern
-    D_L_line = np.square(np.sin(theta_e)) * np.square(np.sin(phi_e)) \
-               / np.pow(1 + M * np.cos(theta_e), 4)
-
-    return D_L_line
-
-
 def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl_correction=False):
     """
     Determine the inflow noise.
@@ -209,16 +194,13 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl
     r_e, theta_e, phi_e = retarded_coordinates(x, y, z, M)
 
     # Determine the flat plate SPL
-    spl_amiet = amiet_model(f, b, c, r_e, U, alpha, I, L, c_0, rho_0)
+    spl_amiet = amiet_model(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0)
 
     # Determine the airfoil shape SPL correction
     delta_spl = moriarty_model(f, c, tc_01, tc_10, U)
 
-    # Determine the directivity pattern
-    D_L_line = directivity_pattern(M, theta_e, phi_e)
-
     # Determine the inflow noise SPL
-    spl = spl_amiet + delta_spl + 10 * np.log10(D_L_line)
+    spl = spl_amiet + delta_spl
 
     # Add optional SPL correction
     if spl_correction:
