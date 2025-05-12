@@ -22,7 +22,7 @@ Exceptions:
 import numpy as np
 
 
-def octave(f_min, f_max, f_ref, base_10=True):
+def octave(f_min, f_max, f_ref, base_10):
     """
     Determine the center, lower, and upper frequencies of the 1/3 octave frequency bands.
 
