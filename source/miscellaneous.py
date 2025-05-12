@@ -60,6 +60,7 @@ def octave(f_min, f_max, f_ref, base_10=True):
 
     return f_center, f_lower, f_upper
 
+
 def turbulence_intensity(z, z_0):
     """
     Determine the turbulence intensity.
