@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-17
+Date:     2025-05-12
 License:  GNU GPL 3.0
 
 Run the XFOIL executable.
@@ -56,7 +56,7 @@ class XFoil:
         self.cwd = cwd
 
         # Create the XFOIL process
-        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd, 
+        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd,
                                 text=True)
 
     def interpolate(self, path_1, path_2, fraction):
@@ -128,7 +128,7 @@ class XFoil:
 
         return os.path.join(self.cwd, path_out)
 
-    def run(self, path, re, mach, alpha, xtr_top=1.0, xtr_bot=1.0, n_crit=9.0, it=10):
+    def run(self, path, re, mach, alpha, xtr_top, xtr_bot, n_crit, it):
         """
         Run XFOIL at a given Re, M, and Alpha.
 
@@ -172,7 +172,7 @@ class XFoil:
 
         # Determine the output file name and path
         name_out = f"Re{re:.2E}_M{mach:.2f}_AOA{alpha:.2f}"
-        path_out = os.path.join("BL", name_out + ".dat")
+        path_out = os.path.join("XFOIL", name_out + ".dat")
 
         # Check if the file path is too long
         if len(path_out) > 64:
@@ -180,8 +180,8 @@ class XFoil:
             sys.exit(1)
 
         # Save the results to a file
-        if not os.path.exists(os.path.join(self.cwd, "BL")):
-            os.makedirs(os.path.join(self.cwd, "BL"))
+        if not os.path.exists(os.path.join(self.cwd, "XFOIL")):
+            os.makedirs(os.path.join(self.cwd, "XFOIL"))
 
         self.process.stdin.write(f"DUMP {path_out}\n")
         self.process.stdin.write("\n")
@@ -203,8 +203,8 @@ class XFoil:
             sys.exit(1)
 
         # Read the output file
-        data = pd.read_csv(os.path.join(self.cwd, path_out), sep=r"\s+", skiprows=1,
-                           names=["s/c", "x/c", "y/c", "U_e/U", "delta_star", "theta", "C_f", "H"])
+        data = pd.read_csv(os.path.join(self.cwd, path_out), sep=r"\s+", skiprows=1, names= \
+                           ["s/c", "x/c", "y/c", "U_e/U", "delta_star/c", "theta/c", "C_f", "H"])
 
         # Filter and sort the boundary layer data
         le_index = data["x/c"].idxmin()
