@@ -149,9 +149,6 @@ def te_noise(f, b, c, x, y, z, U, delta_star, c_0, rho_0, p_ref, alpha_c, b_c, b
     mu_line = K_line * M / np.square(beta)
     kappa_line = np.sqrt(np.square(mu_line) - np.square(K_2_line) / np.square(beta))
 
-    if np.any(np.abs(K_2_line) > K_line * M / beta):
-        print("Sub-critical gust detected!")
-
     # Determine the correction factor
     epsilon = np.pow(1 + 1 / (4 * mu_line), -0.5)
 
