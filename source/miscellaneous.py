@@ -111,7 +111,7 @@ def surface_roughness_length(z_ref, U_ref, g, kappa, nu):
         z_0 : np.array -- surface roughness length, [m]
     """
 
-    # Determine the R and A
+    # Determine R and A
     R = z_ref / (0.11 * nu) * (kappa * U_ref)
     A = 0.018 / (g * z_ref) * np.square(kappa * U_ref)
 
