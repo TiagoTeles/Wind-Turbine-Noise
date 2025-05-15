@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-05-15
 License:  GNU GPL 3.0
 
 Store the data from .trb files.
@@ -22,7 +22,7 @@ import sys
 import numpy as np
 
 from QBlade.blade import Blade
-from QBlade.misc import read, write
+from QBlade.io import read
 
 
 TURBINE_DICT = {
@@ -103,7 +103,6 @@ class Turbine:
     Methods:
         __init__ -- initialise the turbine class
         read -- read the .trb file
-        write -- write to the .trb file
 
     Attributes:
         attributes : dict -- dictionary of attributes
@@ -167,31 +166,4 @@ class Turbine:
         self.attributes["YTILT"] = np.radians(self.attributes["YTILT"])
 
         # Close the file
-        f.close()
-
-    def write(self, key, value):
-        """
-        Write to the .trb file.
-
-        Arguments:
-            key : str -- key to write
-            value : any -- value to write
-
-        Returns:
-            None
-        """
-
-        # Format the value
-        if key in ["BLADEFILE", "STRUCTURALFILE", "CONTROLLERFILE", "PARAMETERFILE"]:
-            value = value.replace("\\", "/")
-
-        if key in ["SHAFTTILT", "ROTORCONE", "XTILT", "YTILT"]:
-            value = np.degrees(value)
-
-        # Set the value in the attributes dictionary
-        self.attributes[key] = value
-
-        # Set the value in .trb file
-        f = open(self.path, "r+", encoding="utf-8")
-        write(f, key, value)
         f.close()
