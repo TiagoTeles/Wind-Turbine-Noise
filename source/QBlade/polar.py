@@ -42,7 +42,7 @@ class Polar:
 
     Attributes:
         attributes : dict -- dictionary of attributes
-        data : pd.DataFrame -- AOA [rad], CL [-], CD [-], and CM [-]
+        data : pd.DataFrame -- alpha [rad], CL [-], CD [-], and CM [-]
         path : str -- path to the .plr file
     """
 
@@ -90,12 +90,12 @@ class Polar:
         self.attributes["FOILNAME"] = self.attributes["FOILNAME"].replace("/", "\\")
         self.attributes["THICKNESS"] /= 100
 
-        # Read the AOA, CL, CD, and CM
+        # Read the AoA, CL, CD, and CM
         f.seek(0)
-        self.data = pd.read_csv(f, names=["AoA", "Cl", "Cd", "Cm"], skiprows=17, delimiter=r"\s+")
+        self.data = pd.read_csv(f, names=["alpha", "Cl", "Cd", "Cm"], skiprows=17, delimiter=r"\s+")
 
-        # Format the AOA
-        self.data["AoA"] = np.radians(self.data["AoA"])
+        # Format the AoA
+        self.data["alpha"] = np.radians(self.data["alpha"])
 
         # Close file
         f.close()
