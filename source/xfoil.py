@@ -128,7 +128,7 @@ class XFoil:
 
         return os.path.join(self.cwd, path_out)
 
-    def run(self, path, re, mach, alpha, xtr_top, xtr_bot, n_crit, it):
+    def run(self, path, re, mach, alpha, x_tr_top, x_tr_bot, n_crit, max_iter):
         """
         Run XFOIL at a given Re, M, and Alpha.
 
@@ -137,10 +137,10 @@ class XFoil:
             re : float -- Reynolds number, [-]
             mach : float -- Mach number, [-]
             alpha : float -- angle of attack, [rad]
-            xtr_top : float -- transition point on the top surface, [-]
-            xtr_bot : float -- transition point on the bottom surface, [-]
+            x_tr_top : float -- transition point on the top surface, [-]
+            x_tr_bot : float -- transition point on the bottom surface, [-]
             n_crit : float -- critical amplification factor, [-]
-            it : int -- maximum number of iterations, [-]
+            max_iter : int -- maximum number of XFOIL iterations, [-]
 
         Returns:
             bl_top : pandas.DataFrame -- boundary layer data on the top surface
@@ -159,11 +159,11 @@ class XFoil:
         self.process.stdin.write("OPER\n")
         self.process.stdin.write(f"Visc {re}\n")
         self.process.stdin.write(f"Mach {mach}\n")
-        self.process.stdin.write(f"ITER {it}\n")
+        self.process.stdin.write(f"ITER {max_iter}\n")
 
         # Set the Xtr_top, Xtr_bot, and N_crit in the VPAR environment
         self.process.stdin.write("VPAR\n")
-        self.process.stdin.write(f"XTR {xtr_top} {xtr_bot}\n")
+        self.process.stdin.write(f"XTR {x_tr_top} {x_tr_bot}\n")
         self.process.stdin.write(f"N {n_crit}\n")
         self.process.stdin.write("\n")
 
@@ -171,7 +171,7 @@ class XFoil:
         self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
 
         # Determine the output file name and path
-        name_out = f"Re{re:.2E}_M{mach:.2f}_AOA{alpha:.2f}"
+        name_out = f"Re{re:.2E}_M{mach:.2f}_AoA{alpha:.2f}"
         path_out = os.path.join("XFOIL", name_out + ".dat")
 
         # Check if the file path is too long
