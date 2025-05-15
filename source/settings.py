@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-05-12
+Date:     2025-05-15
 License:  GNU GPL 3.0
 """
 
@@ -15,7 +15,7 @@ XFOIL_PATH = "bin\\XFOIL\\xfoil.exe"                        # xfoil.exe path
 XFOIL_MAX_ITER = 100                                        # Iteration limit, [-]
 
 # Simulation settings
-SIMULATION_PATH = "data\\DTU_10MW_RWT\\DTU_10MW_RWT.sim"    # Simulation path
+# SIMULATION_PATH = "data\\DTU_10MW_RWT\\DTU_10MW_RWT.sim"    # Simulation path
 N_TIMESTEP = 500                                            # Number of timesteps, [-]
 TIMESTEP_ID = -1                                            # Timestep index
 BLADE_ID = 0                                                # Blade index
@@ -25,9 +25,9 @@ G = 9.81                                                    # Gravitational acce
 KAPPA = 0.41                                                # Von Karman constant, [-]
 
 # Environment properties
-C_0 = 340.3                                                 # Speed of sound, [m/s]
-RHO_0 = 1.225                                               # Air density, [kg/m^3]
-NU_0 = 1.46E-5                                              # Kinematic viscosity, [m^2/s]
+# C_0 = 340.3                                                 # Speed of sound, [m/s]
+# RHO_0 = 1.225                                               # Air density, [kg/m^3]
+# NU_0 = 1.46E-5                                              # Kinematic viscosity, [m^2/s]
 
 # Acoustic settings
 P_REF_AIR = 2E-5                                            # Reference pressure, [Pa]
@@ -44,3 +44,9 @@ PROBE_POSITION_TOP = 0.975                                  # Suction side probe
 PROBE_POSITION_BOT = 0.950                                  # Pressure side probe location, [-]
 CONVECTION_VELOCITY_COEFFICIENT = 1.0/0.7                   # U / U_c, [-]
 SPANWISE_CORRELATION_COEFFICIENT = 1.5                      # Correlation coefficient, [-]
+
+# NM80 settings
+SIMULATION_PATH = "data\\NM_2MW_RWT\\NM_2MW_RWT.sim"        # Simulation path
+C_0 = 339.7                                                 # Speed of sound, [m/s]
+RHO_0 = 1.252                                               # Air density, [kg/m^3]
+NU_0 = 1.437699E-5                                          # Kinematic viscosity, [m^2/s]
