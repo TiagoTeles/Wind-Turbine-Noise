@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-05-15
 License:  GNU GPL 3.0
 
 Store the data from .afl files.
@@ -83,15 +83,15 @@ class Airfoil:
         # Close file
         f.close()
 
-    def thickness(self, xc):
+    def thickness(self, x_c):
         """
         Determine the thickness of the airfoil.
 
         Arguments:
-            xc : float -- x/c, [-]
+            x_c : float -- x/c, [-]
 
         Returns:
-            tc : float -- thickness of the airfoil
+            t_c : float -- thickness of the airfoil
         """
 
         # Separate the airfoil into top and bottom surfaces
@@ -100,7 +100,7 @@ class Airfoil:
         bot = self.data.iloc[le_index:]
 
         # Calculate the thickness
-        yc_top = np.interp(xc, top["x/c"], top["y/c"])
-        yc_bot = np.interp(xc, bot["x/c"], bot["y/c"])
+        y_c_top = np.interp(x_c, top["x/c"], top["y/c"])
+        y_c_bot = np.interp(x_c, bot["x/c"], bot["y/c"])
 
-        return yc_top - yc_bot
+        return y_c_top - y_c_bot
