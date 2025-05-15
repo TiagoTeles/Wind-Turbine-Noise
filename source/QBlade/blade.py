@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-05-15
 License:  GNU GPL 3.0
 
 Store the data from .bld files.
@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 from QBlade.airfoil import Airfoil
-from QBlade.misc import read
+from QBlade.io import read
 from QBlade.polar import Polar
 from settings import XFOIL_PATH
 from xfoil import XFoil
@@ -43,13 +43,14 @@ class Blade():
     Methods:
         __init__ -- initialise the blade class
         read -- read the .bld file
-        interpolate -- determine the interpolated airfoil
+        interpolate -- determine the airfoil at a given radius
         displacement_thickness -- determine the displacement thickness
 
     Attributes:
         airfoils : list -- list of airfoil objects
         attributes : dict -- dictionary of attributes
-        data : pd.DataFrame -- pos [m], chord [m], twist [rad], offset_x [m], offset_y [m], p_axis [-], and polar_file
+        data : pd.DataFrame -- radius [m], chord [m], twist [rad], offset_x [m], 
+                               offset_y [m], pitch_axis [-], and polar_file
         path : str -- path to the .bld file
         polars : list -- list of polar objects
     """
@@ -108,11 +109,11 @@ class Blade():
         for key, value in BLADE_DICT.items():
             self.attributes[key] = read(f, key, value["type"])
 
-        # Read the pos, chord, twist, offset_x, offset_y, p_axis, and polar_file
+        # Read the radius, chord, twist, offset_x, offset_y, pitch_axis, and polar_file
         f.seek(0)
 
-        self.data = pd.read_csv(f, names=["pos", "chord", "twist", "offset_x", "offset_y", \
-                                          "p_axis", "polar_file"], skiprows=16, delimiter=r"\s+")
+        self.data = pd.read_csv(f, names=["radius", "chord", "twist", "offset_x", "offset_y", \
+                                          "pitch_axis", "polar_file"], skiprows=16, delimiter=r"\s+")
 
         # Format the twist and polar_file
         self.data["twist"] = np.radians(self.data["twist"])
@@ -121,25 +122,25 @@ class Blade():
         # Close the file
         f.close()
 
-    def interpolate(self, pos):
+    def interpolate(self, radius):
         """
-        Determine the airfoil shape at a given position.
+        Determine the airfoil shape at a given radius.
 
         Arguments:
-            pos : float -- position along the blade, [m]
+            radius : float -- radius along the blade, [m]
 
         Returns:
             airfoil : Airfoil -- interpolated airfoil
         """
 
         # Determine the neighbouring airfoils
-        index_1 = self.data[self.data["pos"] <= pos].index.max()
-        index_2 = self.data[self.data["pos"] >= pos].index.min()
+        index_1 = self.data[self.data["radius"] <= radius].index.max()
+        index_2 = self.data[self.data["radius"] >= radius].index.min()
 
-        polar_path_1  = self.data["polar_file"].iloc[index_1]
+        polar_path_1 = self.data["polar_file"].iloc[index_1]
         polar_path_2 = self.data["polar_file"].iloc[index_2]
 
-        airfoil_path_1  = None
+        airfoil_path_1 = None
         airfoil_path_2 = None
 
         for polar in self.polars:
@@ -159,10 +160,10 @@ class Blade():
         airfoil_path_2 = os.path.join("Airfoils", os.path.basename(airfoil_path_2))
 
         # Determine the interpolation fraction
-        pos_1 = self.data["pos"].iloc[index_1]
-        pos_2 = self.data["pos"].iloc[index_2]
+        radius_1 = self.data["radius"].iloc[index_1]
+        radius_2 = self.data["radius"].iloc[index_2]
 
-        fraction = np.interp(pos, [pos_1, pos_2], [0, 1])
+        fraction = np.interp(radius, [radius_1, radius_2], [0, 1])
 
         # Interpolate the airfoil
         xfoil = XFoil(XFOIL_PATH, os.path.dirname(self.path))
@@ -170,31 +171,33 @@ class Blade():
 
         return Airfoil(path_out)
 
-
-    def displacement_thickness(self, pos, Re, M, alpha, cutoff, probe_top, probe_bot, it):
+    def displacement_thickness(self, radius, Re, M, alpha, cutoff, probe_top, probe_bot, max_iter):
         """
         Determine the boundary layer displacement thickness.
 
         Arguments:
-            pos : float -- position along the blade, [-]
+            radius : float -- radius along the blade, [-]
             Re : float -- Reynolds number, [-]
             M : float -- Mach number, [-]
             alpha : float -- angle of attack, [rad]
             cutoff : float -- radial cutoff, [-]
-            probe_top : np.array -- probe location at the top surface, [-]
-            probe_bot : np.array -- probe location at the bottom surface, [-]
-            it : int -- number of iterations for XFoil, [-]
+            probe_top : np.array -- top probe position, [-]
+            probe_bot : np.array -- bottom probe position, [-]
+            max_iter : int -- maximum number of XFOIL iterations, [-]
 
         Returns:
             delta_star_top : float -- top boundary layer displacement thickness, [m]
             delta_star_bot : float-- bottom boundary layer displacement thickness, [m]
         """
 
-        airfoil = self.interpolate(pos)
+        # Determine the airfoil
+        airfoil = self.interpolate(radius)
+
+        # Determine the chord
+        chord = np.interp(radius, self.data["radius"], self.data["chord"])
 
         # Use a cutoff to ensure that XFoil converges
-        # For cutoff=0.4, SPL_cutoff = SPL_tip - 19.90 dB
-        if pos / self.data["pos"].iloc[-1] > cutoff:
+        if radius / self.data["radius"].iloc[-1] >= cutoff:
 
             # Determine the path to the airfoil
             cwd = os.path.dirname(self.path)
@@ -202,11 +205,11 @@ class Blade():
 
             # Run XFoil
             xfoil = XFoil(XFOIL_PATH, cwd)
-            top, bot = xfoil.run(path, Re, M, alpha, it=it)
+            top, bot = xfoil.run(path, Re, M, alpha, max_iter)
 
             # Determine the displacement thickness at the probe locations
-            delta_star_top = np.interp(probe_top, top["x/c"], top["delta_star"])
-            delta_star_bot = np.interp(probe_bot, bot["x/c"], bot["delta_star"])
+            delta_star_top = np.interp(probe_top, top["x/c"], top["delta_star/c"]) * chord
+            delta_star_bot = np.interp(probe_bot, bot["x/c"], bot["delta_star/c"]) * chord
 
         else:
 
