@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-18
+Date:     2025-05-15
 License:  GNU GPL 3.0
 
 Store the data from .plr files.
@@ -22,7 +22,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-from QBlade.misc import read
+from QBlade.io import read
 
 
 POLAR_DICT = {
