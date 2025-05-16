@@ -13,6 +13,9 @@ QBLADE_GROUP_SIZE = 32                                      # OpenCL work-group 
 # XFOIL settings
 XFOIL_PATH = "bin\\XFOIL\\xfoil.exe"                        # xfoil.exe path
 XFOIL_MAX_ITER = 100                                        # Iteration limit, [-]
+XFOIL_TRANSITION_TOP = 1.0                                  # Top transition location, [-] 
+XFOIL_TRANSITION_BOT = 1.0                                  # Bottom transition location, [-]
+XFOIL_CRITICAL_AMPLIFICATION = 9.0                          # Critical amplification factor, [-]    
 
 # Simulation settings
 # SIMULATION_PATH = "data\\DTU_10MW_RWT\\DTU_10MW_RWT.sim"    # Simulation path
