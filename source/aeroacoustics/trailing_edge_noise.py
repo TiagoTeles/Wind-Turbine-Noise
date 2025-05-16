@@ -199,10 +199,6 @@ def te_noise(f, b, c, x, y, z, U, delta_star, c_0, rho_0, p_ref, alpha_c, b_c, b
     S_pp = np.square(omega * z * c / (4 * np.pi * c_0 * np.square(S_0))) * 2 * np.pi * b \
          * np.square(np.abs(I)) * Pi_0
 
-    # Consider only one side of the airfoil
-    # TODO: Check if this is correct
-    # S_pp /= 4
-
     # Determine the bandwidth
     if base_10:
         f_lower = f / np.pow(10, 1/20)
@@ -218,6 +214,6 @@ def te_noise(f, b, c, x, y, z, U, delta_star, c_0, rho_0, p_ref, alpha_c, b_c, b
     delta_omega = 2 * np.pi * delta_f
 
     # Determine the 1/3 octave band SPL
-    SPL = 10 * np.log10(2 * delta_omega * S_pp / np.square(p_ref))
+    spl = 10 * np.log10(2 * delta_omega * S_pp / np.square(p_ref))
 
-    return SPL
+    return spl
