@@ -98,7 +98,7 @@ false                                              GEOMSTIFFNESS      - enable g
 false                                              AEROPANELLOADS     - enable distributed aero panel loads and gradients [bool]
 
 ----------------------------------------Turbine Controller-----------------------------------------------------------
-0n                                                 CONTROLLERTYPE     - the type of turbine controller 0 = none, 1 = BLADED, 2 = DTU, 3 = TUB
+0                                                  CONTROLLERTYPE     - the type of turbine controller 0 = none, 1 = BLADED, 2 = DTU, 3 = TUB
                                                    CONTROLLERFILE     - the controller file name, WITHOUT file ending (.dll or .so ) - leave blank if unused
                                                    PARAMETERFILE      - the controller parameter file name (leave blank if unused)
 
