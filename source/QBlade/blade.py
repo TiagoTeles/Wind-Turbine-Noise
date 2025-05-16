@@ -171,7 +171,7 @@ class Blade():
 
         return Airfoil(path_out)
 
-    def displacement_thickness(self, radius, Re, M, alpha, cutoff, probe_top, probe_bot, max_iter):
+    def displacement_thickness(self, radius, Re, M, alpha, cutoff, probe_top, probe_bot, x_tr_top, x_tr_bot, n_crit, max_iter):
         """
         Determine the boundary layer displacement thickness.
 
@@ -183,6 +183,9 @@ class Blade():
             cutoff : float -- radial cutoff, [-]
             probe_top : np.array -- top probe position, [-]
             probe_bot : np.array -- bottom probe position, [-]
+            x_tr_top : float -- top transition location, [-]
+            x_tr_bot : float -- bottom transition location, [-]
+            n_crit : float -- critical amplification factor, [-]
             max_iter : int -- maximum number of XFOIL iterations, [-]
 
         Returns:
@@ -205,7 +208,7 @@ class Blade():
 
             # Run XFoil
             xfoil = XFoil(XFOIL_PATH, cwd)
-            top, bot = xfoil.run(path, Re, M, alpha, max_iter)
+            top, bot = xfoil.run(path, Re, M, alpha, x_tr_bot, x_tr_bot, n_crit, max_iter)
 
             # Determine the displacement thickness at the probe locations
             delta_star_top = np.interp(probe_top, top["x/c"], top["delta_star/c"]) * chord
