@@ -25,7 +25,7 @@ These values are only used if no Structural Model is defined for this Turbine, i
 0.0000                                             CLEARANCE          - the rotor clearance to ground [m] (VAWT only)
 0.0000                                             XTILT              - the rotor x-tilt angle [deg] (VAWT only)
 0.0000                                             YTILT              - the rotor y-tilt angle [deg] (VAWT only)
-87.60                                              TOWERHEIGHT        - the tower height [m]
+90.00                                              TOWERHEIGHT        - the tower height [m]
 1.8000                                             TOWERTOPRAD        - the tower top radius [m]
 2.5200                                             TOWERBOTRAD        - the tower bottom radius [m]
 
