@@ -61,7 +61,7 @@ true                                               WINDAUTOSHIFT      - the wind
 0.000                                              SHEAREXP           - the shear exponent if using a power law profile, if a windfield is used these values are used to calculate the mean wake convection velocities
 0.010                                              ROUGHLENGTH        - the roughness length if using a log profile, if a windfield is used these values are used to calculate the mean wake convection velocities
 0.00                                               DIRSHEAR           - a value for the directional shear in deg/m
-115.63                                             REFHEIGHT          - the reference height, used to construct the BL profile
+119.00                                             REFHEIGHT          - the reference height, used to construct the BL profile
 
 ----------------------------------------Ocean Depth, Waves and Currents------------------------------------------- 
 the following parameters only need to be set if ISOFFSHORE = 1
