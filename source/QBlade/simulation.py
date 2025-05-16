@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-05-15
 License:  GNU GPL 3.0
 
 Store the data from .sim files and run QBlade.
@@ -22,7 +22,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-from QBlade.misc import read
+from QBlade.io import read
 from QBlade.qblade import QBlade
 from QBlade.turbine import Turbine
 
@@ -256,87 +256,87 @@ class Simulation:
         # Save the simulation results
         self.qblade.exportResults(0, results_dir.encode("utf-8"), results_name.encode("utf-8"), b"")
 
-    def results(self, timestep, blade, c_0, cutoff, probe_top, probe_bot, it):
+    def results(self, timestep_id, blade_id, c_0, cutoff, probe_top, probe_bot, x_tr_top, x_tr_bot, n_crit, max_iter):
         """
         Read the simulation results.
 
         Arguments:
-            timestep : int -- timestep index
-            blade : int -- blade index
-            c_0 : float -- speed of sound, [m]
+            timestep_id : int -- timestep index
+            blade_id : int -- blade index
+            c_0 : float -- speed of sound, [m/s]
             cutoff : float -- radial cutoff, [-]
-            probe_top : np.array -- probe location at the top surface, [-]
-            probe_bot : np.array -- probe location at the bottom surface, [-]
-            it : int -- number of iterations for XFoil, [-]
+            probe_top : float -- top probe position, [-]
+            probe_bot : float -- bottom probe position, [-]
+            x_tr_top : float -- top transition location, [-]
+            x_tr_bot : float -- bottom transition location, [-]
+            n_crit : float -- critical amplification factor, [-]
+            max_iter : int -- maximum number of XFOIL iterations, [-]
 
         Returns:
             results : dict -- dictionary of simulation results
         """
+
         # Determine the results path
         results_dir = os.path.dirname(self.sim_path)
         results_name = os.path.splitext(os.path.basename(self.sim_path))[0]
         results_path = os.path.join(results_dir, results_name + ".txt")
 
         # Read the simulation results
-        data = pd.read_csv(results_path, skiprows=2, delimiter="\t").iloc[timestep]
+        data = pd.read_csv(results_path, skiprows=2, delimiter="\t").iloc[timestep_id]
         results = {}
 
-        # Read the turbine attributes
-        pitch = np.radians(data[f"Pitch_Angle_Blade_{blade}_[deg]"])
-        yaw = np.radians(data["Yaw_Angle_[deg]"])
-
-        results["pitch"] = pitch
-        results["yaw"] = yaw
-
         # Read the blade distributions
-        n_panels = self.turbine.attributes["NUMPANELS"]
+        if self.turbine.attributes["DISCTYPE"] != 0:
+            n_panels = self.turbine.attributes["NUMPANELS"]
+        
+        else:
+            n_panels = len(self.turbine.blade.data["radius"]) - 1
 
-        aoa = np.zeros(n_panels)
-        pos = np.zeros(n_panels)
+        alpha = np.zeros(n_panels)
+        radius = np.zeros(n_panels)
         U = np.zeros(n_panels)
         Re = np.zeros(n_panels)
 
         for i in range(n_panels):
-            aoa[i] = np.radians(data[f"Angle_of_Attack_at_0.25c_Blade_{blade}_PAN_{i}_[deg]"])
-            pos[i] = data[f"Radius_Blade_{blade}_PAN_{i}_[m]"]
-            U[i] = data[f"Total_Velocity_Blade_{blade}_PAN_{i}_[m/s]"]
-            Re[i] = data[f"Reynolds_Number_Blade_{blade}_PAN_{i}_[-]"]
+            alpha[i] = np.radians(data[f"Angle_of_Attack_at_0.25c_Blade_{blade_id+1}_PAN_{i}_[deg]"])
+            radius[i] = data[f"Radius_Blade_{blade_id+1}_PAN_{i}_[m]"]
+            U[i] = data[f"Total_Velocity_Blade_{blade_id+1}_PAN_{i}_[m/s]"]
+            Re[i] = data[f"Reynolds_Number_Blade_{blade_id+1}_PAN_{i}_[-]"]
 
-        results["aoa"] = aoa
-        results["pos"] = pos
+        results["alpha"] = alpha
+        results["radius"] = radius
         results["U"] = U
         results["Re"] = Re
 
         # Interpolate the blade distributions
-        radiuses = np.array(self.turbine.blade.data["pos"])
+        radiuses = np.array(self.turbine.blade.data["radius"])
         chords = np.array(self.turbine.blade.data["chord"])
-        twists    = np.array(self.turbine.blade.data["twist"])
+        twists = np.array(self.turbine.blade.data["twist"])
         offsets_x = np.array(self.turbine.blade.data["offset_x"])
         offsets_y = np.array(self.turbine.blade.data["offset_y"])
-        p_axes   = np.array(self.turbine.blade.data["p_axis"])
+        pitch_axes = np.array(self.turbine.blade.data["pitch_axis"])
 
-        chord = np.interp(pos, radiuses, chords)
-        twist = np.interp(pos, radiuses, twists)
-        offset_x = np.interp(pos, radiuses, offsets_x)
-        offset_y = np.interp(pos, radiuses, offsets_y)
-        p_axis = np.interp(pos, radiuses, p_axes)
+        chord = np.interp(radius, radiuses, chords)
+        twist = np.interp(radius, radiuses, twists)
+        offset_x = np.interp(radius, radiuses, offsets_x)
+        offset_y = np.interp(radius, radiuses, offsets_y)
+        pitch_axis = np.interp(radius, radiuses, pitch_axes)
 
         results["chord"] = chord
         results["twist"] = twist
         results["offset_x"] = offset_x
         results["offset_y"] = offset_y
-        results["p_axis"] = p_axis
+        results["pitch_axis"] = pitch_axis
 
         # Determine the panel spanwise distributions
         if self.turbine.attributes["DISCTYPE"] == 0:
-            spans = np.diff(radiuses)
-            span = np.interp(pos, radiuses, spans)
+            span = np.diff(radiuses)
 
         elif self.turbine.attributes["DISCTYPE"] == 1:
             span = np.ones(n_panels) * (radiuses[-1] - radiuses[0]) / n_panels
 
         elif self.turbine.attributes["DISCTYPE"] == 2:
-            r_virtual = np.concat((np.array([radiuses[0]]), pos, np.array([radiuses[-1]])))
+            r_virtual = np.concat((np.array([radiuses[0]]), radius, np.array([radiuses[-1]])))
             span = (r_virtual[2:n_panels+2] - r_virtual[0:n_panels]) / 2
 
         else:
@@ -346,26 +346,26 @@ class Simulation:
         results["span"] = span
 
         # Determine the airfoil thickness distributions
-        tc_01 = np.zeros(n_panels)
-        tc_10 = np.zeros(n_panels)
+        t_c_01 = np.zeros(n_panels)
+        t_c_10 = np.zeros(n_panels)
 
         for i in range(n_panels):
-            airfoil = self.turbine.blade.interpolate(pos[i])
-            tc_01[i] = airfoil.thickness(0.01)
-            tc_10[i] = airfoil.thickness(0.10)
+            airfoil = self.turbine.blade.interpolate(radius[i])
+            t_c_01[i] = airfoil.thickness(0.01)
+            t_c_10[i] = airfoil.thickness(0.10)
 
-        results["tc_01"] = tc_01
-        results["tc_10"] = tc_10
+        results["t_c_01"] = t_c_01
+        results["t_c_10"] = t_c_10
 
         # Determine the airfoil displacement thickness distributions
         delta_star_top = np.zeros(n_panels)
         delta_star_bot = np.zeros(n_panels)
 
         for i in range(n_panels):
-            airfoil = self.turbine.blade.interpolate(pos[i])
+            airfoil = self.turbine.blade.interpolate(radius[i])
 
-            delta_star_top[i], delta_star_bot[i] = \
-                self.turbine.blade.displacement_thickness(pos[i], Re[i], U[i]/c_0, aoa[i], cutoff, probe_top, probe_bot, it)
+            delta_star_top[i], delta_star_bot[i] = self.turbine.blade.displacement_thickness( \
+                radius[i], Re[i], U[i]/c_0, alpha[i], cutoff, probe_top, probe_bot, x_tr_top, x_tr_bot, n_crit, max_iter)
 
         results["delta_star_top"] = delta_star_top
         results["delta_star_bot"] = delta_star_bot
