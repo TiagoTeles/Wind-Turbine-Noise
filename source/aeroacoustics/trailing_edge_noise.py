@@ -115,6 +115,10 @@ def te_noise(f, b, c, x, y, z, U, delta_star, c_0, rho_0, p_ref, alpha_c, b_c, b
         base_10 : bool -- Use base 10?
     """
 
+    # Check for low aspect ratios
+    if np.any(b/c < 3):
+        print("Low aspect ratio detected! AR < 3 [-].")
+
     # Determine the Mach number
     M = U / c_0
 
