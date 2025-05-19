@@ -113,7 +113,7 @@ def moriarty_model(f, c, tc_01, tc_10, U):
 
     # Check for high Strouhal numbers
     if np.any(St > 75):
-        print("High Strouhal number detected (St>75)!")
+        print("High Strouhal number detected! St > 75 [-].")
 
     # Determine the noise indicator
     IT = tc_01 + tc_10
