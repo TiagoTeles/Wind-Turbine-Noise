@@ -64,13 +64,13 @@
 # need -heap-arrays to avoid stack overflows for big runs ...
 # -no-wrap-margin was added to avoid ascii arrival files being wrapped at 80 characters
 
-export FC=ifort
+# export FC=ifort
 # export FFLAGS= -O3 -parallel -axSSE4.2 -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
-export FFLAGS= -fast -axAVX                           -parallel              -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
-export FFLAGS= -O3 -axAVX              -funroll-loops -parallel -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
-export FFLAGS= -O3 -axAVX              -funroll-loops -parallel -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
-export FFLAGS= -O3 -xHost -qopt-report -funroll-loops -parallel -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
-export FFLAGS= -O3 -xHost              -funroll-loops           -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays -no-wrap-margin
+# export FFLAGS= -fast -axAVX                           -parallel              -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
+# export FFLAGS= -O3 -axAVX              -funroll-loops -parallel -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
+# export FFLAGS= -O3 -axAVX              -funroll-loops -parallel -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
+# export FFLAGS= -O3 -xHost -qopt-report -funroll-loops -parallel -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays
+# export FFLAGS= -O3 -xHost              -funroll-loops           -no-prec-div -nologo -inline-level=2 -assume byterecl -threads -heap-arrays -no-wrap-margin
 
 # recommended settings from POLYHEDRON site
 # export FFLAGS= -O3 -fast           -ipo -nostandard-realloc-lhs
@@ -117,14 +117,14 @@ export FFLAGS= -O3 -xHost              -funroll-loops           -no-prec-div -no
 
 export FC=gfortran
 
-# export FFLAGS= -march=native  -Wall -std=gnu -O3 -ffast-math -funroll-all-loops -msse3 -fomit-frame-pointer -mtune=native -Q
+export FFLAGS= -march=native  -Wall -std=gnu -O3 -ffast-math -funroll-all-loops -msse3 -fomit-frame-pointer -mtune=native -Q
 # export FFLAGS= -march=corei7 -Bstatic -Waliasing -Wampersand -Wsurprising -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wline-truncation       -std=f2008 -O3 -ffast-math -funroll-all-loops -fomit-frame-pointer -mtune=native
 # -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib
 # export FFLAGS= -march=corei7 -Bstatic -Waliasing -Wampersand -Wsurprising -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wline-truncation        -std=f2008 -O3 -ffast-math -funroll-all-loops -fomit-frame-pointer
 # export FFLAGS= -march=native          -Waliasing -Wampersand -Wsurprising -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wline-truncation -Wa,-q -std=f2008 -O3 -ffast-math -funroll-all-loops -fomit-frame-pointer -mtune=native
 # Had a problem with -O2 in the KRAKENC root finder for at/tests/Noise/Sduct. Switching to O1 (4//25/2023)
 # export FFLAGS= -march=native -Bstatic -Waliasing -Wampersand              -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wline-truncation         -std=gnu  -O1 -ffast-math -funroll-all-loops -fomit-frame-pointer -mtune=native
-export FFLAGS= -mcpu=apple-m2 -Bstatic -Waliasing -Wampersand              -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wline-truncation         -std=gnu  -O1 -ffast-math -funroll-all-loops -fomit-frame-pointer
+# export FFLAGS= -mcpu=apple-m2 -Bstatic -Waliasing -Wampersand              -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wline-truncation         -std=gnu  -O1 -ffast-math -funroll-all-loops -fomit-frame-pointer
 
 # Compilation and run-time diagnostics on:
 # omni.env fails trap=invalid
