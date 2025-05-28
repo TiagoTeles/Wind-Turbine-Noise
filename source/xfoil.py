@@ -147,8 +147,8 @@ class XFoil:
             bl_bot : pandas.DataFrame -- boundary layer data on the bottom surface
         """
 
-        # Convert the angle of attack from [deg] to [rad]
-        alpha = np.radians(alpha)
+        # Convert the angle of attack from [rad] to [deg]
+        alpha = np.degrees(alpha)
 
         # Check if the file path is too long
         if len(path) > 64:
