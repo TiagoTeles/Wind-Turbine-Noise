@@ -27,14 +27,14 @@ def wall_pressure_spectrum(K_1, U, delta_star, rho_0):
     """
     Determine the wall pressure spectrum.
 
-    # Arguments:
-    #     K_1 : np.array -- streamwise wavenumber, [1/m]
-    #     U : np.array -- velocity, [m/s]
-    #     delta_star : np.array -- boundary layer displacement thickness, [m]
-    #     rho_0 : float -- air density, [kg/m^3]
+    Arguments:
+        K_1 : np.array -- streamwise wavenumber, [1/m]
+        U : np.array -- velocity, [m/s]
+        delta_star : np.array -- boundary layer displacement thickness, [m]
+        rho_0 : float -- air density, [kg/m^3]
 
-    # Returns:
-    #     Phi_pp : np.array -- wall pressure spectrum, [Pa^2/Hz]
+    Returns:
+        Phi_pp : np.array -- wall pressure spectrum, [Pa^2/Hz]
     """
 
     # Determine omega_tilde

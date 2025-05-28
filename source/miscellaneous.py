@@ -135,11 +135,11 @@ def gauge_pressure(Z, phi):
     Determine the ocean pressure.
 
     Parameters:
-        Z : np.array -- Depth, [m]
-        phi : np.array -- Latitude, [rad]
+        Z : np.array -- depth, [m]
+        phi : np.array -- latitude, [rad]
 
     Returns:
-        P : np.array -- Gauge pressure, [Pa]
+        P : np.array -- gauge pressure, [Pa]
     """
 
     # Check the high latitudes
@@ -177,12 +177,12 @@ def sound_speed_profile(T, S, P):
     Determine the sound speed profile.
 
     Parameters:
-        T : np.array -- Ocean temperature, [K]
-        S : np.array -- Ocean salinity, [-]
-        P : np.array -- Ocean pressure, [Pa]
+        T : np.array -- ocean temperature, [K]
+        S : np.array -- ocean salinity, [-]
+        P : np.array -- ocean pressure, [Pa]
 
     Returns:
-        c : np.array -- Sound speed, [m/s]
+        c : np.array -- sound speed, [m/s]
 
     """
 
