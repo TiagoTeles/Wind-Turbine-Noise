@@ -230,7 +230,7 @@ class Simulation:
         Run the QBlade simulation.
 
         Arguments:
-            n_timestep : int -- number of timesteps
+            n_timestep : int -- number of timesteps, [-]
 
         Returns:
             None
