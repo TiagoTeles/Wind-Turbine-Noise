@@ -147,6 +147,9 @@ class XFoil:
             bl_bot : pandas.DataFrame -- boundary layer data on the bottom surface
         """
 
+        # Convert the angle of attack from [deg] to [rad]
+        alpha = np.radians(alpha)
+
         # Check if the file path is too long
         if len(path) > 64:
             print("File path is too long!")
@@ -168,7 +171,7 @@ class XFoil:
         self.process.stdin.write("\n")
 
         # Run the analysis at a given alpha
-        self.process.stdin.write(f"Alfa {np.degrees(alpha)}\n")
+        self.process.stdin.write(f"Alfa {alpha}\n")
 
         # Determine the output file name and path
         name_out = f"Re{re:.2E}_M{mach:.2f}_AoA{alpha:.2f}"
