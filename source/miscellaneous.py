@@ -143,11 +143,11 @@ def gauge_pressure(Z, phi):
     """
 
     # Check the high latitudes
-    if np.degrees(phi) > 60:
+    if phi > np.radians(60):
         print("High latitude detected! phi > 60 [°].")
 
     # Check for low latitudes
-    if np.degrees(phi) < -40:
+    if phi < np.radians(-40):
         print("Low latitude detected! phi < -40 [°].")
 
     # Determine the pressure for a standard ocean
