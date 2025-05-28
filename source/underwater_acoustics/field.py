@@ -10,7 +10,7 @@ Classes:
     None
 
 Functions:
-    write_flp_file
+    write_flp
     uniform_mesh
 
 Exceptions:
@@ -20,7 +20,7 @@ Exceptions:
 import numpy as np
 
 
-def write_flp_file(path, title, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
+def write_flp(path, title, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
     """
     Write the field file for a Nx2D simulation.
 
