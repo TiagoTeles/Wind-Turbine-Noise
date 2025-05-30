@@ -20,7 +20,8 @@ Exceptions:
 import numpy as np
 
 
-def write_flp(path, title, routine, check_mesh, beam_type, dump_rays, sbp, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
+def write_flp(path, title, routine, check_mesh, beam_type, dump_rays, sbp, max_modes, s_x, s_y, \
+              s_z, r_z, r_r, r_theta, nodes, elements):
     """
     Write the .flp file.
 
