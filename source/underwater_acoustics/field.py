@@ -1,10 +1,10 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-05-28
+Date:     2025-05-30
 License:  GNU GPL 3.0
 
-Setup the .flp file.
+Write .flp files.
 
 Classes:
     None
@@ -124,7 +124,7 @@ def uniform_mesh(N_x, N_y):
         elements : np.ndarray -- mesh elements
     """
 
-    elements = np.zeros((2 * (N_x - 1) * (N_y - 1), 3))
+    elements = np.zeros((2 * (N_x - 1) * (N_y - 1), 3), dtype=int)
 
     for i in range(N_x-1):
         for j in range(N_y-1):
@@ -139,12 +139,12 @@ def uniform_mesh(N_x, N_y):
             lower_element = 2 * (j * (N_x - 1) + i)
             upper_element = 2 * (j * (N_x - 1) + i) + 1
 
-            # Lower triangle
+            # Lower element
             elements[lower_element, 0] = sw_node
             elements[lower_element, 1] = se_node
             elements[lower_element, 2] = ne_node
 
-            # Upper triangle
+            # Upper element
             elements[upper_element, 0] = sw_node
             elements[upper_element, 1] = ne_node
             elements[upper_element, 2] = nw_node
