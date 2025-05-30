@@ -27,7 +27,7 @@ def read_shd(filename):
         filename : str -- path to the .shd file
 
     Returns:
-        title : str -- title of the file
+        title : str -- title of the shade file
         frequency : np.ndarray -- frequency, [Hz]
         pressure : np.ndarray -- pressure, [Pa]
         s_x : np.ndarray -- source x coordinates, [m]
