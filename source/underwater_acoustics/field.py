@@ -20,13 +20,15 @@ Exceptions:
 import numpy as np
 
 
-def write_flp(path, title, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
+def write_flp(path, title, check_mesh, sbp, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
     """
     Write the .flp file.
 
     Arguments:
         path : str -- path to the field file
         title : str -- title of the field file
+        check_mesh : bool -- is the mesh is valid?
+        sbp : bool -- use a source beam pattern?
         max_modes : int -- maximum number of modes to be computed, [-]
         s_x : np.ndarray -- source x coordinates, [m]
         s_y : np.ndarray -- source y coordinates, [m]
@@ -54,8 +56,18 @@ def write_flp(path, title, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, e
     # Write the title
     f.write(f"{title}\n")
 
-    # Write the Field3D routine
-    f.write("STD\n")
+    # Write the options
+    f.write("STD")
+
+    if check_mesh:
+        f.write("T  ")
+    else:
+        f.write("   ")
+
+    if sbp:
+        f.write("*\n")
+    else:
+        f.write(" \n")
 
     # Write the maximum number of modes
     f.write(f"{max_modes}\n")
