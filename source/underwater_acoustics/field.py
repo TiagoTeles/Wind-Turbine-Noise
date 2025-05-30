@@ -4,7 +4,7 @@ Email:    tmoreiradafont@tudelft.nl
 Date:     2025-05-30
 License:  GNU GPL 3.0
 
-Write .flp files.
+Write data to .flp files.
 
 Classes:
     None
@@ -22,7 +22,7 @@ import numpy as np
 
 def write_flp(path, title, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
     """
-    Write the field file for a Nx2D simulation.
+    Write the .flp file.
 
     Arguments:
         path : str -- path to the field file
@@ -112,32 +112,32 @@ def write_flp(path, title, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, e
     f.close()
 
 
-def uniform_mesh(N_x, N_y):
+def uniform_mesh(n_x, n_y):
     """
     Determine the elements of the uniform triangular mesh.
 
     Arguments:
-        N_x : int -- number of nodes in the x-direction, [-]
-        N_y : int -- number of nodes in the y-direction, [-]
+        n_x : int -- number of nodes in the x-direction, [-]
+        n_y : int -- number of nodes in the y-direction, [-]
 
     Returns:
         elements : np.ndarray -- mesh elements
     """
 
-    elements = np.zeros((2 * (N_x - 1) * (N_y - 1), 3), dtype=int)
+    elements = np.zeros((2 * (n_x - 1) * (n_y - 1), 3), dtype=int)
 
-    for i in range(N_x-1):
-        for j in range(N_y-1):
+    for i in range(n_x-1):
+        for j in range(n_y-1):
 
             # Node indices
-            sw_node = j * N_x + i
-            se_node = j * N_x + (i + 1)
-            nw_node = (j + 1) * N_x + i
-            ne_node = (j + 1) * N_x + (i + 1)
+            sw_node = j * n_x + i
+            se_node = j * n_x + (i + 1)
+            nw_node = (j + 1) * n_x + i
+            ne_node = (j + 1) * n_x + (i + 1)
 
             # Element indices
-            lower_element = 2 * (j * (N_x - 1) + i)
-            upper_element = 2 * (j * (N_x - 1) + i) + 1
+            lower_element = 2 * (j * (n_x - 1) + i)
+            upper_element = 2 * (j * (n_x - 1) + i) + 1
 
             # Lower element
             elements[lower_element, 0] = sw_node
