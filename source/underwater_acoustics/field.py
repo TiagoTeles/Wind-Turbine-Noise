@@ -20,14 +20,17 @@ Exceptions:
 import numpy as np
 
 
-def write_flp(path, title, check_mesh, sbp, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
+def write_flp(path, title, routine, check_mesh, beam_type, dump_rays, sbp, max_modes, s_x, s_y, s_z, r_z, r_r, r_theta, nodes, elements):
     """
     Write the .flp file.
 
     Arguments:
         path : str -- path to the field file
         title : str -- title of the field file
+        routine : str -- routine type
         check_mesh : bool -- is the mesh is valid?
+        beam_type : str -- beam type
+        dump_rays : bool -- save ray trajectories?
         sbp : bool -- use a source beam pattern?
         max_modes : int -- maximum number of modes to be computed, [-]
         s_x : np.ndarray -- source x coordinates, [m]
@@ -56,13 +59,20 @@ def write_flp(path, title, check_mesh, sbp, max_modes, s_x, s_y, s_z, r_z, r_r, 
     # Write the title
     f.write(f"{title}\n")
 
-    # Write the options. Neglect the PDQ routine, GB routine, beam type, and ray file
-    f.write("STD")
+    # Write the options
+    f.write(f"{routine}")
 
     if check_mesh:
-        f.write("T  ")
+        f.write("T")
     else:
-        f.write("   ")
+        f.write(" ")
+
+    f.write(f"{beam_type}")
+
+    if dump_rays:
+        f.write("R")
+    else:
+        f.write(" ")
 
     if sbp:
         f.write("*\n")
