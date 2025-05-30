@@ -30,8 +30,12 @@ def read_shd(filename):
         title : str -- title of the file
         frequency : np.ndarray -- frequency, [Hz]
         pressure : np.ndarray -- pressure, [Pa]
-        source_position : tuple -- source positions
-        receiver_position : tuple -- receiver positions
+        s_x : np.ndarray -- source x coordinates, [m]
+        s_y : np.ndarray -- source y coordinates, [m]
+        s_z : np.ndarray -- source z coordinates, [m]
+        r_z : np.ndarray -- receiver z coordinates, [m]
+        r_r : np.ndarray -- receiver ranges, [m]
+        r_theta : np.ndarray -- receiver bearings, [rad]
     """
 
     # Open the file
@@ -134,4 +138,4 @@ def read_shd(filename):
     # Convert angles from [deg] to [rad]
     r_theta = np.radians(r_theta)
 
-    return title, frequency, pressure, (s_x, s_y, s_z), (r_theta, r_r, r_z)
+    return title, frequency, pressure, s_x, s_y, s_z, r_z, r_r, r_theta
