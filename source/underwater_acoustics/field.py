@@ -56,7 +56,7 @@ def write_flp(path, title, check_mesh, sbp, max_modes, s_x, s_y, s_z, r_z, r_r, 
     # Write the title
     f.write(f"{title}\n")
 
-    # Write the options
+    # Write the options. Neglect the PDQ routine, GB routine, ray file, and ray type
     f.write("STD")
 
     if check_mesh:
