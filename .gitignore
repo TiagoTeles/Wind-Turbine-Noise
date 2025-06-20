@@ -181,4 +181,4 @@ cython_debug/
 .cursorindexingignore
 
 # Confidential files
-data/Turbines/NM_2MW_RWT
+data/turbines/NM_2MW_RWT
