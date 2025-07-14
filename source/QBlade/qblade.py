@@ -1,10 +1,10 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-03-21
+Date:     2025-07-14
 License:  GNU GPL 3.0
 
-Manage the QBlade shared library.
+Manage the QBlade dynamic-link library.
 
 Classes:
     QBlade
@@ -13,7 +13,7 @@ Functions:
     None
 
 Exceptions:
-    RuntimeError
+    None
 """
 
 from ctypes import CDLL, c_bool, c_char_p, c_double, c_int, c_void_p, POINTER
@@ -22,36 +22,36 @@ from typing import Any, Dict
 
 class QBlade:
     """
-    Class to interact with the QBlade shared library.
+    A class to interact with the QBlade dynamic-link library.
 
     Attributes:
-        functions : Dict -- dictionary of functions with argument types and return types
-        lib_path : str -- path to the shared library
-        lib : ctypes.CDLL -- shared library
-    
+        path : str -- path to the dynamic-link library
+        lib : ctypes.CDLL -- dynamic-link library
+        functions : Dict -- functions in the dynamic-link library 
+
     Methods:
-        __init__: initialise and load the QBlade shared library
-        load_library: load the shared library and dynamically bind all functions
-        unload_library: close the QBlade instance
+        __init__ : initialise the QBlade class
+        load_library : load the QBlade library
+        unload_library : unload the QBlade library
     """
 
-    def __init__(self, shared_lib_path):
+    def __init__(self, path):
         """
-        Initialise and load the QBlade shared library.
-        
+        Initialise the QBlade class.
+
         Arguments:
-            shared_lib_path : str -- path to the shared library
-        
+            path : str -- path to the dynamic-link library
+
         Returns:
             None
         """
 
-        self.lib_path = shared_lib_path
+        self.path = path
         self.lib = None
 
-        # Define all the functions with argument types and return types
+        # Define the function names, argument types, and return type
         self.functions: Dict[str, Dict[str, Any]] = {
-            "createInstance": {"argtypes": [c_int, c_int], "restype": c_void_p},
+            "createInstance": {"argtypes": [c_int, c_int], "restype": c_bool},
             "closeInstance": {"argtypes": None, "restype": c_void_p},
             "loadProject": {"argtypes": [c_char_p], "restype": c_void_p},
             "loadSimDefinition": {"argtypes": [c_char_p], "restype": c_void_p},
@@ -84,68 +84,60 @@ class QBlade:
             "setControlVars_at_num": {"argtypes": [POINTER(c_double * 5), c_int], "restype": c_void_p},
             "getTurbineOperation_at_num": {"argtypes": [POINTER(c_double * 41), c_int], "restype": c_void_p},
             "setPowerLawWind": {"argtypes": [c_double, c_double, c_double, c_double, c_double], "restype": c_void_p},
-            "runFullSimulation": {"argtypes": None, "restype": c_void_p},
-            "setAutoClearTemp": {"argtypes": [c_bool], "restype": c_void_p},
+            "runFullSimulation": {"argtypes": None, "restype": c_bool},
+            "setAutoCleanup": {"argtypes": [c_bool], "restype": c_void_p},
         }
 
-        # Load the library
+        # Load the QBlade library
         self.load_library()
 
     def load_library(self):
         """
-        Load the shared library and dynamically bind all functions.
-        
+        Load the QBlade library.
+
         Arguments:
             None
-            
+
         Returns:
             None
         """
 
-        # Load the shared library
-        try:
-            self.lib = CDLL(self.lib_path)
+        # Load the dynamic-link library
+        self.lib = CDLL(self.path)
 
-        except Exception as e:
-            raise RuntimeError(f"Could not load the library at {self.lib_path}: {e}") from e
+        # Bind the functions
+        for name, signature in self.functions.items():
 
-        # Bind the functions dynamically
-        for func_name, config in self.functions.items():
-            try:
-                func = getattr(self.lib, func_name)
-                func.argtypes = config.get("argtypes")
-                func.restype = config.get("restype")
-                setattr(self, func_name, func)
+            # Get the function from the library
+            function = getattr(self.lib, name)
 
-            except AttributeError as e:
-                raise RuntimeError(f"Failed to bind function '{func_name}': {e}") from e
+            # Set the argument types
+            function.argtypes = signature["argtypes"]
 
-        # Call setLibraryPath after the library is loaded
-        try:
-            self.setLibraryPath(self.lib_path.encode("utf-8"))
+            # Set the return type
+            function.restype = signature["restype"]
 
-        except Exception as e:
-            raise RuntimeError(f"Failed to set library path: {e}") from  e
+            # Assign the function to the class
+            setattr(self, name, function)
+
+        # Set the library path
+        self.setLibraryPath(self.path.encode("utf-8"))
 
     def unload_library(self):
         """
-        Close the QBlade instance if it exists.
-        
+        Unload the QBlade library.
+
         Arguments:
             None
-            
+
         Returns:
             None
         """
 
-        # Close the QBlade instance
-        try:
+        if self.lib:
+
+            # Close the QBlade instance
             self.closeInstance()
 
-        except Exception as e:
-            raise RuntimeError(f"Failed to close QBlade instance: {e}") from e
-
-        # Clean up resources and unload the library
-        if self.lib:
-            del self.lib
+            # Delete the QBlade instance
             self.lib = None
