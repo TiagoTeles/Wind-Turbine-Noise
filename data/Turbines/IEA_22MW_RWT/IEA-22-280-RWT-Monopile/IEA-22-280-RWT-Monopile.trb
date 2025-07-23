@@ -20,14 +20,14 @@ Aero/IEA-22-280-RWT.bld                            BLADEFILE          - the path
 ----------------------------------------Turbine Geometry Parameters-------------------------------------------------
 These values are only used if no Structural Model is defined for this Turbine, in case of a Structural Model the geometry is defined in the Structural Input Files!!
 23.6670                                            OVERHANG           - the rotor overhang [m] (HAWT only)
-0.0000                                             SHAFTTILT          - the shaft tilt angle [deg] (HAWT only)
-0.0000                                             ROTORCONE          - the rotor cone angle [deg] (HAWT only)
+6.0000                                             SHAFTTILT          - the shaft tilt angle [deg] (HAWT only)
+4.0000                                             ROTORCONE          - the rotor cone angle [deg] (HAWT only)
 0.0000                                             CLEARANCE          - the rotor clearance to ground [m] (VAWT only)
 0.0000                                             XTILT              - the rotor x-tilt angle [deg] (VAWT only)
 0.0000                                             YTILT              - the rotor y-tilt angle [deg] (VAWT only)
-284.0000                                           TOWERHEIGHT        - the tower height [m]
-4.0570                                             TOWERTOPRAD        - the tower top radius [m]
-5.6800                                             TOWERBOTRAD        - the tower bottom radius [m]
+170.0000                                           TOWERHEIGHT        - the tower height [m]
+3.0000                                             TOWERTOPRAD        - the tower top radius [m]
+5.0000                                             TOWERBOTRAD        - the tower bottom radius [m]
 
 ----------------------------------------Dynamic Stall Models--------------------------------------------------------
 1                                                  DYNSTALLTYPE       - the dynamic stall model: 0 = none; 1 = OYE; ; 2 = IAG; 3 = GORMONT-BERG; 4 = ATEFLAP
@@ -89,7 +89,7 @@ Only used if waketype = 0
 ----------------------------------------Unsteady BEM Parameters------------------------------------------------------
 12                                                 POLARDISC          - the polar discretization for the unsteady BEM (integer!) [-]
 true                                               BEMTIPLOSS         - use BEM tip loss factor [bool]
-0.00                                               BEMSPEEDUP         - initial BEM convergence acceleration time [s]
+60.00                                              BEMSPEEDUP         - initial BEM convergence acceleration time [s]
 
 ----------------------------------------Structural Model-------------------------------------------------------------
 Structure/IEA_22_280_RWT_MONO_Main.str             STRUCTURALFILE     - the input file for the structural model (leave blank if unused)
