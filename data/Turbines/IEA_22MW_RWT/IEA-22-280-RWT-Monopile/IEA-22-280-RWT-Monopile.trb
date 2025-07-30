@@ -19,7 +19,7 @@ Aero/IEA-22-280-RWT.bld                            BLADEFILE          - the path
 
 ----------------------------------------Turbine Geometry Parameters-------------------------------------------------
 These values are only used if no Structural Model is defined for this Turbine, in case of a Structural Model the geometry is defined in the Structural Input Files!!
-23.6670                                            OVERHANG           - the rotor overhang [m] (HAWT only)
+14.0771                                            OVERHANG           - the rotor overhang [m] (HAWT only)
 6.0000                                             SHAFTTILT          - the shaft tilt angle [deg] (HAWT only)
 4.0000                                             ROTORCONE          - the rotor cone angle [deg] (HAWT only)
 0.0000                                             CLEARANCE          - the rotor clearance to ground [m] (VAWT only)
