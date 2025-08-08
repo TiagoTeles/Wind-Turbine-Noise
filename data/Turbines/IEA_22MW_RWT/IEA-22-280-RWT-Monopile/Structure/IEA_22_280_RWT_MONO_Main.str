@@ -57,74 +57,107 @@ IEA_22_280_RWT_Blade_FPM.str	BLDFILE_2 - Name of file containing properties for 
 IEA_22_280_RWT_Blade_FPM.str	BLDFILE_3 - Name of file containing properties for blade 3
 
 ------------------------------- TOWER -------------------------------------
-149.386						TWRHEIGHT - Height of the tower (m)
+164.386						TWRHEIGHT - Height of the tower (m)
 IEA_22_280_RWT_Tower.str	TWRFILE - Name of file containing properties for the tower
 
 ------------------------------- SUBSTRUCTURE ------------------------------
-IEA_22_280_RWT_MONO_Sub.str	SUBFILE
+							SUBFILE
 
 ------------------------------- DATA OUTPUT TYPES -------------------------
-true			FOR_OUT - store (local) forces at all chosen locations 
-true			DEF_OUT - store (local) deflections at all chosen locations 
-false			POS_OUT - store (global) positions at all chosen locations 
-false			VEL_OUT - store (global) velocities at all chosen locations 
+false			FOR_OUT - store (local) forces at all chosen locations 
+false			DEF_OUT - store (local) deflections at all chosen locations 
+true			POS_OUT - store (global) positions at all chosen locations 
+true			VEL_OUT - store (global) velocities at all chosen locations 
 false			ACC_OUT - store (global) accelerations at all chosen locations
-true			AER_OUT - store aerodynamic forces/moments
+false			AER_OUT - store aerodynamic forces/moments
 
 ------------------------------- DATA OUTPUT LOCATIONS ---------------------
 any number, or zero, user defined positions can be chosen as output locations. locations can be assigned at any of the following components:
 blades, struts, tower and guy cables. See the following examples for the used nomenclature:
 
+TWR_0.00
+TWR_0.05
+TWR_0.10
+TWR_0.15
+TWR_0.20
+TWR_0.25
+TWR_0.30
+TWR_0.35
+TWR_0.40
+TWR_0.45
+TWR_0.50
+TWR_0.55
+TWR_0.60
+TWR_0.65
+TWR_0.70
+TWR_0.75
+TWR_0.80
+TWR_0.85
+TWR_0.90
+TWR_0.95
+TWR_1.00
 BLD_1_0.00
-BLD_1_0.02
-BLD_1_0.04
-BLD_1_0.06
-BLD_1_0.08
+BLD_1_0.05
 BLD_1_0.10
-BLD_1_0.12
-BLD_1_0.14
-BLD_1_0.16
-BLD_1_0.18
+BLD_1_0.15
 BLD_1_0.20
-BLD_1_0.22
-BLD_1_0.24
-BLD_1_0.26
-BLD_1_0.28
+BLD_1_0.25
 BLD_1_0.30
-BLD_1_0.32
-BLD_1_0.34
-BLD_1_0.36
-BLD_1_0.38
+BLD_1_0.35
 BLD_1_0.40
-BLD_1_0.42
-BLD_1_0.44
-BLD_1_0.46
-BLD_1_0.48
+BLD_1_0.45
 BLD_1_0.50
-BLD_1_0.52
-BLD_1_0.54
-BLD_1_0.56
-BLD_1_0.58
+BLD_1_0.55
 BLD_1_0.60
-BLD_1_0.62
-BLD_1_0.64
-BLD_1_0.66
-BLD_1_0.68
+BLD_1_0.65
 BLD_1_0.70
-BLD_1_0.72
-BLD_1_0.74
-BLD_1_0.76
-BLD_1_0.78
+BLD_1_0.75
 BLD_1_0.80
-BLD_1_0.82
-BLD_1_0.84
-BLD_1_0.86
-BLD_1_0.88
+BLD_1_0.85
 BLD_1_0.90
-BLD_1_0.92
-BLD_1_0.94
-BLD_1_0.96
-BLD_1_0.98
+BLD_1_0.95
 BLD_1_1.00
+BLD_2_0.00
+BLD_2_0.05
+BLD_2_0.10
+BLD_2_0.15
+BLD_2_0.20
+BLD_2_0.25
+BLD_2_0.30
+BLD_2_0.35
+BLD_2_0.40
+BLD_2_0.45
+BLD_2_0.50
+BLD_2_0.55
+BLD_2_0.60
+BLD_2_0.65
+BLD_2_0.70
+BLD_2_0.75
+BLD_2_0.80
+BLD_2_0.85
+BLD_2_0.90
+BLD_2_0.95
+BLD_2_1.00
+BLD_3_0.00
+BLD_3_0.05
+BLD_3_0.10
+BLD_3_0.15
+BLD_3_0.20
+BLD_3_0.25
+BLD_3_0.30
+BLD_3_0.35
+BLD_3_0.40
+BLD_3_0.45
+BLD_3_0.50
+BLD_3_0.55
+BLD_3_0.60
+BLD_3_0.65
+BLD_3_0.70
+BLD_3_0.75
+BLD_3_0.80
+BLD_3_0.85
+BLD_3_0.90
+BLD_3_0.95
+BLD_3_1.00
 
 
