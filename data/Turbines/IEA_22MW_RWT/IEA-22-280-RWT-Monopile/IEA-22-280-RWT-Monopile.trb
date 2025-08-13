@@ -89,7 +89,7 @@ Only used if waketype = 0
 ----------------------------------------Unsteady BEM Parameters------------------------------------------------------
 12                                                 POLARDISC          - the polar discretization for the unsteady BEM (integer!) [-]
 true                                               BEMTIPLOSS         - use BEM tip loss factor [bool]
-0.00                                               BEMSPEEDUP         - initial BEM convergence acceleration time [s]
+20.00                                              BEMSPEEDUP         - initial BEM convergence acceleration time [s]
 
 ----------------------------------------Structural Model-------------------------------------------------------------
 Structure/IEA_22_280_RWT_MONO_Main.str             STRUCTURALFILE     - the input file for the structural model (leave blank if unused)
