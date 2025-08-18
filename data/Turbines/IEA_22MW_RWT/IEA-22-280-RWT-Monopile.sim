@@ -61,7 +61,7 @@ true                                               WINDAUTOSHIFT      - the wind
 0.110                                              SHEAREXP           - the shear exponent if using a power law profile, if a windfield is used these values are used to calculate the mean wake convection velocities
 0.010                                              ROUGHLENGTH        - the roughness length if using a log profile, if a windfield is used these values are used to calculate the mean wake convection velocities
 0.00                                               DIRSHEAR           - a value for the directional shear in deg/m
-170.0                                              REFHEIGHT          - the reference height, used to construct the BL profile
+170.00                                             REFHEIGHT          - the reference height, used to construct the BL profile
 false                                              GROUNDEFFECT       - should the ground effect be included (for vortex lines and particles)
 
 ----------------------------------------Ocean Depth, Waves and Currents------------------------------------------- 
@@ -89,7 +89,7 @@ the following parameters only need to be set if ISOFFSHORE = 1
 
 ----------------------------------------Environmental Parameters---------------------------------------------------
 1.22500                                            DENSITYAIR         - the air density [kg/m^3]
-0.000014800                                        VISCOSITYAIR       - the air kinematic viscosity 
+0.000014600                                        VISCOSITYAIR       - the air kinematic viscosity 
 1025.00000                                         DENSITYWATER       - the water density [kg/m^3]
 0.000001307                                        VISCOSITYWATER     - the water kinematic viscosity [m^2/s]
 9.806650000                                        GRAVITY            - the gravity constant [m/s^2]
