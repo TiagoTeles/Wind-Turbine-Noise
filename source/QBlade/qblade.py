@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-07-14
+Date:     2025-08-22
 License:  GNU GPL 3.0
 
 Manage the QBlade library.
@@ -16,23 +16,26 @@ Exceptions:
     None
 """
 
-from ctypes import CDLL, c_bool, c_char_p, c_double, c_int, c_void_p, POINTER
-from typing import Any, Dict
+from ctypes import CDLL, c_bool, c_char_p, c_int, c_void_p
 
 
 class QBlade:
     """
     A class to interact with the QBlade library.
 
+    Methods:
+        __init__ : initialise the QBlade class
+        set_library_path : set the QBlade library path
+        create_instance : create the QBlade instance
+        load_sim_definition : load the simulation definition file
+        initialise_simulation : initialise the simulation
+        run_full_simulation : run the simulation
+        export_results : export the simulation results
+        close_instance : close the QBlade instance
+
     Attributes:
         path : str -- path to the QBlade library
         lib : ctypes.CDLL -- QBlade library
-        functions : Dict -- functions in the QBlade library 
-
-    Methods:
-        __init__ : initialise the QBlade class
-        load_library : load the QBlade library
-        unload_library : unload the QBlade library
     """
 
     def __init__(self, path):
@@ -47,190 +50,77 @@ class QBlade:
         """
 
         self.path = path
-        self.lib = None
-
-        # Define the function names, argument types, and return type
-        self.functions: Dict[str, Dict[str, Any]] = {
-            "createInstance": {
-                "argtypes": [c_int, c_int],
-                "restype": c_bool
-                },
-            "closeInstance": {
-                "argtypes": None,
-                "restype": c_void_p
-                },
-            "loadProject": {
-                "argtypes": [c_char_p],
-                "restype": c_void_p
-                },
-            "loadSimDefinition": {
-                "argtypes": [c_char_p],
-                "restype": c_void_p
-                },
-            "setOmpNumThreads": {
-                "argtypes": [c_int],
-                "restype": c_void_p
-                },
-            "getCustomData_at_num": {
-                "argtypes": [c_char_p, c_double, c_int],
-                "restype": c_double
-                },
-            "getCustomSimulationTimeData": {
-                "argtypes": [c_char_p],
-                "restype": c_double
-                },
-            "getWindspeed": {
-                "argtypes": [c_double, c_double, c_double, POINTER(c_double * 3)],
-                "restype": c_void_p
-                },
-            "getWindspeedArray": {
-                "argtypes": [POINTER(c_double), POINTER(c_double), POINTER(c_double),POINTER(c_double), POINTER(c_double), POINTER(c_double), c_int],
-                "restype": c_void_p
-                },
-            "storeProject": {
-                "argtypes": [c_char_p],
-                "restype": c_void_p
-                },
-            "exportResults": {
-                "argtypes": [c_int, c_char_p, c_char_p, c_char_p],
-                "restype": c_void_p
-                },
-            "setLibraryPath": {
-                "argtypes": [c_char_p],
-                "restype": c_void_p
-                },
-            "setLogFile": {
-                "argtypes": [c_char_p],
-                "restype": c_void_p
-                },
-            "addTurbulentWind": {
-                "argtypes": [c_double, c_double, c_double, c_double, c_int, c_double,c_double, c_char_p, c_char_p, c_int, c_double, c_double, c_bool],
-                "restype": c_void_p
-                },
-            "setExternalAction": {
-                "argtypes": [c_char_p, c_char_p, c_double, c_double, c_char_p, c_bool, c_int],
-                "restype": c_void_p
-                },
-            "setMooringStiffness": {
-                "argtypes": [c_double, c_double, c_int, c_int],
-                "restype": c_void_p
-                },
-            "loadTurbulentWindBinary": {
-                "argtypes": [c_char_p],
-                "restype": c_void_p
-                },
-            "setTimestepSize": {
-                "argtypes": [c_double],
-                "restype": c_void_p
-                },
-            "setInitialConditions_at_num": {
-                "argtypes": [c_double, c_double, c_double, c_double, c_int],
-                "restype": c_void_p
-                },
-            "setRPMPrescribeType_at_num": {
-                "argtypes": [c_int, c_int],
-                "restype": c_void_p
-                },
-            "setRPM_at_num": {
-                "argtypes": [c_double, c_int],
-                "restype": c_void_p
-                },
-            "setRampupTime": {
-                "argtypes": [c_double],
-                "restype": c_void_p
-                },
-            "setTurbinePosition_at_num": {
-                "argtypes": [c_double, c_double, c_double, c_double, c_double, c_double, c_int],
-                "restype": c_void_p
-                },
-            "getTowerBottomLoads_at_num": {
-                "argtypes": [POINTER(c_double * 6), c_int],
-                "restype": c_void_p
-                },
-            "initializeSimulation": {
-                "argtypes": None,
-                "restype": c_void_p
-                },
-            "advanceTurbineSimulation": {
-                "argtypes": None,
-                "restype": c_bool
-                },
-            "advanceController_at_num": {
-                "argtypes": [POINTER(c_double * 5), c_int],
-                "restype": c_void_p
-                },
-            "setDebugInfo": {
-                "argtypes": [c_bool],
-                "restype": c_void_p
-                },
-            "setUseOpenCl": {
-                "argtypes": [c_bool],
-                "restype": c_void_p
-                },
-            "setGranularDebug": {
-                "argtypes": [c_bool, c_bool, c_bool, c_bool, c_bool],
-                "restype": c_void_p
-                },
-            "setControlVars_at_num": {
-                "argtypes": [POINTER(c_double * 5), c_int],
-                "restype": c_void_p
-                },
-            "getTurbineOperation_at_num": {
-                "argtypes": [POINTER(c_double * 41), c_int],
-                "restype": c_void_p
-                },
-            "setPowerLawWind": {
-                "argtypes": [c_double, c_double, c_double, c_double, c_double],
-                "restype": c_void_p
-                },
-            "runFullSimulation": {
-                "argtypes": None,
-                "restype": c_bool
-                },
-            "setAutoCleanup": {
-                "argtypes": [c_bool],
-                "restype": c_void_p
-                },
-        }
-
-        # Load the QBlade library
-        self.load_library()
-
-    def load_library(self):
-        """
-        Load the QBlade library.
-
-        Arguments:
-            None
-
-        Returns:
-            None
-        """
 
         # Load the library
         self.lib = CDLL(self.path)
 
-        # Bind the functions
-        for name, signature in self.functions.items():
-
-            # Get the function from the library
-            function = getattr(self.lib, name)
-
-            # Set the argument types
-            function.argtypes = signature["argtypes"]
-
-            # Set the return type
-            function.restype = signature["restype"]
-
-            # Assign the function to the class
-            setattr(self, name, function)
-
         # Set the library path
-        self.setLibraryPath(self.path.encode("utf-8"))
+        self.set_library_path(self.path)
 
-    def unload_library(self):
+    def set_library_path(self, path):
         """
-        Unload the QBlade library.
+        Set the QBlade library path.
+
+        Arguments:
+            path : str -- path to the QBlade library
+
+        Returns:
+            None
+        """
+
+        # Set the argument and return types
+        self.lib.setLibraryPath.argtypes = [c_char_p]
+        self.lib.setLibraryPath.restype = c_void_p
+
+        # Call the function
+        self.lib.setLibraryPath(path.encode("utf-8"))
+
+        return None
+
+    def create_instance(self, cl_device, group_size):
+        """
+        Create the QBlade instance.
+
+        Arguments:
+            cl_device : int -- OpenCL device
+            group_size : int -- work group size
+
+        Returns:
+            success : bool -- status
+        """
+
+        # Set the argument and return types
+        self.lib.createInstance.argtypes = [c_int, c_int]
+        self.lib.createInstance.restype = c_bool
+
+        # Call the function
+        success = self.lib.createInstance(cl_device, group_size)
+
+        return success
+
+    def load_sim_definition(self, path):
+        """
+        Load the simulation definition file.
+
+        Arguments:
+            path : str -- path to the simulation definition file
+
+        Returns:
+            None
+        """
+
+        # Set the argument and return types
+        self.lib.loadSimDefinition.argtypes = [c_char_p]
+        self.lib.loadSimDefinition.restype = c_void_p
+
+        # Call the function
+        self.lib.loadSimDefinition(path.encode("utf-8"))
+
+        return None
+
+    def initialise_simulation(self):
+        """
+        Initialise the simulation.
 
         Arguments:
             None
@@ -239,10 +129,78 @@ class QBlade:
             None
         """
 
-        if self.lib:
+        # Set the argument and return types
+        self.lib.initializeSimulation.argtypes = None
+        self.lib.initializeSimulation.restype = c_void_p
 
-            # Close the QBlade instance
-            self.closeInstance()
+        # Call the function
+        self.lib.initializeSimulation()
 
-            # Delete the QBlade instance
-            self.lib = None
+        return None
+
+    def run_full_simulation(self):
+        """
+        Run the simulation.
+
+        Arguments:
+            None
+
+        Returns:
+            success : bool -- status
+        """
+
+        # Set the argument and return types
+        self.lib.runFullSimulation.argtypes = None
+        self.lib.runFullSimulation.restype = c_bool
+
+        # Call the function
+        success = self.lib.runFullSimulation()
+
+        return success
+
+    def export_results(self, type, directory, name, filter):
+        """
+        Export the simulation results.
+
+        Arguments:
+            type : int -- results file type
+            directory : str -- results directory
+            name : str -- results file name
+            filter : str -- results filter
+
+        Returns:
+            None
+        """
+
+        # Set the argument and return types
+        self.lib.exportResults.argtypes = [c_int, c_char_p, c_char_p, c_char_p]
+        self.lib.exportResults.restype = c_void_p
+
+        # Call the function
+        self.lib.exportResults(type, directory.encode("utf-8"), name.encode("utf-8"), \
+                               filter.encode("utf-8"))
+
+        return None
+
+    def close_instance(self):
+        """
+        Close the QBlade instance.
+
+        Arguments:
+            None
+
+        Returns:
+            None
+        """
+
+        # Set the argument and return types
+        self.lib.closeInstance.argtypes = None
+        self.lib.closeInstance.restype = c_void_p
+
+        # Call the function
+        self.lib.closeInstance()
+
+        # Delete the QBlade instance
+        self.lib = None
+
+        return None
