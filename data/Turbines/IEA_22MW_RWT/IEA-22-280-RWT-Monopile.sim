@@ -89,7 +89,7 @@ the following parameters only need to be set if ISOFFSHORE = 1
 
 ----------------------------------------Environmental Parameters---------------------------------------------------
 1.22500                                            DENSITYAIR         - the air density [kg/m^3]
-0.000014600                                        VISCOSITYAIR       - the air kinematic viscosity 
+0.000014607                                        VISCOSITYAIR       - the air kinematic viscosity 
 1025.00000                                         DENSITYWATER       - the water density [kg/m^3]
 0.000001307                                        VISCOSITYWATER     - the water kinematic viscosity [m^2/s]
 9.806650000                                        GRAVITY            - the gravity constant [m/s^2]
