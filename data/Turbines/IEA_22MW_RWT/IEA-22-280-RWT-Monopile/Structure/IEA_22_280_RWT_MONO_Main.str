@@ -61,7 +61,7 @@ IEA_22_280_RWT_Blade_FPM.str	BLDFILE_3 - Name of file containing properties for 
 IEA_22_280_RWT_Tower.str	TWRFILE - Name of file containing properties for the tower
 
 ------------------------------- SUBSTRUCTURE ------------------------------
-							SUBFILE
+				SUBFILE
 
 ------------------------------- DATA OUTPUT TYPES -------------------------
 false			FOR_OUT - store (local) forces at all chosen locations 
@@ -279,5 +279,4 @@ BLD_3_0.94
 BLD_3_0.96
 BLD_3_0.98
 BLD_3_1.00
-
 
