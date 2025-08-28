@@ -162,6 +162,6 @@ if __name__ == "__main__":
     # Get the bathymetry
     bathymetry = Bathymetry("data\\environments\\windfloat_atlantic\\bathymetry.csv")
 
-    # Plot the seabed type
+    # Show the seabed type
     seabed = Seabed("data\\environments\\windfloat_atlantic\\seabed.csv")
     seabed.show("tab10", bathymetry)

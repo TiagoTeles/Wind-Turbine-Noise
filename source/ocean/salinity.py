@@ -141,6 +141,6 @@ class Salinity:
 
 if __name__ == "__main__":
 
-    # Plot the temperature profile
+    # Show the temperature profile
     salinity = Salinity("data\\environments\\windfloat_atlantic\\salinity.csv")
     salinity.show(np.radians(41.6865), np.radians(-9.0574), 34, 36)

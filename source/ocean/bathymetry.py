@@ -137,6 +137,6 @@ class Bathymetry:
 
 if __name__ == "__main__":
 
-    # Plot the bathymetry
+    # Show the bathymetry
     bathymetry = Bathymetry("data\\environments\\windfloat_atlantic\\bathymetry.csv")
     bathymetry.show("inferno", -200, 0)
