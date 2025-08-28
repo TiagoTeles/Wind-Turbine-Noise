@@ -22,6 +22,8 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
+from bathymetry import Bathymetry
+
 
 LABELS = {
     0: "Mud",
@@ -156,8 +158,6 @@ class Seabed:
         plt.show()
 
 if __name__ == "__main__":
-
-    from bathymetry import Bathymetry
 
     # Get the bathymetry
     bathymetry = Bathymetry("data\\environments\\windfloat_atlantic\\bathymetry.csv")
