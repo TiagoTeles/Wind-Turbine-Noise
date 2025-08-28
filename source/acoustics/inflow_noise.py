@@ -1,17 +1,17 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-05-05
+Date:     2025-08-28
 License:  GNU GPL 3.0
 
-Calculate the inflow turbulence noise spectra.
+Determine the inflow turbulence noise spectra.
 
 Classes:
     None
 
 Functions:
-    amiet_model
-    moriarty_model
+    flat_plate_spl
+    airfoil_shape_correction
     retarded_coordinates
     inflow_noise
 
@@ -22,7 +22,7 @@ Exceptions:
 import numpy as np
 
 
-def amiet_model(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
+def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     """
     Determine the flat plate SPL.
 
@@ -41,7 +41,7 @@ def amiet_model(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
         rho_0 : float -- air density, [kg/m^3]
 
     Returns:
-        spl_amiet : np.array -- flat plate SPL, [dB]
+        spl_flat_plate : np.array -- flat plate SPL, [dB]
     """
 
     # Determine the Mach number
@@ -74,23 +74,23 @@ def amiet_model(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     # Determine the Prandtl-Glauert factor
     beta = np.sqrt(1 - np.square(M))
 
-    # Determine the Sears function
+    # Determine the compressible Sears function
     S = np.sqrt(1 / (2 * np.pi * (K_x_line / np.square(beta)) \
                      + 1 / (1 + 2.4 * (K_x_line / np.square(beta)))))
 
     # Determine the low-frequency correction
     LFC = 10 * np.square(S) * M * np.square(K_x_line) / np.square(beta)
 
-    # Add the angle of attack correction
+    # Apply the angle of attack correction
     LFC *= 1 + 9 * np.square(alpha)
 
-    # Determine the corrected SPL
-    spl_amiet = spl_h + 10 * np.log10(LFC / (1 + LFC))
+    # Determine the flat plate SPL
+    spl_flat_plate = spl_h + 10 * np.log10(LFC / (1 + LFC))
 
-    return spl_amiet
+    return spl_flat_plate
 
 
-def moriarty_model(f, c, tc_01, tc_10, U):
+def airfoil_shape_correction(f, c, tc_01, tc_10, U):
     """
     Determine the airfoil shape SPL correction.
     
@@ -129,7 +129,7 @@ def moriarty_model(f, c, tc_01, tc_10, U):
 
 def retarded_coordinates(x, y, z, M):
     """
-    Determine the retrarded distance and angles.
+    Determine the retarded distance and angles.
 
     Arguments:
         x : np.array -- x-coordinate, [m]
@@ -149,6 +149,9 @@ def retarded_coordinates(x, y, z, M):
     # Determine the chordwise angle
     theta = np.arccos(x / r)
 
+    # Determine the spanwise angle
+    phi = np.arctan2(z, y)
+
     # Determine the chordwise retarded angle
     theta_e = np.arccos(np.sqrt(1 - np.square(M) * np.square(np.sin(theta))) * np.cos(theta) \
                         - M * np.square(np.sin(theta)))
@@ -157,21 +160,21 @@ def retarded_coordinates(x, y, z, M):
     r_e = r * np.sin(theta) / np.sin(theta_e)
 
     # Determine the spanwise retarded angle
-    phi_e = np.arctan2(z, y)
+    phi_e = phi
 
     return r_e, theta_e, phi_e
 
 
-def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl_correction):
+def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
     """
-    Determine the inflow noise.
+    Determine the inflow noise SPL.
 
     Arguments:
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
-        tc_01 : np.array -- thickness at 1% c, [-]
-        tc_10 : np.array -- thickness at 10% c, [-]
+        tc_01 : np.array -- thickness at x/c = 1%, [-]
+        tc_10 : np.array -- thickness at x/c = 10%, [-]
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
@@ -181,7 +184,6 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl
         L : np.array -- turbulence length scale, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
-        spl_correction : bool -- apply SPL correction?
 
     Returns:
         spl : np.array -- inflow noise SPL, [dB]
@@ -194,16 +196,12 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0, spl
     r_e, theta_e, phi_e = retarded_coordinates(x, y, z, M)
 
     # Determine the flat plate SPL
-    spl_amiet = amiet_model(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0)
+    spl_amiet = flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0)
 
     # Determine the airfoil shape SPL correction
-    delta_spl = moriarty_model(f, c, tc_01, tc_10, U)
+    delta_spl = airfoil_shape_correction(f, c, tc_01, tc_10, U)
 
     # Determine the inflow noise SPL
     spl = spl_amiet + delta_spl
-
-    # Add optional SPL correction
-    if spl_correction:
-        spl += 10
 
     return spl
