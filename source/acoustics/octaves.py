@@ -56,3 +56,13 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
         f_upper = f_center * np.pow(2, 1/6)
 
     return f_center, f_lower, f_upper
+
+if __name__ == "__main__":
+
+    # Show the base-2 one-third octave frequency bands
+    f_c, f_l, f_u = one_third_octave(20, 20000, 1000, base_10=False)
+    print("Base 2:\n" + str(f_c) + " [Hz] \n")
+
+    # Show the base-10 one-third octave frequency bands
+    f_c, f_l, f_u = one_third_octave(20, 20000, 1000, base_10=True)
+    print("Base 10:\n" + str(f_c) + " [Hz] \n")
