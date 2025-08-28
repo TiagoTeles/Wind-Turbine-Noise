@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-22
+Date:     2025-08-25
 License:  GNU GPL 3.0
 
 Functions from the International Standard Atmosphere.
