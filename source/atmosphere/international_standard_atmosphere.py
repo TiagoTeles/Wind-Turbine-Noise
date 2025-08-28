@@ -87,11 +87,11 @@ def speed_of_sound(T, R, gamma):
 
 if __name__ == "__main__":
 
-    # Determine the density
-    print(density(101325.0, 288.15, 287.1))
+    # Show the density of air
+    print("Rho: " + str(density(101325.0, 288.15, 287.1)) + " [kg/m^3]")
 
-    # Determine the kinematic viscosity
-    print(kinematic_viscosity(101325.0, 288.15, 287.1, 110.4, 1.458e-6))
+    # Show the kinematic viscosity of air
+    print("Nu: " + str(kinematic_viscosity(101325.0, 288.15, 287.1, 110.4, 1.458e-6)) + " [m^2/s]")
 
-    # Determine the speed of sound
-    print(speed_of_sound(288.15, 287.1, 1.4))
+    # Show the speed of sound in air
+    print("C: " + str(speed_of_sound(288.15, 287.1, 1.4)) + " [m/s]")
