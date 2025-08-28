@@ -209,11 +209,10 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
 
 if __name__ == "__main__":
 
-    # Determine the directivity pattern
+    # Show the directivity pattern
     theta = np.linspace(0, 2*np.pi, 360)
     D_line = np.square(np.sin(theta))
 
-    # Show the directivity pattern
     plt.polar(theta, D_line)
     plt.xlim(0, 2*np.pi)
     plt.ylim(0, 1.2)
