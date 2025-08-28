@@ -84,3 +84,14 @@ def speed_of_sound(T, R, gamma):
     c = np.sqrt(gamma * R * T)
 
     return c
+
+if __name__ == "__main__":
+
+    # Determine the density
+    print(density(101325.0, 288.15, 287.1))
+
+    # Determine the kinematic viscosity
+    print(kinematic_viscosity(101325.0, 288.15, 287.1, 110.4, 1.458e-6))
+
+    # Determine the speed of sound
+    print(speed_of_sound(288.15, 287.1, 1.4))
