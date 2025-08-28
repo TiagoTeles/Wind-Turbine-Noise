@@ -1,16 +1,16 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-22
+Date:     2025-08-28
 License:  GNU GPL 3.0
 
-Octave band frequency calculation functions.
+Functions to determine octave frequency bands.
 
 Classes:
     None
 
 Functions:
-    octave
+    one_third_octave
 
 Exceptions:
     None
@@ -19,7 +19,7 @@ Exceptions:
 import numpy as np
 
 
-def octave(f_min, f_max, f_ref, base_10):
+def one_third_octave(f_min, f_max, f_ref, base_10):
     """
     Determine the center, lower, and upper frequencies of the 1/3 octave frequency bands.
 
