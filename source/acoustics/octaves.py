@@ -4,7 +4,7 @@ Email:    tmoreiradafont@tudelft.nl
 Date:     2025-08-28
 License:  GNU GPL 3.0
 
-Functions to determine octave frequency bands.
+Determine the octave frequency bands.
 
 Classes:
     None
