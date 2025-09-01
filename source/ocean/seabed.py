@@ -22,8 +22,9 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
-from bathymetry import Bathymetry
+from source.ocean.bathymetry import Bathymetry
 from source.settings import BATHYMETRY_PATH, SEABED_PATH
+
 
 LABELS = {
     0: "Mud",

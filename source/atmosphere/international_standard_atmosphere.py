@@ -20,15 +20,17 @@ Exceptions:
 
 import numpy as np
 
+from source.constants import R, GAMMA, S, BETA_S
+from source.settings import P_0, T_0
 
-def density(p, T, R):
+
+def density(p, T):
     """
     Determine the density of air.
 
     Arguments:
         p : float -- pressure, [Pa]
         T : float -- temperature, [K]
-        R : float -- specific gas constant, [J/(K*kg)]
 
     Returns:
         rho : float -- density, [kg/m^3]
@@ -40,26 +42,23 @@ def density(p, T, R):
     return rho
 
 
-def kinematic_viscosity(p, T, R, S, beta_s):
+def kinematic_viscosity(p, T):
     """
     Determine the kinematic viscosity of air.
 
     Arguments:
         p : float -- pressure, [Pa]
         T : float -- temperature, [K]
-        R : float -- specific gas constant, [J/(K*kg)]
-        S : float -- sutherland's empirical coefficient, [K]
-        beta_s : float -- sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
 
     Returns:
         nu : float -- kinematic viscosity, [m^2/s]
     """
 
     # Determine the dynamic viscosity
-    mu = beta_s * np.power(T, 3/2) / (T + S)
+    mu = BETA_S * np.power(T, 3/2) / (T + S)
 
     # Determine the density
-    rho = density(p, T, R)
+    rho = density(p, T)
 
     # Determine the kinematic viscosity
     nu = mu / rho
@@ -67,31 +66,29 @@ def kinematic_viscosity(p, T, R, S, beta_s):
     return nu
 
 
-def speed_of_sound(T, R, gamma):
+def speed_of_sound(T):
     """
     Determine the speed of sound in air.
 
     Arguments:
         T : float -- temperature, [K]
-        R : float -- specific gas constant, [J/(kg*K)]
-        gamma : float -- specific heat ratio, [-]
 
     Returns:
         c : float -- speed of sound, [m/s]
     """
 
     # Determine the speed of sound
-    c = np.sqrt(gamma * R * T)
+    c = np.sqrt(GAMMA * R * T)
 
     return c
 
 if __name__ == "__main__":
 
     # Show the density of air
-    print("Rho: " + str(density(101325.0, 288.15, 287.1)) + " [kg/m^3]")
+    print("Rho: " + str(density(P_0, T_0)) + " [kg/m^3]")
 
     # Show the kinematic viscosity of air
-    print("Nu: " + str(kinematic_viscosity(101325.0, 288.15, 287.1, 110.4, 1.458E-6)) + " [m^2/s]")
+    print("Nu: " + str(kinematic_viscosity(P_0, T_0)) + " [m^2/s]")
 
     # Show the speed of sound in air
-    print("C: " + str(speed_of_sound(288.15, 287.1, 1.4)) + " [m/s]")
+    print("C: " + str(speed_of_sound(T_0)) + " [m/s]")

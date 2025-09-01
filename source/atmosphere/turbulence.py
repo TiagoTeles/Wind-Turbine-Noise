@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from international_standard_atmosphere import kinematic_viscosity
-
+from source.
 
 def turbulence_intensity(z, z_0):
     """
@@ -74,13 +74,13 @@ def surface_roughness_length(z_ref, U_ref, nu, output_individual=False):
     """
 
     # Determine R and A
-    R = z_ref / (0.11 * nu) * (0.41 * U_ref)
-    A = 0.018 / (9.80665 * z_ref) * np.square(0.41 * U_ref)
+    R = z_ref / (ALPHA_M * nu) * (KAPPA * U_ref)
+    A = ALPHA_CH / (g * z_ref) * np.square(KAPPA * U_ref)
 
     # Determine b_n
     b_n_nu = -1.47 + 0.93 * np.log(R)
     b_n_alpha = 2.65 - 1.44 * np.log(A) - 0.015 * np.square(np.log(A))
-    b_n = np.pow(np.pow(b_n_nu, -12) + np.pow(b_n_alpha, -12), -1/12)
+    b_n = np.pow(np.pow(b_n_nu, p) + np.pow(b_n_alpha, p), 1.0/p)
 
     # Determine the surface roughness length
     z_0 = z_ref / (np.exp(b_n) - 1)
@@ -99,7 +99,8 @@ def surface_roughness_length(z_ref, U_ref, nu, output_individual=False):
 if __name__ == "__main__":
 
     # Determine the kinematic viscosity of air
-    nu = kinematic_viscosity(101325.0, 288.15)
+    rho = density(101325.0, 288.15)
+    nu = kinematic_viscosity(288.15, rho)
 
     # Show the turbulence intensity
     z = np.linspace(1.0E-3, 200.0, 1000)
