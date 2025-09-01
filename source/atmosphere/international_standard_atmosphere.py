@@ -26,12 +26,12 @@ def density(p, T, R):
     Determine the density of air.
 
     Arguments:
-        p : float -- Pressure, [Pa]
-        T : float -- Temperature, [K]
-        R : float -- Specific gas constant, [J/(K*kg)]
+        p : float -- pressure, [Pa]
+        T : float -- temperature, [K]
+        R : float -- specific gas constant, [J/(K*kg)]
 
     Returns:
-        rho : float -- Density, [kg/m^3]
+        rho : float -- density, [kg/m^3]
     """
 
     # Determine the density
@@ -45,18 +45,18 @@ def kinematic_viscosity(p, T, R, S, beta_s):
     Determine the kinematic viscosity of air.
 
     Arguments:
-        p : float -- Pressure, [Pa]
-        T : float -- Temperature, [K]
-        R : float -- Specific gas constant, [J/(K*kg)]
-        S : float -- Sutherland's empirical coefficient, [K]
-        beta_s : float -- Sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
+        p : float -- pressure, [Pa]
+        T : float -- temperature, [K]
+        R : float -- specific gas constant, [J/(K*kg)]
+        S : float -- sutherland's empirical coefficient, [K]
+        beta_s : float -- sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
 
     Returns:
-        nu : float -- Kinematic viscosity, [m^2/s]
+        nu : float -- kinematic viscosity, [m^2/s]
     """
 
     # Determine the dynamic viscosity
-    mu = beta_s * np.power(T, 1.5) / (T + S)
+    mu = beta_s * np.power(T, 3/2) / (T + S)
 
     # Determine the density
     rho = density(p, T, R)
@@ -72,12 +72,12 @@ def speed_of_sound(T, R, gamma):
     Determine the speed of sound in air.
 
     Arguments:
-        T : float -- Temperature, [K]
-        R : float -- Specific gas constant, [J/(kg*K)]
-        gamma : float -- Specific heat ratio, [-]
+        T : float -- temperature, [K]
+        R : float -- specific gas constant, [J/(kg*K)]
+        gamma : float -- specific heat ratio, [-]
 
     Returns:
-        c : float -- Speed of sound, [m/s]
+        c : float -- speed of sound, [m/s]
     """
 
     # Determine the speed of sound
