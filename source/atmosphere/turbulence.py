@@ -61,13 +61,13 @@ def turbulence_length_scale(z, z_0):
     return L
 
 
-def surface_roughness_length(z_ref, U_ref, nu, output_individual=False):
+def surface_roughness_length(z, u_n, nu, output_individual=False):
     """
     Determine the surface roughness length.
 
     Parameters:
-        z_ref : np.array -- reference height, [m]
-        U_ref : np.array -- reference velocity, [m/s]
+        z : np.array -- height, [m]
+        u_n : np.array -- neutral velocity, [m/s]
         nu : np.array -- kinematic viscosity, [m^2/s]
         output_individual : bool -- output individual contributions?
 
@@ -76,23 +76,23 @@ def surface_roughness_length(z_ref, U_ref, nu, output_individual=False):
     """
 
     # Determine R and A
-    R = z_ref / (ALPHA_M * nu) * (KAPPA * U_ref)
-    A = ALPHA_CH / (G * z_ref) * np.square(KAPPA * U_ref)
+    R = z / (ALPHA_M * nu) * (KAPPA * u_n)
+    A = ALPHA_CH / (G * z) * np.square(KAPPA * u_n)
 
     # Determine b_n
     b_n_nu = -1.47 + 0.93 * np.log(R)
     b_n_alpha = 2.65 - 1.44 * np.log(A) - 0.015 * np.square(np.log(A))
-    b_n = np.pow(np.pow(b_n_nu, P) + np.pow(b_n_alpha, P), 1.0/P)
+    b_n_fit = np.pow(np.pow(b_n_nu, P) + np.pow(b_n_alpha, P), 1.0/P)
 
     # Determine the surface roughness length
-    z_0 = z_ref / (np.exp(b_n) - 1.0)
+    z_0 = z / (np.exp(b_n_fit) - 1.0)
 
     # Determine the individual contributions
-    z_0_nu = z_ref / (np.exp(b_n_nu) - 1.0)
-    z_0_alpha = z_ref / (np.exp(b_n_alpha) - 1.0)
+    z_0_nu = z / (np.exp(b_n_nu) - 1.0)
+    z_0_alpha = z / (np.exp(b_n_alpha) - 1.0)
 
     # Return the surface roughness length
-    if output_individual: 
+    if output_individual:
         return z_0, z_0_nu, z_0_alpha
     else:
         return z_0
