@@ -23,7 +23,7 @@ import pandas as pd
 import scipy as sp
 
 from bathymetry import Bathymetry
-
+from source.settings import BATHYMETRY_PATH, SEABED_PATH
 
 LABELS = {
     0: "Mud",
@@ -160,8 +160,8 @@ class Seabed:
 if __name__ == "__main__":
 
     # Get the bathymetry
-    bathymetry = Bathymetry("data\\environments\\windfloat_atlantic\\bathymetry.csv")
+    bathymetry = Bathymetry(BATHYMETRY_PATH)
 
     # Show the seabed type
-    seabed = Seabed("data\\environments\\windfloat_atlantic\\seabed.csv")
+    seabed = Seabed(SEABED_PATH)
     seabed.show("tab10", bathymetry)

@@ -21,6 +21,8 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
+from source.settings import BATHYMETRY_PATH
+
 
 class Bathymetry:
     """
@@ -138,5 +140,5 @@ class Bathymetry:
 if __name__ == "__main__":
 
     # Show the bathymetry
-    bathymetry = Bathymetry("data\\environments\\windfloat_atlantic\\bathymetry.csv")
+    bathymetry = Bathymetry(BATHYMETRY_PATH)
     bathymetry.show("inferno", -200.0, 0.0)

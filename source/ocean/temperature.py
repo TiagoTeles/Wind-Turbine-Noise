@@ -21,6 +21,8 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
+from source.settings import LATITUDE, LONGITUDE, TEMPERATURE_PATH
+
 
 class Temperature:
     """
@@ -142,5 +144,5 @@ class Temperature:
 if __name__ == "__main__":
 
     # Show the temperature profile
-    temperature = Temperature("data\\environments\\windfloat_atlantic\\temperature.csv")
-    temperature.show(np.radians(41.6865), np.radians(-9.0574), 13.0, 17.0)
+    temperature = Temperature(TEMPERATURE_PATH)
+    temperature.show(LATITUDE, LONGITUDE, 13.0, 17.0)

@@ -21,6 +21,8 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
+from source.settings import LATITUDE, LONGITUDE, SALINITY_PATH
+
 
 class Salinity:
     """
@@ -142,5 +144,5 @@ class Salinity:
 if __name__ == "__main__":
 
     # Show the temperature profile
-    salinity = Salinity("data\\environments\\windfloat_atlantic\\salinity.csv")
-    salinity.show(np.radians(41.6865), np.radians(-9.0574), 34.0, 36.0)
+    salinity = Salinity(SALINITY_PATH)
+    salinity.show(LATITUDE, LONGITUDE, 34.0, 36.0)
