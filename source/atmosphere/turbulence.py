@@ -59,15 +59,13 @@ def turbulence_length_scale(z, z_0):
     return L
 
 
-def surface_roughness_length(z_ref, U_ref, g, kappa, nu, output_individual=False):
+def surface_roughness_length(z_ref, U_ref, nu, output_individual=False):
     """
     Determine the surface roughness length.
 
     Parameters:
         z_ref : np.array -- reference height, [m]
         U_ref : np.array -- reference velocity, [m/s]
-        g : np.array -- gravitational acceleration, [m/s^2]
-        kappa : np.array -- Von Karman constant, [-]
         nu : np.array -- kinematic viscosity, [m^2/s]
         output_individual : bool -- output individual contributions?
 
@@ -76,8 +74,8 @@ def surface_roughness_length(z_ref, U_ref, g, kappa, nu, output_individual=False
     """
 
     # Determine R and A
-    R = z_ref / (0.11 * nu) * (kappa * U_ref)
-    A = 0.018 / (g * z_ref) * np.square(kappa * U_ref)
+    R = z_ref / (0.11 * nu) * (0.41 * U_ref)
+    A = 0.018 / (9.80665 * z_ref) * np.square(0.41 * U_ref)
 
     # Determine b_n
     b_n_nu = -1.47 + 0.93 * np.log(R)
@@ -101,11 +99,11 @@ def surface_roughness_length(z_ref, U_ref, g, kappa, nu, output_individual=False
 if __name__ == "__main__":
 
     # Determine the kinematic viscosity of air
-    nu = kinematic_viscosity(101325.0, 288.15, 287.1, 110.4, 1.458E-6)
+    nu = kinematic_viscosity(101325.0, 288.15)
 
     # Show the turbulence intensity
     z = np.linspace(1.0E-3, 200.0, 1000)
-    z_0 = surface_roughness_length(170.0, 11.0, 9.80665, 0.41, nu)
+    z_0 = surface_roughness_length(170.0, 11.0, nu)
     I = turbulence_intensity(z, z_0)
 
     plt.plot(100*I, z)
@@ -118,7 +116,7 @@ if __name__ == "__main__":
 
     # Show the turbulence length scale
     z = np.linspace(1.0E-3, 200.0, 1000)
-    z_0 = surface_roughness_length(170.0, 11.0, 9.80665, 0.41, nu)
+    z_0 = surface_roughness_length(170.0, 11.0, nu)
     L = turbulence_length_scale(z, z_0)
 
     plt.plot(L, z)
@@ -131,7 +129,7 @@ if __name__ == "__main__":
 
     # Show the surface roughness length
     U = np.linspace(1.0E-3, 12.0, 1000)
-    z_0, z_0_nu, z_0_alpha = surface_roughness_length(170.0, U, 9.80665, 0.41, nu, True)
+    z_0, z_0_nu, z_0_alpha = surface_roughness_length(170.0, U, nu, True)
 
     plt.semilogy(U, z_0_nu, label="Kinematic Viscosity")
     plt.semilogy(U, z_0_alpha, label="Charnock's Relation")
