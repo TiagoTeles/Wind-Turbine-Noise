@@ -133,7 +133,7 @@ class Temperature:
 
         # Set the axis limits
         plt.xlim(t_min, t_max)
-        plt.ylim(np.min(altitude), 0)
+        plt.ylim(np.min(altitude), 0.0)
 
         # Show the plot
         plt.grid()
@@ -143,4 +143,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     temperature = Temperature("data\\environments\\windfloat_atlantic\\temperature.csv")
-    temperature.show(np.radians(41.6865), np.radians(-9.0574), 13, 17)
+    temperature.show(np.radians(41.6865), np.radians(-9.0574), 13.0, 17.0)

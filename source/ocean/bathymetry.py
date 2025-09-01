@@ -120,9 +120,9 @@ class Bathymetry:
         # Plot the coastline
         latitude = np.degrees(self.latitude)
         longitude = np.degrees(self.longitude)
-        elevation = np.nan_to_num(self.elevation, nan=np.nextafter(0, 1))
+        elevation = np.nan_to_num(self.elevation, nan=np.nextafter(0.0, 1.0))
 
-        plt.contour(longitude, latitude, elevation, levels=[0], colors="black")
+        plt.contour(longitude, latitude, elevation, levels=[0.0], colors="black")
 
         # Set the axis labels
         plt.xlabel(r"Longitude, [$^\circ$]")
@@ -139,4 +139,4 @@ if __name__ == "__main__":
 
     # Show the bathymetry
     bathymetry = Bathymetry("data\\environments\\windfloat_atlantic\\bathymetry.csv")
-    bathymetry.show("inferno", -200, 0)
+    bathymetry.show("inferno", -200.0, 0.0)

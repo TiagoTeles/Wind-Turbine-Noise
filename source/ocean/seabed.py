@@ -142,9 +142,9 @@ class Seabed:
         # Plot the coastline
         latitude = np.degrees(bathymetry.latitude)
         longitude = np.degrees(bathymetry.longitude)
-        elevation = np.nan_to_num(bathymetry.elevation, nan=np.nextafter(0, 1))
+        elevation = np.nan_to_num(bathymetry.elevation, nan=np.nextafter(0.0, 1.0))
 
-        plt.contour(longitude, latitude, elevation, levels=[0], colors="black")
+        plt.contour(longitude, latitude, elevation, levels=[0.0], colors="black")
 
         # Set the axis labels
         plt.xlabel(r"Longitude, [$^\circ$]")

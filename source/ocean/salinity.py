@@ -125,7 +125,7 @@ class Salinity:
         salinity = salinity[np.invert(np.isnan(salinity))]
 
         # Plot the salinity profile
-        plt.plot(1E3 * salinity, altitude)
+        plt.plot(1.0E3 * salinity, altitude)
 
         # Set the axis labels
         plt.xlabel("Salinity, [‰]")
@@ -133,7 +133,7 @@ class Salinity:
 
         # Set the axis limits
         plt.xlim(s_min, s_max)
-        plt.ylim(np.min(altitude), 0)
+        plt.ylim(np.min(altitude), 0.0)
 
         # Show the plot
         plt.grid()
@@ -143,4 +143,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     salinity = Salinity("data\\environments\\windfloat_atlantic\\salinity.csv")
-    salinity.show(np.radians(41.6865), np.radians(-9.0574), 34, 36)
+    salinity.show(np.radians(41.6865), np.radians(-9.0574), 34.0, 36.0)
