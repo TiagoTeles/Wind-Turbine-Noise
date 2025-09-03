@@ -115,7 +115,6 @@ def surface_roughness_length(u_n, z, p, T, output_individual=False):
     else:
         return z_0
 
-
 if __name__ == "__main__":
 
     # Show the turbulence intensity
