@@ -127,10 +127,10 @@ class Salinity:
         salinity = salinity[np.invert(np.isnan(salinity))]
 
         # Plot the salinity profile
-        plt.plot(1.0E3 * salinity, altitude)
+        plt.plot(salinity, altitude)
 
         # Set the axis labels
-        plt.xlabel("Salinity, [‰]")
+        plt.xlabel("Salinity, [-]")
         plt.ylabel("Altitude, [m]")
 
         # Set the axis limits
@@ -145,4 +145,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     salinity = Salinity(SALINITY_PATH)
-    salinity.show(LATITUDE, LONGITUDE, 34.0, 36.0)
+    salinity.show(LATITUDE, LONGITUDE, 0.034, 0.036)
