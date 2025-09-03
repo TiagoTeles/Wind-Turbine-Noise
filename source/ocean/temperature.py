@@ -127,10 +127,10 @@ class Temperature:
         temperature = temperature[np.invert(np.isnan(temperature))]
 
         # Plot the temperature profile
-        plt.plot(temperature - 273.15, altitude)
+        plt.plot(temperature, altitude)
 
         # Set the axis labels
-        plt.xlabel(r"Temperature, [$^\circ C$]")
+        plt.xlabel("Temperature, [K]")
         plt.ylabel("Altitude, [m]")
 
         # Set the axis limits
@@ -145,4 +145,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     temperature = Temperature(TEMPERATURE_PATH)
-    temperature.show(LATITUDE, LONGITUDE, 13.0, 17.0)
+    temperature.show(LATITUDE, LONGITUDE, 286.0, 290.0)

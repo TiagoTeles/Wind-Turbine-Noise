@@ -104,10 +104,10 @@ if __name__ == "__main__":
     f = np.linspace(F_MIN, F_MAX, 1000)
     alpha = attenuation_coefficient(f, P_0, T_0, H_R)
 
-    plt.loglog(f, 1000.0 * alpha)
+    plt.loglog(f, alpha)
     plt.xlabel("Frequency, [Hz]")
-    plt.ylabel("Attenuation Coefficient, [dB/km]")
+    plt.ylabel("Attenuation Coefficient, [dB/m]")
     plt.xlim(F_MIN, F_MAX)
-    plt.ylim(1.0E-2, 1.0E3)
+    plt.ylim(1.0E-5, 1.0)
     plt.grid(which="both")
     plt.show()

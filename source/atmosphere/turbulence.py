@@ -121,10 +121,10 @@ if __name__ == "__main__":
     z = np.linspace(1.0E-3, 200.0, 1000)
     I = turbulence_intensity(z, 11.0, 170.0, P_0, T_0)
 
-    plt.plot(100.0 * I, z)
-    plt.xlabel("Turbulence Intensity, [%]")
+    plt.plot(I, z)
+    plt.xlabel("Turbulence Intensity, [-]")
     plt.ylabel("Height, [m]")
-    plt.xlim(0.0, 20.0)
+    plt.xlim(0.0, 0.2)
     plt.ylim(0.0, 200.0)
     plt.grid()
     plt.show()
