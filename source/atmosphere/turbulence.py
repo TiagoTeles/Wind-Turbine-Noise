@@ -32,10 +32,10 @@ def turbulence_intensity(z, z_0):
 
     Parameters:
         z : np.array -- height above the terrain, [m]
-        z_0 :  np.array -- surface roughness length, [m]
+        z_0 : np.array -- surface roughness length, [m]
 
     Returns:
-        I :  np.array -- turbulence intensity, [-]
+        I : np.array -- turbulence intensity, [-]
     """
 
     gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
@@ -50,10 +50,10 @@ def turbulence_length_scale(z, z_0):
 
     Parameters:
         z : np.array -- height above the terrain, [m]
-        z_0 :  np.array -- surface roughness length, [m]
+        z_0 : np.array -- surface roughness length, [m]
 
     Returns:
-        L :  np.array -- turbulence length scale, [m]
+        L : np.array -- turbulence length scale, [m]
     """
 
     L = 25.0 * np.pow(z, 0.35) * np.pow(z_0, -0.063)
