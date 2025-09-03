@@ -26,54 +26,72 @@ from source.constants import G, P, ALPHA_CH, ALPHA_M, KAPPA
 from source.settings import P_0, T_0
 
 
-def turbulence_intensity(z, z_0):
+def turbulence_intensity(z, u_n, z_ref, p, T):
     """
     Determine the turbulence intensity.
 
     Parameters:
         z : np.array -- height above the terrain, [m]
-        z_0 : np.array -- surface roughness length, [m]
+        u_n : np.array -- neutral wind speed, [m/s]
+        z_ref : np.array -- reference height, [m]
+        p : np.array -- pressure, [Pa]
+        T : np.array -- temperature, [K]
 
     Returns:
         I : np.array -- turbulence intensity, [-]
     """
 
+    # Determine the surface roughness length
+    z_0 = surface_roughness_length(u_n, z_ref, p, T)
+
+    # Determine the turbulence intensity
     gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
     I = gamma * np.log10(30.0/z_0) / np.log10(z/z_0)
 
     return I
 
 
-def turbulence_length_scale(z, z_0):
+def turbulence_length_scale(z, u_n, z_ref, p, T):
     """
     Determine the turbulence length scale.
 
     Parameters:
         z : np.array -- height above the terrain, [m]
-        z_0 : np.array -- surface roughness length, [m]
+        u_n : np.array -- neutral wind speed, [m/s]
+        z_ref : np.array -- reference height, [m]
+        p : np.array -- pressure, [Pa]
+        T : np.array -- temperature, [K]
 
     Returns:
         L : np.array -- turbulence length scale, [m]
     """
 
+    # Determine the surface roughness length
+    z_0 = surface_roughness_length(u_n, z_ref, p, T)
+
+    # Determine the turbulence length scale
     L = 25.0 * np.pow(z, 0.35) * np.pow(z_0, -0.063)
 
     return L
 
 
-def surface_roughness_length(z, u_n, nu, output_individual=False):
+def surface_roughness_length(u_n, z, p, T, output_individual=False):
     """
     Determine the surface roughness length.
 
     Parameters:
-        z : np.array -- height, [m]
         u_n : np.array -- neutral velocity, [m/s]
-        nu : np.array -- kinematic viscosity, [m^2/s]
+        z : np.array -- height, [m]
+        p : np.array -- pressure, [Pa]
+        T : np.array -- temperature, [K]
         output_individual : bool -- output individual contributions?
 
     Returns:
         z_0 : np.array -- surface roughness length, [m]
     """
+
+    # Determine the kinematic viscosity of air
+    nu = kinematic_viscosity(p, T)
 
     # Determine R and A
     R = z / (ALPHA_M * nu) * (KAPPA * u_n)
@@ -100,13 +118,9 @@ def surface_roughness_length(z, u_n, nu, output_individual=False):
 
 if __name__ == "__main__":
 
-    # Determine the kinematic viscosity of air
-    nu = kinematic_viscosity(P_0, T_0)
-
     # Show the turbulence intensity
     z = np.linspace(1.0E-3, 200.0, 1000)
-    z_0 = surface_roughness_length(170.0, 11.0, nu)
-    I = turbulence_intensity(z, z_0)
+    I = turbulence_intensity(z, 11.0, 170.0, P_0, T_0)
 
     plt.plot(100.0 * I, z)
     plt.xlabel("Turbulence Intensity, [%]")
@@ -118,8 +132,7 @@ if __name__ == "__main__":
 
     # Show the turbulence length scale
     z = np.linspace(1.0E-3, 200.0, 1000)
-    z_0 = surface_roughness_length(170.0, 11.0, nu)
-    L = turbulence_length_scale(z, z_0)
+    L = turbulence_length_scale(z, 11.0, 170.0, P_0, T_0)
 
     plt.plot(L, z)
     plt.xlabel("Turbulence Length Scale, [m]")
@@ -131,7 +144,7 @@ if __name__ == "__main__":
 
     # Show the surface roughness length
     U = np.linspace(1.0E-3, 12.0, 1000)
-    z_0, z_0_nu, z_0_alpha = surface_roughness_length(170.0, U, nu, True)
+    z_0, z_0_nu, z_0_alpha = surface_roughness_length(U, 170.0, P_0, T_0, True)
 
     plt.semilogy(U, z_0_nu, label="Kinematic Viscosity")
     plt.semilogy(U, z_0_alpha, label="Charnock's Relation")
