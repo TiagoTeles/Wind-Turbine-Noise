@@ -65,7 +65,7 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
                / np.pow(1 + M * np.cos(theta_e), 4)
 
     # Determine the high-frequency SPL (P_REF = 2E-5 [Pa])
-    spl_h = 10 * np.log10(np.pow(M, 5) * (L*b)/(2*np.square(r_e)) * np.square(I) \
+    spl_h = 10 * np.log10(np.pow(M, 5) * (L * b) / (2 * np.square(r_e)) * np.square(I) \
                           * np.square(rho_0) * np.pow(c_0, 4) * np.pow(K_x_hat, 3) \
                           / np.pow(1 + np.square(K_x_hat), 7/3) * D_line) + 78.4
 
