@@ -63,6 +63,10 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
 
 if __name__ == "__main__":
 
-    # Show the one-third octave frequency bands
-    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, F_REF, BASE_10)
-    print("Centre frequency:\n" + str(f_c) + " [Hz] \n")
+    # Show the base-2 one-third octave frequency bands
+    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, F_REF, False)
+    print("Base-2 centre frequency:\n" + str(f_c) + " [Hz] \n")
+
+    # Show the base-10 one-third octave frequency bands
+    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, F_REF, True)
+    print("Base-2 centre frequency:\n" + str(f_c) + " [Hz] \n")
