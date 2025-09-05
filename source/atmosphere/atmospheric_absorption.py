@@ -45,6 +45,14 @@ def molar_concentration(p, T, h_r):
     # Determine the molar concentration of water vapour
     h = h_r * p_sat / p
 
+    # Check for low molar concentrations of water vapour
+    if np.any(h < 5.0E-4):
+        print("Low molar concentration of water vapour detected! h < 5.0E-4 [-].")
+
+    # Check for high molar concentrations of water vapour
+    if np.any(h > 0.05):
+        print("High molar concentration of water vapour detected! h > 0.05 [-].")
+
     return h
 
 
@@ -61,6 +69,26 @@ def attenuation_coefficient(f, p, T, h_r):
     Returns:
         alpha : np.array -- attenuation coefficient, [dB/m]
     """
+
+    # Check for high pressures
+    if np.any(p > 200000.0):
+        print("High pressure detected! p > 200000.0 [Pa].")
+
+    # Check for low temperatures
+    if np.any(T < 253.15):
+        print("Low temperature detected! T < 253.15 [K].")
+
+    # Check for high temperatures
+    if np.any(T > 323.15):
+        print("High temperature detected! T > 323.15 [K].")
+
+    # Check for low frequency-pressure ratios
+    if np.any(f/p < 4.0E-4):
+        print("Low frequency-pressure ratio detected! f/p < 4.0E-4 [Hz/Pa].")
+
+    # Check for high frequency-pressure ratios
+    if np.any(f/p > 10.0):
+        print("High frequency-pressure ratio detected! f/p > 10.0 [Hz/Pa].")
 
     # Determine the speed of sound in air
     c_0 = speed_of_sound(T)
