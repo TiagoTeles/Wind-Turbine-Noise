@@ -62,12 +62,12 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
 
     # Determine the low-frequency directivity pattern
     D_line = np.square(np.sin(theta_e)) * np.square(np.sin(phi_e)) \
-               / np.pow(1.0 + M * np.cos(theta_e), 4.0)
+           / np.pow(1.0 + M * np.cos(theta_e), 4.0)
 
     # Determine the high-frequency SPL (P_REF = 2E-5 [Pa])
-    spl_h = 10.0 * np.log10(np.pow(M, 5.0) * (L * b) / (2.0 * np.square(r_e)) \
-          * np.square(I) * np.square(rho_0) * np.pow(c_0, 4.0) \
-          * np.pow(K_x_hat, 3.0) / np.pow(1.0 + np.square(K_x_hat), 7.0/3.0) * D_line) + 78.4
+    spl_h = 10.0 * np.log10(np.pow(M, 5.0) * (L * b) / (2.0 * np.square(r_e)) * np.square(I) \
+                            * np.square(rho_0) * np.pow(c_0, 4.0) * np.pow(K_x_hat, 3.0) \
+                            / np.pow(1.0 + np.square(K_x_hat), 7.0/3.0) * D_line) + 78.4
 
     # Determine the non-dimensional wavenumber
     K_x_line = K_x * c / 2.0
@@ -76,8 +76,8 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     beta = np.sqrt(1.0 - np.square(M))
 
     # Determine the compressible Sears function
-    S = np.sqrt(1.0 / (2.0 * np.pi * (K_x_line / np.square(beta)) \
-                     + 1.0 / (1.0 + 2.4 * (K_x_line / np.square(beta)))))
+    S = np.sqrt(1.0 / (2.0 * np.pi * (K_x_line / np.square(beta)) + 1.0 \
+                       / (1.0 + 2.4 * (K_x_line / np.square(beta)))))
 
     # Determine the low-frequency correction
     LFC = 10.0 * np.square(S) * M * np.square(K_x_line) / np.square(beta)
@@ -214,6 +214,6 @@ if __name__ == "__main__":
     D_line = np.square(np.sin(theta))
 
     plt.polar(theta, D_line)
-    plt.xlim(0, 2.0 * np.pi)
-    plt.ylim(0, 1.2)
+    plt.xlim(0.0, 2.0 * np.pi)
+    plt.ylim(0.0, 1.2)
     plt.show()
