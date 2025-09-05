@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-25
+Date:     2025-09-05
 License:  GNU GPL 3.0
 
 Store the seabed data.
@@ -100,8 +100,10 @@ class Seabed:
             type : np.array -- seabed type, [-]
         """
 
+        # Stack the latitude and longitude
         coordinate = np.stack((latitude, longitude), axis=1)
 
+        # Determine the seabed type
         type = self.interpolator(coordinate)
 
         return type
