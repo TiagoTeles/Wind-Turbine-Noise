@@ -101,10 +101,12 @@ def surface_roughness_length(u_n, z, nu, output_individual=False):
 
 if __name__ == "__main__":
 
-    # Determine z_0 when U = 11 [m/s] and z = 170 [m]
+    # Print z_0 when U = 11 [m/s] and z = 170 [m]
     rho = density(P_0, T_0)
     nu = kinematic_viscosity(T_0, rho)
     z_0 = surface_roughness_length(11.0, 170.0, nu)
+
+    print(f"Surface Roughness Length: {z_0} [m]")
 
     # Show the turbulence intensity
     z = np.linspace(1.0E-3, 200.0, 1000)
