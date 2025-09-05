@@ -55,7 +55,7 @@ def kinematic_viscosity(p, T):
     """
 
     # Determine the dynamic viscosity
-    mu = BETA_S * np.power(T, 3/2) / (T + S)
+    mu = BETA_S * np.power(T, 3.0/2.0) / (T + S)
 
     # Determine the density
     rho = density(p, T)
