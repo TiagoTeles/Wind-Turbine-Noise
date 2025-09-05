@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-25
+Date:     2025-09-05
 License:  GNU GPL 3.0
 
 Functions from the International Standard Atmosphere.
@@ -20,7 +20,7 @@ Exceptions:
 
 import numpy as np
 
-from source.constants import R, GAMMA, S, BETA_S
+from source.constants import R, S, BETA_S, GAMMA
 from source.settings import P_0, T_0
 
 
