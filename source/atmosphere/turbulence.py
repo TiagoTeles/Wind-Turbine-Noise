@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-28
+Date:     2025-09-05
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -21,28 +21,22 @@ Exceptions:
 import matplotlib.pyplot as plt
 import numpy as np
 
-from source.atmosphere.international_standard_atmosphere import kinematic_viscosity
+from source.atmosphere.international_standard_atmosphere import density, kinematic_viscosity
 from source.constants import G, P, ALPHA_CH, ALPHA_M, KAPPA
 from source.settings import P_0, T_0
 
 
-def turbulence_intensity(z, u_n, z_ref, p, T):
+def turbulence_intensity(z, z_0):
     """
     Determine the turbulence intensity.
 
     Parameters:
         z : np.array -- height above the terrain, [m]
-        u_n : np.array -- neutral wind speed, [m/s]
-        z_ref : np.array -- reference height, [m]
-        p : np.array -- pressure, [Pa]
-        T : np.array -- temperature, [K]
+        z_0 : np.array -- surface roughness length, [m]
 
     Returns:
         I : np.array -- turbulence intensity, [-]
     """
-
-    # Determine the surface roughness length
-    z_0 = surface_roughness_length(u_n, z_ref, p, T)
 
     # Determine the turbulence intensity
     gamma = 0.24 + 0.096 * np.log10(z_0) + 0.016 * np.square(np.log10(z_0))
@@ -51,23 +45,17 @@ def turbulence_intensity(z, u_n, z_ref, p, T):
     return I
 
 
-def turbulence_length_scale(z, u_n, z_ref, p, T):
+def turbulence_length_scale(z, z_0):
     """
     Determine the turbulence length scale.
 
     Parameters:
         z : np.array -- height above the terrain, [m]
-        u_n : np.array -- neutral wind speed, [m/s]
-        z_ref : np.array -- reference height, [m]
-        p : np.array -- pressure, [Pa]
-        T : np.array -- temperature, [K]
+        z_0 : np.array -- surface roughness length, [m]
 
     Returns:
         L : np.array -- turbulence length scale, [m]
     """
-
-    # Determine the surface roughness length
-    z_0 = surface_roughness_length(u_n, z_ref, p, T)
 
     # Determine the turbulence length scale
     L = 25.0 * np.pow(z, 0.35) * np.pow(z_0, -0.063)
@@ -75,23 +63,19 @@ def turbulence_length_scale(z, u_n, z_ref, p, T):
     return L
 
 
-def surface_roughness_length(u_n, z, p, T, output_individual=False):
+def surface_roughness_length(u_n, z, nu, output_individual=False):
     """
     Determine the surface roughness length.
 
     Parameters:
         u_n : np.array -- neutral velocity, [m/s]
         z : np.array -- height, [m]
-        p : np.array -- pressure, [Pa]
-        T : np.array -- temperature, [K]
+        nu : np.array -- kinematic viscosity, [m^2/s]
         output_individual : bool -- output individual contributions?
 
     Returns:
         z_0 : np.array -- surface roughness length, [m]
     """
-
-    # Determine the kinematic viscosity of air
-    nu = kinematic_viscosity(p, T)
 
     # Determine R and A
     R = z / (ALPHA_M * nu) * (KAPPA * u_n)
@@ -117,9 +101,14 @@ def surface_roughness_length(u_n, z, p, T, output_individual=False):
 
 if __name__ == "__main__":
 
+    # Determine z_0 when U = 11 [m/s] and z = 170 [m]
+    rho = density(P_0, T_0)
+    nu = kinematic_viscosity(T_0, rho)
+    z_0 = surface_roughness_length(11.0, 170.0, nu)
+
     # Show the turbulence intensity
     z = np.linspace(1.0E-3, 200.0, 1000)
-    I = turbulence_intensity(z, 11.0, 170.0, P_0, T_0)
+    I = turbulence_intensity(z, z_0)
 
     plt.plot(I, z)
     plt.xlabel("Turbulence Intensity, [-]")
@@ -131,7 +120,7 @@ if __name__ == "__main__":
 
     # Show the turbulence length scale
     z = np.linspace(1.0E-3, 200.0, 1000)
-    L = turbulence_length_scale(z, 11.0, 170.0, P_0, T_0)
+    L = turbulence_length_scale(z, z_0)
 
     plt.plot(L, z)
     plt.xlabel("Turbulence Length Scale, [m]")
@@ -143,7 +132,7 @@ if __name__ == "__main__":
 
     # Show the surface roughness length
     U = np.linspace(1.0E-3, 12.0, 1000)
-    z_0, z_0_nu, z_0_alpha = surface_roughness_length(U, 170.0, P_0, T_0, True)
+    z_0, z_0_nu, z_0_alpha = surface_roughness_length(U, 170.0, nu, True)
 
     plt.semilogy(U, z_0_nu, label="Kinematic Viscosity")
     plt.semilogy(U, z_0_alpha, label="Charnock's Relation")
