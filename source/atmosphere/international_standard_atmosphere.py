@@ -4,7 +4,7 @@ Email:    tmoreiradafont@tudelft.nl
 Date:     2025-09-05
 License:  GNU GPL 3.0
 
-Functions from the International Standard Atmosphere.
+Determine the international standard atmosphere characteristics.
 
 Classes:
     None
