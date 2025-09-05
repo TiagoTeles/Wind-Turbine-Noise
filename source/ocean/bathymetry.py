@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-25
+Date:     2025-09-05
 License:  GNU GPL 3.0
 
 Store the bathymetry data.
@@ -88,20 +88,22 @@ class Bathymetry:
             elevation : np.array -- elevation, [m]
         """
 
+        # Stack the latitude and longitude
         coordinate = np.stack((latitude, longitude), axis=1)
 
+        # Determine the elevation
         elevation = self.interpolator(coordinate)
 
         return elevation
 
-    def show(self, c_map, v_min, v_max):
+    def show(self, c_map, z_min, z_max):
         """
         Show the bathymetry data.
 
         Arguments:
             c_map : str -- colormap
-            v_min : float -- minimum value
-            v_max : float -- maximum value
+            z_min : float -- minimum elevation
+            z_max : float -- maximum elevation
 
         Returns:
             None
@@ -116,7 +118,7 @@ class Bathymetry:
         extent = [lon_min, lon_max, lat_min, lat_max]
 
         # Plot the elevation
-        plt.imshow(self.elevation, cmap=c_map, vmin=v_min, vmax=v_max, origin="lower", extent=extent)
+        plt.imshow(self.elevation, cmap=c_map, vmin=z_min, vmax=z_max, origin="lower", extent=extent)
         plt.colorbar(label="Elevation, [m]", extend="min")
 
         # Plot the coastline
