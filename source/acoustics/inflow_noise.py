@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-28
+Date:     2025-09-05
 License:  GNU GPL 3.0
 
 Determine the inflow turbulence noise spectra.
@@ -32,14 +32,14 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
         r_e : np.array -- retarded distance, [m]
-        theta_e : np.array -- chordwise retarded angle,
+        theta_e : np.array -- chordwise retarded angle, [rad]
         phi_e : np.array -- spanwise retarded angle, [rad]
         U : np.array -- velocity, [m/s]
         alpha : np.array -- angle of attack, [rad]
         I : np.array -- turbulence intensity, [-]
         L : np.array -- turbulence length scale, [m]
         c_0 : float -- speed of sound, [m/s]
-        rho_0 : float -- air density, [kg/m^3]
+        rho_0 : float -- density, [kg/m^3]
 
     Returns:
         spl_flat_plate : np.array -- flat plate SPL, [dB]
@@ -49,7 +49,7 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     M = U / c_0
 
     # Determine the angular frequency
-    omega = 2 * np.pi * f
+    omega = 2.0 * np.pi * f
 
     # Determine the wavenumber in the chordwise direction
     K_x = omega / U
@@ -62,31 +62,31 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
 
     # Determine the low-frequency directivity pattern
     D_line = np.square(np.sin(theta_e)) * np.square(np.sin(phi_e)) \
-               / np.pow(1 + M * np.cos(theta_e), 4)
+               / np.pow(1.0 + M * np.cos(theta_e), 4.0)
 
     # Determine the high-frequency SPL (P_REF = 2E-5 [Pa])
-    spl_h = 10 * np.log10(np.pow(M, 5) * (L * b) / (2 * np.square(r_e)) * np.square(I) \
-                          * np.square(rho_0) * np.pow(c_0, 4) * np.pow(K_x_hat, 3) \
-                          / np.pow(1 + np.square(K_x_hat), 7/3) * D_line) + 78.4
+    spl_h = 10.0 * np.log10(np.pow(M, 5.0) * (L * b) / (2.0 * np.square(r_e)) \
+          * np.square(I) * np.square(rho_0) * np.pow(c_0, 4.0) \
+          * np.pow(K_x_hat, 3.0) / np.pow(1.0 + np.square(K_x_hat), 7.0/3.0) * D_line) + 78.4
 
     # Determine the non-dimensional wavenumber
-    K_x_line = K_x * c / 2
+    K_x_line = K_x * c / 2.0
 
     # Determine the Prandtl-Glauert factor
-    beta = np.sqrt(1 - np.square(M))
+    beta = np.sqrt(1.0 - np.square(M))
 
     # Determine the compressible Sears function
-    S = np.sqrt(1 / (2 * np.pi * (K_x_line / np.square(beta)) \
-                     + 1 / (1 + 2.4 * (K_x_line / np.square(beta)))))
+    S = np.sqrt(1.0 / (2.0 * np.pi * (K_x_line / np.square(beta)) \
+                     + 1.0 / (1.0 + 2.4 * (K_x_line / np.square(beta)))))
 
     # Determine the low-frequency correction
-    LFC = 10 * np.square(S) * M * np.square(K_x_line) / np.square(beta)
+    LFC = 10.0 * np.square(S) * M * np.square(K_x_line) / np.square(beta)
 
     # Apply the angle of attack correction
-    LFC *= 1 + 9 * np.square(alpha)
+    LFC *= 1.0 + 9.0 * np.square(alpha)
 
     # Determine the flat plate SPL
-    spl_flat_plate = spl_h + 10 * np.log10(LFC / (1 + LFC))
+    spl_flat_plate = spl_h + 10.0 * np.log10(LFC / (1.0 + LFC))
 
     return spl_flat_plate
 
@@ -98,8 +98,8 @@ def airfoil_shape_correction(f, c, tc_01, tc_10, U):
     Args:
         f : np.array -- frequency, [Hz]
         c : np.array -- chord, [m]
-        t_01 : np.array -- thickness at x/c = 1%, [-]
-        t_10 : np.array -- thickness at x/c = 10%, [-]
+        t_01 : np.array -- thickness at x/c = 0.01, [-]
+        t_10 : np.array -- thickness at x/c = 0.10, [-]
         U : np.array -- velocity, [m/s]
 
     Returns:
@@ -107,13 +107,13 @@ def airfoil_shape_correction(f, c, tc_01, tc_10, U):
     """
 
     # Determine the angular frequency
-    omega = 2 * np.pi * f
+    omega = 2.0 * np.pi * f
 
     # Determine the Strouhal number
     St = omega * c / U
 
     # Check for high Strouhal numbers
-    if np.any(St > 75):
+    if np.any(St > 75.0):
         print("High Strouhal number detected! St > 75 [-].")
 
     # Determine the noise indicator
@@ -123,7 +123,7 @@ def airfoil_shape_correction(f, c, tc_01, tc_10, U):
     SL = 1.123 * IT + 5.317 * np.square(IT)
 
     # Determine the SPL correction
-    delta_spl = -SL * (St + 5)
+    delta_spl = -SL * (St + 5.0)
 
     return delta_spl
 
@@ -154,7 +154,7 @@ def retarded_coordinates(x, y, z, M):
     phi = np.arctan2(z, y)
 
     # Determine the chordwise retarded angle
-    theta_e = np.arccos(np.sqrt(1 - np.square(M) * np.square(np.sin(theta))) * np.cos(theta) \
+    theta_e = np.arccos(np.sqrt(1.0 - np.square(M) * np.square(np.sin(theta))) * np.cos(theta) \
                         - M * np.square(np.sin(theta)))
 
     # Determine the retarded distance
@@ -174,8 +174,8 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
-        tc_01 : np.array -- thickness at x/c = 1%, [-]
-        tc_10 : np.array -- thickness at x/c = 10%, [-]
+        tc_01 : np.array -- thickness at x/c = 0.01, [-]
+        tc_10 : np.array -- thickness at x/c = 0.10, [-]
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
@@ -210,10 +210,10 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
 if __name__ == "__main__":
 
     # Show the directivity pattern
-    theta = np.linspace(0, 2*np.pi, 360)
+    theta = np.linspace(0.0, 2.0 * np.pi, 360)
     D_line = np.square(np.sin(theta))
 
     plt.polar(theta, D_line)
-    plt.xlim(0, 2*np.pi)
+    plt.xlim(0, 2.0 * np.pi)
     plt.ylim(0, 1.2)
     plt.show()
