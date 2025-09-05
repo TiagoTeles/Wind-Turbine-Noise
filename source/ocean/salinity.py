@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-08-25
+Date:     2025-09-05
 License:  GNU GPL 3.0
 
 Store the salinity data.
@@ -92,9 +92,11 @@ class Salinity:
             salinity : np.array -- salinity, [-]
         """
 
-        coordinates = np.stack((latitude, longitude, altitude), axis=1)
+        # Stack the latitude, longitude, and altitude
+        coordinate = np.stack((latitude, longitude, altitude), axis=1)
 
-        salinity = self.interpolator(coordinates)
+        # Determine the salinity
+        salinity = self.interpolator(coordinate)
 
         return salinity
 
@@ -105,8 +107,8 @@ class Salinity:
         Arguments:
             latitude : float -- latitude, [rad]
             longitude : float -- longitude, [rad]
-            s_min : float -- minimum salinity, [ppt]
-            s_max : float -- maximum salinity, [ppt]
+            s_min : float -- minimum salinity, [-]
+            s_max : float -- maximum salinity, [-]
             
         Returns:
             None
