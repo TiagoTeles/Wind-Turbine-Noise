@@ -42,13 +42,13 @@ def density(p, T):
     return rho
 
 
-def kinematic_viscosity(p, T):
+def kinematic_viscosity(T, rho):
     """
     Determine the kinematic viscosity of air.
 
     Arguments:
-        p : np.array -- pressure, [Pa]
         T : np.array -- temperature, [K]
+        rho : np.array -- density, [kg/m^3]
 
     Returns:
         nu : np.array -- kinematic viscosity, [m^2/s]
@@ -56,9 +56,6 @@ def kinematic_viscosity(p, T):
 
     # Determine the dynamic viscosity
     mu = BETA_S * np.power(T, 3.0/2.0) / (T + S)
-
-    # Determine the density
-    rho = density(p, T)
 
     # Determine the kinematic viscosity
     nu = mu / rho
@@ -88,7 +85,8 @@ if __name__ == "__main__":
     print("Rho: " + str(density(P_0, T_0)) + " [kg/m^3]")
 
     # Show the kinematic viscosity of air
-    print("Nu: " + str(kinematic_viscosity(P_0, T_0)) + " [m^2/s]")
+    rho = density(P_0, T_0)
+    print("Nu: " + str(kinematic_viscosity(T_0, rho)) + " [m^2/s]")
 
     # Show the speed of sound in air
     print("C: " + str(speed_of_sound(T_0)) + " [m/s]")
