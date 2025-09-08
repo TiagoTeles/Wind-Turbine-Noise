@@ -57,7 +57,7 @@ class Seabed:
         """
         Initialise the Seabed class.
 
-        Arguments:
+        Parameters:
             path : str -- path to the seabed file
 
         Returns:
@@ -92,7 +92,7 @@ class Seabed:
         """
         Get the seabed type at a given latitude and longitude.
 
-        Arguments:
+        Parameters:
             latitude : np.array -- latitude, [rad]
             longitude : np.array -- longitude, [rad]
 
@@ -112,7 +112,7 @@ class Seabed:
         """
         Show the seabed data.
 
-        Arguments:
+        Parameters:
             c_map : str -- colormap
 
         Returns:

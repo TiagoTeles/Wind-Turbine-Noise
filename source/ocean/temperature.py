@@ -45,7 +45,7 @@ class Temperature:
         """
         Initialise the Temperature class.
 
-        Arguments:
+        Parameters:
             path : str -- path to the temperature file
 
         Returns:
@@ -83,7 +83,7 @@ class Temperature:
         """
         Get the temperature at a given latitude, longitude, and altitude.
 
-        Arguments:
+        Parameters:
             latitude : np.array -- latitude, [rad]
             longitude : np.array -- longitude, [rad]
             altitude : np.array -- altitude, [m]
@@ -104,7 +104,7 @@ class Temperature:
         """
         Show the temperature profile at a given latitude and longitude.
         
-        Arguments:
+        Parameters:
             latitude : float -- latitude, [rad]
             longitude : float -- longitude, [rad]
             t_min : float -- minimum temperature, [K]

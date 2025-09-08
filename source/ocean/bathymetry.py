@@ -45,7 +45,7 @@ class Bathymetry:
         """
         Initialise the Bathymetry class.
 
-        Arguments:
+        Parameters:
             path : str -- path to the bathymetry file
 
         Returns:
@@ -80,7 +80,7 @@ class Bathymetry:
         """
         Get the elevation at a given latitude and longitude.
 
-        Arguments:
+        Parameters:
             latitude : np.array -- latitude, [rad]
             longitude : np.array -- longitude, [rad]
 
@@ -100,7 +100,7 @@ class Bathymetry:
         """
         Show the bathymetry data.
 
-        Arguments:
+        Parameters:
             c_map : str -- colormap
             z_min : float -- minimum elevation
             z_max : float -- maximum elevation

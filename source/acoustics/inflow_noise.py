@@ -27,7 +27,7 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     """
     Determine the flat plate SPL.
 
-    Arguments:
+    Parameters:
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
@@ -132,7 +132,7 @@ def retarded_coordinates(x, y, z, M):
     """
     Determine the retarded distance and angles.
 
-    Arguments:
+    Parameters:
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
@@ -170,7 +170,7 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
     """
     Determine the inflow noise SPL.
 
-    Arguments:
+    Parameters:
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]

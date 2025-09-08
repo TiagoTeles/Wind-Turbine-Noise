@@ -45,7 +45,7 @@ class Salinity:
         """
         Initialise the Salinity class.
 
-        Arguments:
+        Parameters:
             path : str -- path to the salinity file
 
         Returns:
@@ -83,7 +83,7 @@ class Salinity:
         """
         Get the salinity at a given latitude, longitude, and altitude.
 
-        Arguments:
+        Parameters:
             latitude : np.array -- latitude, [rad]
             longitude : np.array -- longitude, [rad]
             altitude : np.array -- altitude, [m]
@@ -104,7 +104,7 @@ class Salinity:
         """
         Show the salinity profile at a given latitude and longitude.
         
-        Arguments:
+        Parameters:
             latitude : float -- latitude, [rad]
             longitude : float -- longitude, [rad]
             s_min : float -- minimum salinity, [-]

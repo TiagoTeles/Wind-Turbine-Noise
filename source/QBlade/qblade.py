@@ -42,7 +42,7 @@ class QBlade:
         """
         Initialise the QBlade class.
 
-        Arguments:
+        Parameters:
             path : str -- path to the QBlade library
 
         Returns:
@@ -61,7 +61,7 @@ class QBlade:
         """
         Set the QBlade library path.
 
-        Arguments:
+        Parameters:
             path : str -- path to the QBlade library
 
         Returns:
@@ -81,7 +81,7 @@ class QBlade:
         """
         Create the QBlade instance.
 
-        Arguments:
+        Parameters:
             cl_device : int -- OpenCL device
             group_size : int -- work group size
 
@@ -102,7 +102,7 @@ class QBlade:
         """
         Load the simulation definition file.
 
-        Arguments:
+        Parameters:
             path : str -- path to the simulation definition file
 
         Returns:
@@ -122,7 +122,7 @@ class QBlade:
         """
         Initialise the simulation.
 
-        Arguments:
+        Parameters:
             None
 
         Returns:
@@ -142,7 +142,7 @@ class QBlade:
         """
         Run the simulation.
 
-        Arguments:
+        Parameters:
             None
 
         Returns:
@@ -162,7 +162,7 @@ class QBlade:
         """
         Export the simulation results.
 
-        Arguments:
+        Parameters:
             type : int -- results file type
             directory : str -- results directory
             name : str -- results file name
@@ -186,7 +186,7 @@ class QBlade:
         """
         Close the QBlade instance.
 
-        Arguments:
+        Parameters:
             None
 
         Returns:
