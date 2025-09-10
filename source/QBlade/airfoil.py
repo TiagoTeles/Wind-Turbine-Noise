@@ -7,7 +7,7 @@ License:  GNU GPL 3.0
 Store the airfoil data.
 
 Classes:
-    Airfoil 
+    Airfoil
 
 Functions:
     None
