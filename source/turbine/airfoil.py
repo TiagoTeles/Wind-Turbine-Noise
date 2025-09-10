@@ -31,6 +31,10 @@ class Airfoil:
         __init__ -- initialise the airfoil class
         read -- read the .afl file
         thickness -- determine the airfoil thickness
+
+    Attributes:
+        coordinates : pd.DataFrame -- x/c and y/c
+        path : str -- path to the .afl file
     """
 
     def __init__(self, path):
