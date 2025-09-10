@@ -140,6 +140,9 @@ class Salinity:
         plt.xlim(s_min, s_max)
         plt.ylim(np.min(altitude), 0.0)
 
+        # Use scientific notation on the x-axis
+        plt.ticklabel_format(axis="x", style="scientific", scilimits=(-3, -3))
+
         # Show the plot
         plt.grid()
         plt.show()
