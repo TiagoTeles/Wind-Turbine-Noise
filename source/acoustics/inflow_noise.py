@@ -91,15 +91,15 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     return spl_flat_plate
 
 
-def airfoil_shape_correction(f, c, tc_01, tc_10, U):
+def airfoil_shape_correction(f, c, t_c_01, t_c_10, U):
     """
     Determine the airfoil shape SPL correction.
     
     Args:
         f : np.array -- frequency, [Hz]
         c : np.array -- chord, [m]
-        t_01 : np.array -- thickness at x/c = 0.01, [-]
-        t_10 : np.array -- thickness at x/c = 0.10, [-]
+        t_c_01 : np.array -- thickness at x/c = 0.01, [-]
+        t_c_10 : np.array -- thickness at x/c = 0.10, [-]
         U : np.array -- velocity, [m/s]
 
     Returns:
@@ -117,7 +117,7 @@ def airfoil_shape_correction(f, c, tc_01, tc_10, U):
         print("High Strouhal number detected! St > 75 [-].")
 
     # Determine the noise indicator
-    IT = tc_01 + tc_10
+    IT = t_c_01 + t_c_10
 
     # Determine the slope parameter
     SL = 1.123 * IT + 5.317 * np.square(IT)
@@ -166,7 +166,7 @@ def retarded_coordinates(x, y, z, M):
     return r_e, theta_e, phi_e
 
 
-def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
+def inflow_noise(f, b, c, t_c_01, t_c_10, x, y, z, U, alpha, I, L, c_0, rho_0):
     """
     Determine the inflow noise SPL.
 
@@ -174,8 +174,8 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
-        tc_01 : np.array -- thickness at x/c = 0.01, [-]
-        tc_10 : np.array -- thickness at x/c = 0.10, [-]
+        t_c_01 : np.array -- thickness at x/c = 0.01, [-]
+        t_c_10 : np.array -- thickness at x/c = 0.10, [-]
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
@@ -200,7 +200,7 @@ def inflow_noise(f, b, c, tc_01, tc_10, x, y, z, U, alpha, I, L, c_0, rho_0):
     spl_amiet = flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0)
 
     # Determine the airfoil shape SPL correction
-    delta_spl = airfoil_shape_correction(f, c, tc_01, tc_10, U)
+    delta_spl = airfoil_shape_correction(f, c, t_c_01, t_c_10, U)
 
     # Determine the inflow noise SPL
     spl = spl_amiet + delta_spl
