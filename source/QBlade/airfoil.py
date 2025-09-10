@@ -34,7 +34,6 @@ class Airfoil:
 
     Attributes:
         path : str -- path to the .afl file
-        name : str -- airfoil name
         coordinates : pd.DataFrame -- airfoil coordinates
     """
 
@@ -69,15 +68,6 @@ class Airfoil:
         Returns:
             None
         """
-
-        # Open the file
-        f = open(self.path, "r", encoding="utf-8")
-
-        # Read the airfoil name
-        self.name = f.readline()
-
-        # Close the file
-        f.close()
 
         # Read the airfoil coordinates
         self.coordinates = pd.read_csv(self.path, delimiter=r"\s+", names=["x/c", "y/c"], skiprows=1)

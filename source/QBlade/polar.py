@@ -35,7 +35,6 @@ class Polar:
 
     Attributes:
         path : str -- path to the .plr file
-        name : str -- polar name
         reynolds : float -- Reynolds number
         airfoil : Airfoil -- airfoil object
         coefficients : pd.DataFrame -- alpha, Cl, Cd, and Cm
@@ -77,8 +76,7 @@ class Polar:
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
-        # Read the polar name and Reynolds number
-        self.name = str(lines[7].split()[0])
+        # Read the Reynolds number
         self.reynolds = float(lines[13].split()[1])
 
         # Determine the airfoil path
