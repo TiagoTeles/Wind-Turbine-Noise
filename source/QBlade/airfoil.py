@@ -34,8 +34,8 @@ class Airfoil:
 
     Attributes:
         path : str -- path to the .afl file
-        name : str -- name of the airfoil
-        coordinates : pd.DataFrame -- coordinates of the airfoil
+        name : str -- airfoil name
+        coordinates : pd.DataFrame -- airfoil coordinates
     """
 
     def __init__(self, path):
