@@ -82,9 +82,9 @@ class Polar:
         self.reynolds = float(lines[13].split()[1])
 
         # Determine the airfoil path
-        polar_path = os.path.dirname(self.path)
+        polar_dir = os.path.dirname(self.path)
         airfoil_path = str(lines[8].split()[0])
-        path = os.path.normpath(os.path.join(polar_path, airfoil_path))
+        path = os.path.normpath(os.path.join(polar_dir, airfoil_path))
 
         # Initialise the airfoil
         self.airfoil = Airfoil(path)
