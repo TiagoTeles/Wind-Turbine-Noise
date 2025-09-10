@@ -109,21 +109,21 @@ def turbine_to_global(t_x, t_y, t_z, r_x, r_y, r_z):
     return transform(t_x, t_y, t_z, r_x, r_y, r_z, "zyx")
 
 
-def nacelle_to_turbine(tower_height, shaft_tilt_angle, phi):
+def nacelle_to_turbine(tower_height, shaft_tilt, phi):
     """
     Determine the transformation matrix from the nacelle
     coordinate system to the turbine coordinate system.
 
     Parameters:
         tower_height : float -- tower height, [m]
-        shaft_tilt_angle : float -- shaft tilt angle, [rad]
+        shaft_tilt : float -- shaft tilt angle, [rad]
         phi : float -- yaw angle, [rad]
 
     Returns:
         matrix : np.array -- transformation matrix
     """
 
-    return transform(0.0, 0.0, tower_height, 0.0, shaft_tilt_angle, phi, "xyz")
+    return transform(0.0, 0.0, tower_height, 0.0, shaft_tilt, phi, "xyz")
 
 
 def hub_to_nacelle(rotor_overhang, psi):
@@ -142,23 +142,23 @@ def hub_to_nacelle(rotor_overhang, psi):
     return transform(-rotor_overhang, 0.0, 0.0, psi, 0.0, 0.0, "xyz")
 
 
-def blade_to_hub(rotor_cone_angle, theta):
+def blade_to_hub(rotor_cone, theta):
     """
     Determine the transformation matrix from the blade
     coordinate system to the hub coordinate system.
 
     Parameters:
-        rotor_cone_angle : float -- rotor cone angle, [rad]
+        rotor_cone : float -- rotor cone angle, [rad]
         theta : float -- blade pitch angle, [rad]
 
     Returns:
         matrix : np.array -- transformation matrix
     """
 
-    return transform(0.0, 0.0, 0.0, 0.0, -rotor_cone_angle, -theta, "xzy")
+    return transform(0.0, 0.0, 0.0, 0.0, -rotor_cone, -theta, "xzy")
 
 
-def airfoil_to_blade(radius, chord, twist_angle, offset_x, offset_y, pitch_axis, x_c):
+def airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, x_c):
     """
     Determine the transformation matrix from the airfoil
     coordinate system to the blade coordinate system.
@@ -166,7 +166,7 @@ def airfoil_to_blade(radius, chord, twist_angle, offset_x, offset_y, pitch_axis,
     Parameters:
         radius : float -- spanwise position, [m]
         chord : float -- chord, [m]
-        twist_angle : float -- twist angle, [rad]
+        twist : float -- twist angle, [rad]
         offset_x : float -- offset in the x-direction, [m]
         offset_y : float -- offset in the y-direction, [m]
         pitch_axis : float -- pitch axis position, [-]
@@ -176,7 +176,7 @@ def airfoil_to_blade(radius, chord, twist_angle, offset_x, offset_y, pitch_axis,
         matrix : np.array -- transformation matrix
     """
 
-    return transform(offset_y, offset_x, radius, np.pi/2.0, 0.0, np.pi/2.0 - twist_angle, "xyz") \
+    return transform(offset_y, offset_x, radius, np.pi/2.0, 0.0, np.pi/2.0 - twist, "xyz") \
            @ transform((x_c - pitch_axis) * chord, 0.0, 0.0, 0.0, 0.0, 0.0, "xyz")
 
 
