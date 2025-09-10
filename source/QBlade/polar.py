@@ -22,7 +22,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-from source.turbine.airfoil import Airfoil
+from source.QBlade.airfoil import Airfoil
 
 
 class Polar:
@@ -32,11 +32,12 @@ class Polar:
     Methods:
         __init__ -- initialise the polar class
         read -- read the .plr file
-    
+
     Attributes:
         path : str -- path to the .plr file
-        airfoil : Airfoil -- airfoil object
+        name : str -- polar name
         reynolds : float -- Reynolds number
+        airfoil : Airfoil -- airfoil object
         coefficients : pd.DataFrame -- alpha, Cl, Cd, and Cm
     """
 
@@ -74,20 +75,19 @@ class Polar:
 
         # Open the file
         f = open(self.path, "r", encoding="utf-8")
-
-        # Read the file
         lines = f.readlines()
 
+        # Read the polar name and Reynolds number
+        self.name = str(lines[7].split()[0])
+        self.reynolds = float(lines[13].split()[1])
+
         # Determine the airfoil path
-        airfoil_path = lines[8].split()[0]
         polar_path = os.path.dirname(self.path)
+        airfoil_path = str(lines[8].split()[0])
         path = os.path.normpath(os.path.join(polar_path, airfoil_path))
 
         # Initialise the airfoil
         self.airfoil = Airfoil(path)
-
-        # Read the Reynolds number
-        self.reynolds = float(lines[13].split()[1])
 
         # Close the file
         f.close()
