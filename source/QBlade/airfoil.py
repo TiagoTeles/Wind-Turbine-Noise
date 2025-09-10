@@ -28,7 +28,7 @@ class Airfoil:
     A class to store the airfoil data.
 
     Methods:
-        __init__ -- initialise the airfoil class
+        __init__ -- initialise the Airfoil class
         read -- read the .afl file
         thickness -- determine the airfoil thickness
 

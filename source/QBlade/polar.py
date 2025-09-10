@@ -30,7 +30,7 @@ class Polar:
     A class to store the polar data.
 
     Methods:
-        __init__ -- initialise the polar class
+        __init__ -- initialise the Polar class
         read -- read the .plr file
 
     Attributes:
