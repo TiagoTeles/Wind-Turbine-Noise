@@ -39,6 +39,14 @@ def attenuation_coefficient(f, p, T, h):
         alpha : np.array -- attenuation coefficient, [dB/m]
     """
 
+    # Check for low molar concentrations of water vapour
+    if np.any(h < 5.0E-4):
+        print("Low molar concentration of water vapour detected! h < 5.0E-4 [-].")
+
+    # Check for high molar concentrations of water vapour
+    if np.any(h > 0.05):
+        print("High molar concentration of water vapour detected! h > 0.05 [-].")
+
     # Check for high pressures
     if np.any(p > 200000.0):
         print("High pressure detected! p > 200000.0 [Pa].")
@@ -112,14 +120,6 @@ def molar_concentration(p, T, h_r):
 
     # Determine the molar concentration of water vapour
     h = h_r * p_sat / p
-
-    # Check for low molar concentrations of water vapour
-    if np.any(h < 5.0E-4):
-        print("Low molar concentration of water vapour detected! h < 5.0E-4 [-].")
-
-    # Check for high molar concentrations of water vapour
-    if np.any(h > 0.05):
-        print("High molar concentration of water vapour detected! h > 0.05 [-].")
 
     return h
 
