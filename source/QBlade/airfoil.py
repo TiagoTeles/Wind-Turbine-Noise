@@ -34,7 +34,8 @@ class Airfoil:
 
     Attributes:
         path : str -- path to the .afl file
-        coordinates : pd.DataFrame -- x/c and y/c
+        name : str -- name of the airfoil
+        coordinates : pd.DataFrame -- coordinates of the airfoil
     """
 
     def __init__(self, path):
@@ -69,7 +70,16 @@ class Airfoil:
             None
         """
 
-        # Read x/c and y/c
+        # Open the file
+        f = open(self.path, "r", encoding="utf-8")
+
+        # Read the airfoil name
+        self.name = f.readline()
+
+        # Close the file
+        f.close()
+
+        # Read the airfoil coordinates
         self.coordinates = pd.read_csv(self.path, delimiter=r"\s+", names=["x/c", "y/c"], skiprows=1)
 
     def thickness(self, x_c):
