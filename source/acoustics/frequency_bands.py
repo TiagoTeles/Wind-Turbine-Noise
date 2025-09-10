@@ -18,7 +18,7 @@ Exceptions:
 
 import numpy as np
 
-from source.settings import BASE_10, F_MAX, F_MIN, F_REF
+from source.settings import F_MAX, F_MIN, F_REF
 
 
 def one_third_octave(f_min, f_max, f_ref, base_10):
