@@ -34,11 +34,11 @@ class Bathymetry:
         show -- show the bathymetry data
 
     Attributes:
-        elevation : np.ndarray -- elevation, [m]
-        interpolator : RegularGridInterpolator -- 2D interpolator
+        path : str -- path to the bathymetry file
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
-        path : str -- path to the bathymetry file
+        elevation : np.ndarray -- elevation, [m]
+        interpolator : RegularGridInterpolator -- 2D interpolator
     """
 
     def __init__(self, path):

@@ -34,11 +34,12 @@ class Temperature:
         show -- show the temperature profile at a given latitude and longitude
 
     Attributes:
-        altitude : np.ndarray -- altitude, [m]
-        interpolator : RegularGridInterpolator -- 3D interpolator
+        path : str -- path to the temperature file
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
-        path : str -- path to the temperature file
+        altitude : np.ndarray -- altitude, [m]
+        temperature : np.ndarray -- temperature, [-]
+        interpolator : RegularGridInterpolator -- 3D interpolator
     """
 
     def __init__(self, path):

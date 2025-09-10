@@ -46,11 +46,11 @@ class Seabed:
         show -- show the seabed data
 
     Attributes:
-        interpolator : RegularGridInterpolator -- 2D interpolator
+        path : str -- path to the seabed file
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
-        path : str -- path to the seabed file
         type: np.ndarray -- seabed type, [-]
+        interpolator : RegularGridInterpolator -- 2D interpolator
     """
 
     def __init__(self, path):

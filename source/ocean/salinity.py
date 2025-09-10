@@ -34,11 +34,12 @@ class Salinity:
         show -- show the salinity profile at a given latitude and longitude
 
     Attributes:
-        altitude : np.ndarray -- altitude, [m]
-        interpolator : RegularGridInterpolator -- 3D interpolator
+        path : str -- path to the salinity file
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
-        path : str -- path to the salinity file
+        altitude : np.ndarray -- altitude, [m]
+        salinity : np.ndarray -- salinity, [-]
+        interpolator : RegularGridInterpolator -- 3D interpolator
     """
 
     def __init__(self, path):
