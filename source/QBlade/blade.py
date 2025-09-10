@@ -70,7 +70,7 @@ class Blade():
             None
         """
 
-        # Read the radius, chord, twist, offset_x, offset_y, pitch_axis, and polar_path
+        # Read the blade geometry
         self.geometry = pd.read_csv(self.path, delimiter=r"\s+", names=["radius", "chord", "twist", \
                                     "offset_x", "offset_y", "pitch_axis", "polar_path"], skiprows=16)
 

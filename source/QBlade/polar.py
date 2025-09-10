@@ -88,7 +88,7 @@ class Polar:
         # Close the file
         f.close()
 
-        # Read alpha, Cl, Cd, and Cm
+        # Read the polar coefficients
         self.coefficients = pd.read_csv(self.path, delimiter=r"\s+", \
                                         names=["alpha", "Cl", "Cd", "Cm"], skiprows=17)
 
