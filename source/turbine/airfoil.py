@@ -33,8 +33,8 @@ class Airfoil:
         thickness -- determine the airfoil thickness
 
     Attributes:
-        coordinates : pd.DataFrame -- x/c and y/c
         path : str -- path to the .afl file
+        coordinates : pd.DataFrame -- x/c and y/c
     """
 
     def __init__(self, path):
