@@ -87,11 +87,11 @@ class Turbine:
         self.rotor_cone = float(lines[23].split()[0])
         self.tower_height = float(lines[27].split()[0])
 
-        # Convert the angles cone from [deg] to [rad]
+        # Convert the angles from [deg] to [rad]
         self.shaft_tilt = np.radians(self.shaft_tilt)
         self.rotor_cone = np.radians(self.rotor_cone)
 
-        # Add the blade object
+        # Add the Blade object
         blade_path = os.path.join(os.path.dirname(self.path), lines[10].split()[0])
         self.blade = Blade(blade_path)
 

@@ -82,8 +82,6 @@ class Blade():
 
         for index, row in self.geometry.iterrows():
 
-            # Determine the polar path
+            # Add the Polar object
             polar_path = os.path.join(os.path.dirname(self.path), row["polar_path"])
-
-            # Initialise the Polar
             self.geometry.at[index, "polar"] = Polar(polar_path)
