@@ -211,9 +211,9 @@ if __name__ == "__main__":
 
     # Show the directivity pattern
     theta = np.linspace(0.0, 2.0 * np.pi, 360)
-    D_line = np.square(np.sin(theta))
+    D_line = np.square(np.sin(theta)) / np.pow(1.0 + 0.3 * np.cos(theta), 4.0)
 
     plt.polar(theta, D_line)
     plt.xlim(0.0, 2.0 * np.pi)
-    plt.ylim(0.0, 1.2)
+    plt.ylim(0.0, 1.6)
     plt.show()
