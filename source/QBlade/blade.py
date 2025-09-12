@@ -16,13 +16,16 @@ Exceptions:
     None
 """
 
+import glob
 import os
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 from source.QBlade.polar import Polar
+from source.settings import SIMULATION_PATH, AR
 
 
 class Blade():
@@ -162,3 +165,53 @@ class Blade():
         span_p = np.diff(radius)
 
         return radius_p, span_p, chord_p
+
+if __name__ == "__main__":
+
+    # Determine the blade directory
+    blade_path = glob.glob(os.path.dirname(SIMULATION_PATH) + "\\**\\*.bld", recursive=True)[0]
+
+    # Create the Blade object
+    blade = Blade(blade_path)
+
+    # Discretise the blade
+    radius, span, chord = blade.discretise(AR)
+
+    # Show the blade discretisation
+    plt.bar(radius, chord, width=span, color="tab:blue", edgecolor="black", label="Panels", zorder=2)
+    plt.plot(blade.geometry["radius"], blade.geometry["chord"], color="tab:orange", label="Chord", zorder=3)
+
+    plt.xlabel("Radius, [m]")
+    plt.ylabel("Chord, [m]")
+
+    plt.xlim(0.0, 146.2)
+    plt.ylim(0.0, 8.0)
+
+    plt.legend()
+    plt.grid(zorder=0)
+    plt.show()
+
+    # Determine the number of panels for different ARs
+    AR_list = []
+    n_list = []
+
+    for AR in np.linspace(1.0, 10.0, 1000):
+
+        # Discretise the blade
+        radius, span, chord = blade.discretise(AR)
+
+        # Save the AR and number of panels
+        AR_list.append(AR)
+        n_list.append(len(radius))
+
+    # Show the number of panels
+    plt.plot(AR_list, n_list)
+
+    plt.xlabel("Aspect Ratio, [-]")
+    plt.ylabel("Number of Panels, [-]")
+
+    plt.xlim(1.0, 10.0)
+    plt.ylim(0.0, 40.0)
+
+    plt.grid()
+    plt.show()
