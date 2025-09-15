@@ -36,7 +36,7 @@ class Turbine:
         path : str -- path to the .trb file
         n_blades : int -- number of blades
         n_panels : int -- number of panels
-        overhang : float -- overhang, [m]
+        rotor_overhang : float -- rotor overhang, [m]
         shaft_tilt : float -- shaft tilt angle, [rad]
         rotor_cone : float -- rotor cone angle, [rad]
         tower_height : float -- tower height, [m]
@@ -82,7 +82,7 @@ class Turbine:
         # Read the turbine geometry
         self.n_blades = int(lines[12].split()[0])
         self.n_panels = int(lines[17].split()[0])
-        self.overhang = float(lines[21].split()[0])
+        self.rotor_overhang = float(lines[21].split()[0])
         self.shaft_tilt = float(lines[22].split()[0])
         self.rotor_cone = float(lines[23].split()[0])
         self.tower_height = float(lines[27].split()[0])
@@ -92,7 +92,7 @@ class Turbine:
         self.rotor_cone = np.radians(self.rotor_cone)
 
         # Add the Blade object
-        blade_path = os.path.join(os.path.dirname(self.path), lines[10].split()[0])
+        blade_path = os.path.normpath(os.path.join(os.path.dirname(self.path), lines[10].split()[0]))
         self.blade = Blade(blade_path)
 
         # Close the file
