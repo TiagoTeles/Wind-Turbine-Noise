@@ -22,9 +22,14 @@ Exceptions:
     None
 """
 
+import glob
+import os
 import sys
 
 import numpy as np
+
+from source.settings import SIMULATION_PATH
+from source.QBlade.turbine import Turbine
 
 
 def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
@@ -193,3 +198,56 @@ def freestream_to_airfoil(alpha):
     """
 
     return transform(0.0, 0.0, 0.0, 0.0, -alpha, 0.0, "xyz")
+
+if __name__ == "__main__":
+
+    # Determine the turbine directory
+    turbine_pattern = os.path.normpath(os.path.join(os.path.dirname(SIMULATION_PATH), "**\\*.trb"))
+    turbine_path = glob.glob(turbine_pattern, recursive=True)[0]
+
+    # Create the Turbine object
+    turbine = Turbine(turbine_path)
+
+    # Open the output file
+    f = open("coordinates.obj", "w", encoding="utf-8")
+
+    # Determine the turbine properties
+    n_blades = turbine.n_blades
+    rotor_overhang = turbine.rotor_overhang
+    shaft_tilt = turbine.shaft_tilt
+    rotor_cone = turbine.rotor_cone
+    tower_height = turbine.tower_height
+
+    # Iterate through all blades and panels
+    for psi in np.linspace(0.0, 2.0 * np.pi, n_blades, endpoint=False):
+        for index, panel in turbine.blade.geometry.iterrows():
+
+            # Determine the transformation matrix
+            radius = panel["radius"]
+            chord = panel["chord"]
+            twist = panel["twist"]
+            offset_x = panel["offset_x"]
+            offset_y = panel["offset_y"]
+            pitch_axis = panel["pitch_axis"]
+            airfoil = panel["polar"].airfoil
+
+            m_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
+            m_bh = blade_to_hub(rotor_cone, 0.0)
+            m_hn = hub_to_nacelle(rotor_overhang, psi)
+            m_nt = nacelle_to_turbine(tower_height, shaft_tilt, 0.0)
+            m_tg = turbine_to_global(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+
+            matrix = m_tg @ m_nt @ m_hn @ m_bh @ m_ab
+
+            # Determine the airfoil coordinates
+            x = airfoil.coordinates["x/c"] * chord
+            y = np.zeros(len(x))
+            z = airfoil.coordinates["y/c"] * chord
+            w = np.ones(len(x))
+
+            # Transform the airfoil coordinates
+            x_g = matrix @ np.array([x, y, z, w])
+
+            # Write the airfoil coordinates
+            for i in range(x_g.shape[1]):
+                f.write(f"v {x_g[0, i]} {x_g[1, i]} {x_g[2, i]}\n")
