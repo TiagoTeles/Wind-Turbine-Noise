@@ -96,9 +96,9 @@ class Blade():
             AR : float -- aspect ratio of the panels, [-]
 
         Returns:
-            radius_p : list -- list of panel radiuses, [m]
-            span_p : list -- list of panel spans, [m]
-            chord_p : list -- list of panel chords, [m]
+            radius_p : np.array -- panel radiuses, [m]
+            span_p : np.array -- panel spans, [m]
+            chord_p : np.array -- panel chords, [m]
         """
 
         radius = []
@@ -136,7 +136,7 @@ class Blade():
                 AR_01 = (radius_0 - radius_1) / MAC_01
 
                 # Check if the AR is correct
-                if np.abs(AR_01 - AR) < 1.0E-6:
+                if np.abs(AR_01 - AR) < 1.0E-3:
 
                     # Set the inner panel radius and chord
                     radius.append(radius_1)
