@@ -84,9 +84,12 @@ class Blade():
         # Add the Polar object
         self.geometry["polar"] = None
 
-        for index, row in self.geometry.iterrows():
-            polar_path = os.path.join(os.path.dirname(self.path), row["polar_path"])
+        for index, panel in self.geometry.iterrows():
+            polar_path = os.path.normpath(os.path.join(os.path.dirname(self.path), panel["polar_path"]))
             self.geometry.at[index, "polar"] = Polar(polar_path)
+
+        # Remove the polar path column
+        self.geometry = self.geometry.drop("polar_path", axis=1)
 
     def discretise(self, AR):
         """
@@ -155,7 +158,7 @@ class Blade():
 
         # Invert the radius and chord lists
         radius = np.array(radius[::-1])
-        chord =  np.array(chord[::-1])
+        chord = np.array(chord[::-1])
 
         # Determine the panel radius and chord
         radius_p = (radius[1:] + radius[:-1]) / 2.0
@@ -169,7 +172,8 @@ class Blade():
 if __name__ == "__main__":
 
     # Determine the blade directory
-    blade_path = glob.glob(os.path.dirname(SIMULATION_PATH) + "\\**\\*.bld", recursive=True)[0]
+    blade_pattern = os.path.normpath(os.path.join(os.path.dirname(SIMULATION_PATH), "**\\*.bld"))
+    blade_path = glob.glob(blade_pattern, recursive=True)[0]
 
     # Create the Blade object
     blade = Blade(blade_path)
