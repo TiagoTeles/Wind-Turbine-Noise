@@ -26,15 +26,15 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
     Determine the center, lower, and upper frequencies of the 1/3 octave frequency bands.
 
     Parameters:
-        f_min : float -- Minimum frequency, [Hz]
-        f_max : float -- Maximum frequency, [Hz]
-        f_ref : float -- Reference frequency, [Hz]
-        base_10 : bool -- Use base 10?
+        f_min : float -- minimum frequency, [Hz]
+        f_max : float -- maximum frequency, [Hz]
+        f_ref : float -- reference frequency, [Hz]
+        base_10 : bool -- use base 10?
 
     Returns:
-        f_center : np.array -- Center frequencies, [Hz]
-        f_lower : np.array -- Lower frequencies, [Hz]
-        f_upper : np.array -- Upper frequencies, [Hz]
+        f_center : np.array -- center frequencies, [Hz]
+        f_lower : np.array -- lower frequencies, [Hz]
+        f_upper : np.array -- upper frequencies, [Hz]
     """
 
     if base_10:
