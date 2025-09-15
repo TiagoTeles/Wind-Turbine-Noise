@@ -11,7 +11,6 @@ Classes:
 
 Functions:
     transform
-    turbine_to_global
     nacelle_to_turbine
     hub_to_nacelle
     blade_to_hub
@@ -92,26 +91,6 @@ def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
     else:
         print("Invalid order of rotation!")
         sys.exit(1)
-
-
-def turbine_to_global(t_x, t_y, t_z, r_x, r_y, r_z):
-    """
-    Determine the transformation matrix from the turbine
-    coordinate system to the global coordinate system.
-
-    Parameters:
-        t_x : float -- translation in the x direction, [m]
-        t_y : float -- translation in the y direction, [m]
-        t_z : float -- translation in the z direction, [m]
-        r_x : float -- rotation about the x-axis, [rad]
-        r_y : float -- rotation about the y-axis, [rad]
-        r_z : float -- rotation about the z-axis, [rad]
-
-    Returns:
-        matrix : np.array -- transformation matrix
-    """
-
-    return transform(t_x, t_y, t_z, r_x, r_y, r_z, "zyx")
 
 
 def nacelle_to_turbine(tower_height, shaft_tilt, phi):
@@ -231,13 +210,12 @@ if __name__ == "__main__":
             pitch_axis = panel["pitch_axis"]
             airfoil = panel["polar"].airfoil
 
-            m_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
-            m_bh = blade_to_hub(rotor_cone, 0.0)
-            m_hn = hub_to_nacelle(rotor_overhang, psi)
-            m_nt = nacelle_to_turbine(tower_height, shaft_tilt, 0.0)
-            m_tg = turbine_to_global(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+            matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
+            matrix_bh = blade_to_hub(rotor_cone, 0.0)
+            matrix_hn = hub_to_nacelle(rotor_overhang, psi)
+            matrix_nt = nacelle_to_turbine(tower_height, shaft_tilt, 0.0)
 
-            matrix = m_tg @ m_nt @ m_hn @ m_bh @ m_ab
+            matrix_at = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab
 
             # Determine the airfoil coordinates
             x = airfoil.coordinates["x/c"] * chord
@@ -246,8 +224,8 @@ if __name__ == "__main__":
             w = np.ones(len(x))
 
             # Transform the airfoil coordinates
-            x_g = matrix @ np.array([x, y, z, w])
+            x_t = matrix_at @ np.array([x, y, z, w])
 
             # Write the airfoil coordinates
-            for i in range(x_g.shape[1]):
-                f.write(f"v {x_g[0, i]} {x_g[1, i]} {x_g[2, i]}\n")
+            for i in range(x_t.shape[1]):
+                f.write(f"v {x_t[0, i]} {x_t[1, i]} {x_t[2, i]}\n")
