@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
-Determine the international standard atmosphere characteristics.
+Determine the international standard atmosphere.
 
 Classes:
     None
@@ -82,11 +82,13 @@ def speed_of_sound(T):
 if __name__ == "__main__":
 
     # Show the density of air
-    print("Rho: " + str(density(P_0, T_0)) + " [kg/m^3]")
+    rho = density(P_0, T_0)
+    print("Rho: " + str(rho) + " [kg/m^3]")
 
     # Show the kinematic viscosity of air
-    rho = density(P_0, T_0)
-    print("Nu: " + str(kinematic_viscosity(T_0, rho)) + " [m^2/s]")
+    nu = kinematic_viscosity(T_0, rho)
+    print("Nu: " + str(nu) + " [m^2/s]")
 
     # Show the speed of sound in air
-    print("C: " + str(speed_of_sound(T_0)) + " [m/s]")
+    c = speed_of_sound(T_0)
+    print("C: " + str(c) + " [m/s]")
