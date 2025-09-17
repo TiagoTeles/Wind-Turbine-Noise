@@ -19,8 +19,6 @@ Exceptions:
 import os
 import sys
 
-import numpy as np
-
 from source.QBlade.turbine import Turbine
 
 
