@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-15
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Determine the octave frequency bands.
@@ -19,7 +19,7 @@ Exceptions:
 
 import numpy as np
 
-from source.settings import F_MAX, F_MIN, F_REF
+from source.settings import F_MIN, F_MAX, F_REF
 
 
 def one_third_octave(f_min, f_max, f_ref, base_10):
