@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Determine the inflow turbulence noise spectra.
@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
+def flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0):
     """
     Determine the flat plate SPL.
 
@@ -31,13 +31,13 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
+        I : np.array -- turbulence intensity, [-]
+        L : np.array -- turbulence length scale, [m]
+        U : np.array -- velocity, [m/s]
+        alpha : np.array -- angle of attack, [rad]
         r_e : np.array -- retarded distance, [m]
         theta_e : np.array -- chordwise retarded angle, [rad]
         phi_e : np.array -- spanwise retarded angle, [rad]
-        U : np.array -- velocity, [m/s]
-        alpha : np.array -- angle of attack, [rad]
-        I : np.array -- turbulence intensity, [-]
-        L : np.array -- turbulence length scale, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- density, [kg/m^3]
 
@@ -64,7 +64,7 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
     D_line = np.square(np.sin(theta_e)) * np.square(np.sin(phi_e)) \
            / np.pow(1.0 + M * np.cos(theta_e), 4.0)
 
-    # Determine the high-frequency SPL (P_REF = 2E-5 [Pa])
+    # Determine the high-frequency SPL (P_REF_AIR = 2.0E-5 [Pa])
     spl_h = 10.0 * np.log10(np.pow(M, 5.0) * (L * b) / (2.0 * np.square(r_e)) * np.square(I) \
                             * np.square(rho_0) * np.pow(c_0, 4.0) * np.pow(K_x_hat, 3.0) \
                             / np.pow(1.0 + np.square(K_x_hat), 7.0/3.0) * D_line) + 78.4
@@ -94,7 +94,7 @@ def flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0):
 def airfoil_shape_correction(f, c, t_c_01, t_c_10, U):
     """
     Determine the airfoil shape SPL correction.
-    
+
     Args:
         f : np.array -- frequency, [Hz]
         c : np.array -- chord, [m]
@@ -166,28 +166,28 @@ def retarded_coordinates(x, y, z, M):
     return r_e, theta_e, phi_e
 
 
-def inflow_noise(f, b, c, t_c_01, t_c_10, x, y, z, U, alpha, I, L, c_0, rho_0):
+def inflow_noise(f, b, c, I, L, t_c_01, t_c_10, U, alpha, x, y, z, c_0, rho_0):
     """
-    Determine the inflow noise SPL.
+    Determine the inflow turbulence noise SPL.
 
     Parameters:
         f : np.array -- frequency, [Hz]
         b : np.array -- span, [m]
         c : np.array -- chord, [m]
+        I : np.array -- turbulence intensity, [-]
+        L : np.array -- turbulence length scale, [m]
         t_c_01 : np.array -- thickness at x/c = 0.01, [-]
         t_c_10 : np.array -- thickness at x/c = 0.10, [-]
+        U : np.array -- velocity, [m/s]
+        alpha : np.array -- angle of attack, [rad]
         x : np.array -- x-coordinate, [m]
         y : np.array -- y-coordinate, [m]
         z : np.array -- z-coordinate, [m]
-        U : np.array -- velocity, [m/s]
-        alpha : np.array -- angle of attack, [rad]
-        I : np.array -- turbulence intensity, [-]
-        L : np.array -- turbulence length scale, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
 
     Returns:
-        spl : np.array -- inflow noise SPL, [dB]
+        spl : np.array -- inflow turbulence noise SPL, [dB]
     """
 
     # Determine the Mach number
@@ -197,12 +197,12 @@ def inflow_noise(f, b, c, t_c_01, t_c_10, x, y, z, U, alpha, I, L, c_0, rho_0):
     r_e, theta_e, phi_e = retarded_coordinates(x, y, z, M)
 
     # Determine the flat plate SPL
-    spl_amiet = flat_plate_spl(f, b, c, r_e, theta_e, phi_e, U, alpha, I, L, c_0, rho_0)
+    spl_amiet = flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0)
 
     # Determine the airfoil shape SPL correction
     delta_spl = airfoil_shape_correction(f, c, t_c_01, t_c_10, U)
 
-    # Determine the inflow noise SPL
+    # Determine the inflow turbulence noise SPL
     spl = spl_amiet + delta_spl
 
     return spl
