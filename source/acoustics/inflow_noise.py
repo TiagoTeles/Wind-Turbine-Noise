@@ -13,7 +13,7 @@ Functions:
     flat_plate_spl
     airfoil_shape_correction
     retarded_coordinates
-    inflow_noise
+    inflow_turbulence_noise
 
 Exceptions:
     None
@@ -166,7 +166,7 @@ def retarded_coordinates(x, y, z, M):
     return r_e, theta_e, phi_e
 
 
-def inflow_noise(f, b, c, I, L, t_c_01, t_c_10, U, alpha, x, y, z, c_0, rho_0):
+def inflow_turbulence_noise(f, b, c, I, L, t_c_01, t_c_10, U, alpha, x, y, z, c_0, rho_0):
     """
     Determine the inflow turbulence noise SPL.
 
