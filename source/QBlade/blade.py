@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-10
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -16,7 +16,6 @@ Exceptions:
     None
 """
 
-import glob
 import os
 import sys
 
@@ -39,7 +38,8 @@ class Blade():
 
     Attributes:
         path : str -- path to the .bld file
-        geometry : pd.DataFrame -- blade geometry
+        geometry : pd.DataFrame -- radius, chord, twist, offset_x, 
+                                   offset_y, pitch_axis, and polar
     """
 
     def __init__(self, path):
@@ -96,7 +96,7 @@ class Blade():
         Discretise the blade into panels.
 
         Parameters:
-            AR : float -- aspect ratio of the panels, [-]
+            AR : float -- aspect ratio, [-]
 
         Returns:
             radius_p : np.array -- panel radiuses, [m]
@@ -171,12 +171,13 @@ class Blade():
 
 if __name__ == "__main__":
 
-    # Determine the blade directory
-    blade_pattern = os.path.normpath(os.path.join(os.path.dirname(SIMULATION_PATH), "**\\*.bld"))
-    blade_path = glob.glob(blade_pattern, recursive=True)[0]
+    # Import the Simulation class
+    from source.QBlade.simulation import Simulation
 
     # Create the Blade object
-    blade = Blade(blade_path)
+    simulation = Simulation(SIMULATION_PATH)
+    turbine = simulation.turbine
+    blade = turbine.blade
 
     # Discretise the blade
     radius, span, chord = blade.discretise(AR)
