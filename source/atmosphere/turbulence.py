@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -31,7 +31,7 @@ def turbulence_intensity(z, z_0):
     Determine the turbulence intensity.
 
     Parameters:
-        z : np.array -- height above the terrain, [m]
+        z : np.array -- height, [m]
         z_0 : np.array -- surface roughness length, [m]
 
     Returns:
@@ -50,7 +50,7 @@ def turbulence_length_scale(z, z_0):
     Determine the turbulence length scale.
 
     Parameters:
-        z : np.array -- height above the terrain, [m]
+        z : np.array -- height, [m]
         z_0 : np.array -- surface roughness length, [m]
 
     Returns:
@@ -63,15 +63,15 @@ def turbulence_length_scale(z, z_0):
     return L
 
 
-def surface_roughness_length(u_n, z, nu, output_individual=False):
+def surface_roughness_length(u_n, z, nu, output_all=False):
     """
     Determine the surface roughness length.
 
     Parameters:
-        u_n : np.array -- neutral velocity, [m/s]
+        u_n : np.array -- neutral wind speed, [m/s]
         z : np.array -- height, [m]
         nu : np.array -- kinematic viscosity, [m^2/s]
-        output_individual : bool -- output individual contributions?
+        output_all : bool -- output all contributions?
 
     Returns:
         z_0 : np.array -- surface roughness length, [m]
@@ -84,24 +84,21 @@ def surface_roughness_length(u_n, z, nu, output_individual=False):
     # Determine b_n
     b_n_nu = -1.47 + 0.93 * np.log(R)
     b_n_alpha = 2.65 - 1.44 * np.log(A) - 0.015 * np.square(np.log(A))
-    b_n_fit = np.pow(np.pow(b_n_nu, P) + np.pow(b_n_alpha, P), 1.0/P)
+    b_n_fit = np.pow(np.pow(b_n_nu, P) + np.pow(b_n_alpha, P), 1.0 / P)
 
     # Determine the surface roughness length
-    z_0 = z / (np.exp(b_n_fit) - 1.0)
-
-    # Determine the individual contributions
     z_0_nu = z / (np.exp(b_n_nu) - 1.0)
     z_0_alpha = z / (np.exp(b_n_alpha) - 1.0)
+    z_0 = z / (np.exp(b_n_fit) - 1.0)
 
-    # Return the surface roughness length
-    if output_individual:
+    if output_all:
         return z_0, z_0_nu, z_0_alpha
     else:
         return z_0
 
 if __name__ == "__main__":
 
-    # Print z_0 when U = 11 [m/s] and z = 170 [m]
+    # Show z_0 when u_n=11 [m/s] and z=170 [m]
     rho = density(P_0, T_0)
     nu = kinematic_viscosity(T_0, rho)
     z_0 = surface_roughness_length(11.0, 170.0, nu)
@@ -133,12 +130,12 @@ if __name__ == "__main__":
     plt.show()
 
     # Show the surface roughness length
-    U = np.linspace(1.0E-3, 12.0, 1000)
-    z_0, z_0_nu, z_0_alpha = surface_roughness_length(U, 170.0, nu, True)
+    u_n = np.linspace(1.0E-3, 12.0, 1000)
+    z_0, z_0_nu, z_0_alpha = surface_roughness_length(u_n, 170.0, nu, True)
 
-    plt.semilogy(U, z_0_nu, label="Kinematic Viscosity")
-    plt.semilogy(U, z_0_alpha, label="Charnock's Relation")
-    plt.semilogy(U, z_0, label="Empirical Fit")
+    plt.semilogy(u_n, z_0_nu, label="Kinematic Viscosity")
+    plt.semilogy(u_n, z_0_alpha, label="Charnock's Relation")
+    plt.semilogy(u_n, z_0, label="Empirical Fit")
     plt.xlabel("Neutral Wind Speed, [m/s]")
     plt.ylabel("Surface Roughness Length, [m]")
     plt.xlim(0.0, 12.0)
