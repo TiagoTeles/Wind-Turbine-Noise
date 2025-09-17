@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Determine the attenuation coefficient due to atmospheric absorption.
@@ -128,10 +128,11 @@ if __name__ == "__main__":
     # Determine the molar concentration of water vapour
     h = molar_concentration(P_0, T_0, H_R)
 
-    # Show the attenuation coefficient
+    # Determine the attenuation coefficient
     f = np.linspace(F_MIN, F_MAX, 1000)
     alpha = attenuation_coefficient(f, P_0, T_0, h)
 
+    # Show the attenuation coefficient
     plt.loglog(f, alpha)
     plt.xlabel("Frequency, [Hz]")
     plt.ylabel("Attenuation Coefficient, [dB/m]")
