@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-08
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Determine the coordinate system transformations.
@@ -21,14 +21,12 @@ Exceptions:
     None
 """
 
-import glob
-import os
 import sys
 
 import numpy as np
 
 from source.settings import SIMULATION_PATH
-from source.QBlade.turbine import Turbine
+from source.QBlade.simulation import Simulation
 
 
 def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
@@ -70,27 +68,20 @@ def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
                             [0.0, 0.0, 0.0, 1.0]])
 
     # Determine the transformation matrix
-    if order == "xyz":
-        return translation @ rotation_z @ rotation_y @ rotation_x
+    rotation = {
+        "xyz": rotation_z @ rotation_y @ rotation_x,
+        "xzy": rotation_y @ rotation_z @ rotation_x,
+        "yxz": rotation_z @ rotation_x @ rotation_y,
+        "yzx": rotation_x @ rotation_z @ rotation_y,
+        "zxy": rotation_y @ rotation_x @ rotation_z,
+        "zyx": rotation_x @ rotation_y @ rotation_z,
+        }
 
-    elif order == "xzy":
-        return translation @ rotation_y @ rotation_z @ rotation_x
-
-    elif order == "yxz":
-        return translation @ rotation_z @ rotation_x @ rotation_y
-
-    elif order == "yzx":
-        return translation @ rotation_x @ rotation_z @ rotation_y
-
-    elif order == "zxy":
-        return translation @ rotation_y @ rotation_x @ rotation_z
-
-    elif order == "zyx":
-        return translation @ rotation_x @ rotation_y @ rotation_z
-
-    else:
+    if order not in rotation:
         print("Invalid order of rotation!")
         sys.exit(1)
+
+    return translation @ rotation[order]
 
 
 def nacelle_to_turbine(tower_height, shaft_tilt, phi):
@@ -133,7 +124,7 @@ def blade_to_hub(rotor_cone, theta):
 
     Parameters:
         rotor_cone : float -- rotor cone angle, [rad]
-        theta : float -- blade pitch angle, [rad]
+        theta : float -- pitch angle, [rad]
 
     Returns:
         matrix : np.array -- transformation matrix
@@ -180,15 +171,13 @@ def freestream_to_airfoil(alpha):
 
 if __name__ == "__main__":
 
-    # Determine the turbine directory
-    turbine_pattern = os.path.normpath(os.path.join(os.path.dirname(SIMULATION_PATH), "**\\*.trb"))
-    turbine_path = glob.glob(turbine_pattern, recursive=True)[0]
-
-    # Create the Turbine object
-    turbine = Turbine(turbine_path)
-
     # Open the output file
     f = open("coordinates.obj", "w", encoding="utf-8")
+
+    # Create the Turbine object
+    simulation = Simulation(SIMULATION_PATH)
+    turbine = simulation.turbine
+    blade = turbine.blade
 
     # Determine the turbine properties
     n_blades = turbine.n_blades
@@ -197,25 +186,23 @@ if __name__ == "__main__":
     rotor_cone = turbine.rotor_cone
     tower_height = turbine.tower_height
 
-    # Iterate through all blades and panels
-    for psi in np.linspace(0.0, 2.0 * np.pi, n_blades, endpoint=False):
-        for index, panel in turbine.blade.geometry.iterrows():
+    # Iterate through all blades
+    for i in range(n_blades):
 
-            # Determine the transformation matrix
-            radius = panel["radius"]
-            chord = panel["chord"]
-            twist = panel["twist"]
-            offset_x = panel["offset_x"]
-            offset_y = panel["offset_y"]
-            pitch_axis = panel["pitch_axis"]
-            airfoil = panel["polar"].airfoil
+        # Determine the azimuth angle
+        psi = i * 2.0 * np.pi / n_blades
 
-            matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
-            matrix_bh = blade_to_hub(rotor_cone, 0.0)
-            matrix_hn = hub_to_nacelle(rotor_overhang, psi)
-            matrix_nt = nacelle_to_turbine(tower_height, shaft_tilt, 0.0)
+        # Iterate through all panels
+        for j in range(len(blade.geometry)):
 
-            matrix_at = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab
+            # Determine the blade properties
+            radius = blade.geometry.at[j, "radius"]
+            chord = blade.geometry.at[j, "chord"]
+            twist = blade.geometry.at[j, "twist"]
+            offset_x = blade.geometry.at[j, "offset_x"]
+            offset_y = blade.geometry.at[j, "offset_y"]
+            pitch_axis = blade.geometry.at[j, "pitch_axis"]
+            airfoil = blade.geometry.at[j, "polar"].airfoil
 
             # Determine the airfoil coordinates
             x = airfoil.coordinates["x/c"] * chord
@@ -223,8 +210,14 @@ if __name__ == "__main__":
             z = airfoil.coordinates["y/c"] * chord
             w = np.ones(len(x))
 
+            # Determine the transformation matrix
+            matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
+            matrix_bh = blade_to_hub(rotor_cone, 0.0)
+            matrix_hn = hub_to_nacelle(rotor_overhang, psi)
+            matrix_nt = nacelle_to_turbine(tower_height, shaft_tilt, 0.0)
+
             # Transform the airfoil coordinates
-            x_t = matrix_at @ np.array([x, y, z, w])
+            x_t = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab @ np.array([x, y, z, w])
 
             # Write the airfoil coordinates
             for i in range(x_t.shape[1]):
