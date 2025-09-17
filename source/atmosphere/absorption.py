@@ -20,7 +20,6 @@ Exceptions:
 import matplotlib.pyplot as plt
 import numpy as np
 
-from source.atmosphere.international_standard_atmosphere import speed_of_sound
 from source.constants import P_REF, T_REF, T_01, X_N, X_O, THETA_N, THETA_O
 from source.settings import P_0, T_0, H_R, F_MIN, F_MAX
 
@@ -68,7 +67,7 @@ def attenuation_coefficient(f, p, T, h):
         print("High frequency-pressure ratio detected! f/p > 10.0 [Hz/Pa].")
 
     # Determine the speed of sound in air
-    c_0 = speed_of_sound(T)
+    c_0 = 343.2 * np.sqrt(T / T_REF)
 
     # Convert the molar concentration of water vapour from [-] to [%]
     h *= 100.0
