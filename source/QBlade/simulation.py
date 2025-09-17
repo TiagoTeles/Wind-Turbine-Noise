@@ -22,7 +22,7 @@ import sys
 import numpy as np
 
 from source.QBlade.turbine import Turbine
-from source.settings import SIMULATION_PATH
+
 
 class Simulation:
     """
