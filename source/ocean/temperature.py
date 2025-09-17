@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Store the temperature data.
@@ -38,7 +38,7 @@ class Temperature:
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
         altitude : np.ndarray -- altitude, [m]
-        temperature : np.ndarray -- temperature, [-]
+        temperature : np.ndarray -- temperature, [K]
         interpolator : RegularGridInterpolator -- 3D interpolator
     """
 
@@ -90,14 +90,11 @@ class Temperature:
             altitude : np.array -- altitude, [m]
 
         Returns:
-            temperature : np.array -- temperature, [-]
+            temperature : np.array -- temperature, [K]
         """
 
-        # Stack the latitude, longitude, and altitude
-        coordinate = np.stack((latitude, longitude, altitude), axis=1)
-
         # Determine the temperature
-        temperature = self.interpolator(coordinate)
+        temperature = self.interpolator((latitude, longitude, altitude))
 
         return temperature
 

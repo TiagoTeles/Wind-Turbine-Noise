@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Store the seabed data.
@@ -49,7 +49,7 @@ class Seabed:
         path : str -- path to the seabed file
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
-        type: np.ndarray -- seabed type, [-]
+        type : np.ndarray -- seabed type
         interpolator : RegularGridInterpolator -- 2D interpolator
     """
 
@@ -97,14 +97,11 @@ class Seabed:
             longitude : np.array -- longitude, [rad]
 
         Returns:
-            type : np.array -- seabed type, [-]
+            type : np.array -- seabed type
         """
 
-        # Stack the latitude and longitude
-        coordinate = np.stack((latitude, longitude), axis=1)
-
         # Determine the seabed type
-        type = self.interpolator(coordinate)
+        type = self.interpolator((latitude, longitude))
 
         return type
 
