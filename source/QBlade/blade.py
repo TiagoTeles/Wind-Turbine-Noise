@@ -90,16 +90,12 @@ class Blade():
 
         self.geometry = self.geometry.drop("polar_path", axis=1)
 
-        # Add the airfoil thickness at x/c = 0.01 [-]
+        # Add the airfoil thickness at x/c = 0.01 [-] and x/c = 0.10 [-]
         self.geometry["thickness_01"] = None
-
-        for index, panel in self.geometry.iterrows():
-            self.geometry.at[index, "thickness_01"] = panel["polar"].airfoil.thickness(0.01)
-
-        # Add the airfoil thickness at x/c = 0.10 [-]
         self.geometry["thickness_10"] = None
 
         for index, panel in self.geometry.iterrows():
+            self.geometry.at[index, "thickness_01"] = panel["polar"].airfoil.thickness(0.01)
             self.geometry.at[index, "thickness_10"] = panel["polar"].airfoil.thickness(0.10)
 
     def discretise(self, AR):
