@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-10
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Store the turbine data.
@@ -34,8 +34,8 @@ class Turbine:
 
     Attributes:
         path : str -- path to the .trb file
-        n_blades : int -- number of blades
-        n_panels : int -- number of panels
+        n_blades : int -- number of blades, [-]
+        n_panels : int -- number of panels, [-]
         rotor_overhang : float -- rotor overhang, [m]
         shaft_tilt : float -- shaft tilt angle, [rad]
         rotor_cone : float -- rotor cone angle, [rad]

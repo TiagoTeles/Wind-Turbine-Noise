@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-10
+Date:     2025-09-17
 License:  GNU GPL 3.0
 
 Store the polar data.
