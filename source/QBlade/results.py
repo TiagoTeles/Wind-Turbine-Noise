@@ -77,45 +77,42 @@ class Results:
         # Read the simulation results
         data = pd.read_csv(self.path, delimiter=r"\s+", skiprows=2)
 
-        # Determine the number of time steps
-        n_steps = data.shape[0]
-
         # Determine the number of blades
         n_blades = 0
 
         for column in data.columns.values:
             if "Azimuthal~Angle~BLD_" in column:
-                n_blades = n_blades + 1
+                n_blades += 1
 
         # Determine the number of panels
         n_panels = 0
 
         for column in data.columns.values:
             if "Radius~BLD_1~PAN_" in column:
-                n_panels = n_panels + 1
+                n_panels += 1
 
         # Determine the turbine properties
-        self.U_hub =  data["Abs~Inflow~Vel.~at~Hub~[m/s]"].to_numpy()
-        self.phi = data["Yaw~Angle~[deg]"].to_numpy()
+        self.U_hub = data["Abs~Inflow~Vel.~at~Hub~[m/s]"]
+        self.phi = data["Yaw~Angle~[deg]"]
 
         # Determine the blade properties
-        self.theta = np.empty((n_steps, n_blades))
-        self.psi = np.empty((n_steps, n_blades))
+        self.theta = np.empty((len(data), n_blades))
+        self.psi = np.empty((len(data), n_blades))
 
         for i in range(n_blades):
-            self.theta[:, i] = data[f"Pitch~Angle~BLD_{i+1}~[deg]"].to_numpy()
-            self.psi[:, i] = data[f"Azimuthal~Angle~BLD_{i+1}~[deg]"].to_numpy()
+            self.theta[:, i] = data[f"Pitch~Angle~BLD_{i+1}~[deg]"]
+            self.psi[:, i] = data[f"Azimuthal~Angle~BLD_{i+1}~[deg]"]
 
         # Determine the panel properties
-        self.r = np.empty((n_steps, n_blades, n_panels))
-        self.U = np.empty((n_steps, n_blades, n_panels))
-        self.alpha = np.empty((n_steps, n_blades, n_panels))
+        self.r = np.empty((len(data), n_blades, n_panels))
+        self.U = np.empty((len(data), n_blades, n_panels))
+        self.alpha = np.empty((len(data), n_blades, n_panels))
 
         for i in range(n_blades):
             for j in range(n_panels):
-                self.r[:, i, j] = data[f"Radius~BLD_{i+1}~PAN_{j}~[m]"].to_numpy()
-                self.U[:, i, j] = data[f"Total~Velocity~BLD_{i+1}~PAN_{j}~[m/s]"].to_numpy()
-                self.alpha[:, i, j] = data[f"Angle~of~Attack~at~0.25c~BLD_{i+1}~PAN_{j}~[deg]"].to_numpy()
+                self.r[:, i, j] = data[f"Radius~BLD_{i+1}~PAN_{j}~[m]"]
+                self.U[:, i, j] = data[f"Total~Velocity~BLD_{i+1}~PAN_{j}~[m/s]"]
+                self.alpha[:, i, j] = data[f"Angle~of~Attack~at~0.25c~BLD_{i+1}~PAN_{j}~[deg]"]
 
         # Convert the results from [deg] to [rad]
         self.alpha = np.radians(self.alpha)
