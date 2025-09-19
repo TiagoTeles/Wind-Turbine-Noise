@@ -91,8 +91,8 @@ class Blade():
         self.geometry = self.geometry.drop("polar_path", axis=1)
 
         # Add the airfoil thickness at x/c = 0.01 [-] and x/c = 0.10 [-]
-        self.geometry["thickness_01"] = None
-        self.geometry["thickness_10"] = None
+        self.geometry["thickness_01"] = 0.0
+        self.geometry["thickness_10"] = 0.0
 
         for index, panel in self.geometry.iterrows():
             self.geometry.at[index, "thickness_01"] = panel["polar"].airfoil.thickness(0.01)
