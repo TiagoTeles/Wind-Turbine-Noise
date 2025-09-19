@@ -80,12 +80,12 @@ class Turbine:
         lines = f.readlines()
 
         # Read the turbine geometry
-        self.n_blades = int(lines[12].split()[0])
-        self.n_panels = int(lines[17].split()[0])
-        self.rotor_overhang = float(lines[21].split()[0])
-        self.shaft_tilt = float(lines[22].split()[0])
-        self.rotor_cone = float(lines[23].split()[0])
-        self.tower_height = float(lines[27].split()[0])
+        self.n_blades = lines[12].split()[0]
+        self.n_panels = lines[17].split()[0]
+        self.rotor_overhang = lines[21].split()[0]
+        self.shaft_tilt = lines[22].split()[0]
+        self.rotor_cone = lines[23].split()[0]
+        self.tower_height = lines[27].split()[0]
 
         # Convert the angles from [deg] to [rad]
         self.shaft_tilt = np.radians(self.shaft_tilt)
