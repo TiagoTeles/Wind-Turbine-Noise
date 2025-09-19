@@ -82,12 +82,12 @@ def doppler_effect(f_s, x_s, x_o, v_s, v_o, c_0):
     # Determine the source-observer unit vector
     r_so = (x_o - x_s) / np.linalg.norm(x_o - x_s, axis=0)
 
-    # Determine the velocity in the direction of r_so
-    v_s_proj = np.sum(v_s * r_so, axis=0)
-    v_o_proj = np.sum(v_o * r_so, axis=0)
+    # Determine the velocity component in the direction of r_so
+    v_s_r_so = np.sum(v_s * r_so, axis=0)
+    v_o_r_so = np.sum(v_o * r_so, axis=0)
 
     # Determine the observer frequency
-    f_o = f_s * (c_0 - v_o_proj) / (c_0 - v_s_proj)
+    f_o = f_s * (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
 
     return f_o
 
