@@ -21,7 +21,7 @@ Exceptions:
 import matplotlib.pyplot as plt
 import numpy as np
 
-from source.atmosphere.international_standard_atmosphere import density, kinematic_viscosity
+from source.atmosphere.ISA import density, kinematic_viscosity
 from source.constants import G, P, ALPHA_CH, ALPHA_M, KAPPA
 from source.settings import P_0, T_0
 
