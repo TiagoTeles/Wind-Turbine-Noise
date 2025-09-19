@@ -179,18 +179,11 @@ if __name__ == "__main__":
     turbine = simulation.turbine
     blade = turbine.blade
 
-    # Determine the turbine properties
-    n_blades = turbine.n_blades
-    rotor_overhang = turbine.rotor_overhang
-    shaft_tilt = turbine.shaft_tilt
-    rotor_cone = turbine.rotor_cone
-    tower_height = turbine.tower_height
-
     # Iterate through all blades
-    for i in range(n_blades):
+    for i in range(turbine.n_blades):
 
         # Determine the azimuth angle
-        psi = i * 2.0 * np.pi / n_blades
+        psi = 2.0 * np.pi * i / turbine.n_blades
 
         # Iterate through all panels
         for j in range(len(blade.geometry)):
@@ -210,11 +203,11 @@ if __name__ == "__main__":
             z = airfoil.coordinates["y/c"] * chord
             w = np.ones(len(x))
 
-            # Determine the transformation matrix
+            # Determine the transformation matrices
             matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
-            matrix_bh = blade_to_hub(rotor_cone, 0.0)
-            matrix_hn = hub_to_nacelle(rotor_overhang, psi)
-            matrix_nt = nacelle_to_turbine(tower_height, shaft_tilt, 0.0)
+            matrix_bh = blade_to_hub(turbine.rotor_cone, 0.0)
+            matrix_hn = hub_to_nacelle(turbine.rotor_overhang, psi)
+            matrix_nt = nacelle_to_turbine(turbine.tower_height, turbine.shaft_tilt, 0.0)
 
             # Transform the airfoil coordinates
             x_t = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab @ np.array([x, y, z, w])
