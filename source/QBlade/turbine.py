@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-09-22
 License:  GNU GPL 3.0
 
 Store the turbine data.
@@ -17,7 +17,6 @@ Exceptions:
 """
 
 import os
-import sys
 
 import numpy as np
 
@@ -30,7 +29,6 @@ class Turbine:
 
     Methods:
         __init__ -- initialise the Turbine class
-        read -- read the .trb file
 
     Attributes:
         path : str -- path to the .trb file
@@ -56,36 +54,17 @@ class Turbine:
 
         self.path = path
 
-        # Check if the file exists
-        if not os.path.isfile(path):
-            print(f"No file found at {path}!")
-            sys.exit(1)
-
-        # Read the file
-        self.read()
-
-    def read(self):
-        """
-        Read the .trb file.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
-
         # Open the file
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
         # Read the turbine geometry
-        self.n_blades = lines[12].split()[0]
-        self.n_panels = lines[17].split()[0]
-        self.rotor_overhang = lines[21].split()[0]
-        self.shaft_tilt = lines[22].split()[0]
-        self.rotor_cone = lines[23].split()[0]
-        self.tower_height = lines[27].split()[0]
+        self.n_blades = int(lines[12].split()[0])
+        self.n_panels = int(lines[17].split()[0])
+        self.rotor_overhang = float(lines[21].split()[0])
+        self.shaft_tilt = float(lines[22].split()[0])
+        self.rotor_cone = float(lines[23].split()[0])
+        self.tower_height = float(lines[27].split()[0])
 
         # Convert the angles from [deg] to [rad]
         self.shaft_tilt = np.radians(self.shaft_tilt)

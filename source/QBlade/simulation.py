@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-09-22
 License:  GNU GPL 3.0
 
 Store the simulation data.
@@ -17,7 +17,6 @@ Exceptions:
 """
 
 import os
-import sys
 
 from source.QBlade.turbine import Turbine
 
@@ -28,7 +27,6 @@ class Simulation:
 
     Methods:
         __init__ -- initialise the Simulation class
-        read -- read the .sim file
 
     Attributes:
         path : str -- path to the .sim file
@@ -47,25 +45,6 @@ class Simulation:
         """
 
         self.path = path
-
-        # Check if the file exists
-        if not os.path.isfile(path):
-            print(f"No file found at {path}!")
-            sys.exit(1)
-
-        # Read the file
-        self.read()
-
-    def read(self):
-        """
-        Read the .sim file.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
 
         # Open the file
         f = open(self.path, "r", encoding="utf-8")
