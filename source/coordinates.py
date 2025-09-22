@@ -213,5 +213,5 @@ if __name__ == "__main__":
             x_t = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab @ np.array([x, y, z, w])
 
             # Write the airfoil coordinates
-            for i in range(x_t.shape[1]):
-                f.write(f"v {x_t[0, i]} {x_t[1, i]} {x_t[2, i]}\n")
+            for k in range(x_t.shape[1]):
+                f.write(f"v {x_t[0, k]} {x_t[1, k]} {x_t[2, k]}\n")
