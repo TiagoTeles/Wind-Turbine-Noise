@@ -117,7 +117,7 @@ class Results:
         """
 
         # Determine the time index
-        index = np.where(np.diff(np.sign(self.azimuth[:, blade] - azimuth)) > 0.0)[0]
+        index = np.where(np.diff(np.sign(self.azimuth[:, blade] - azimuth)) > 0.0)[0][-1]
 
         print(index)
 
