@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-09-22
 License:  GNU GPL 3.0
 
 Store the simulation results.
@@ -16,7 +16,6 @@ Exceptions:
     None
 """
 
-import os
 import sys
 
 import numpy as np
@@ -29,17 +28,18 @@ class Results:
 
     Methods:
         __init__ -- initialise the Results class
-        read -- read the results file
+        get -- get the results at a given azimuth angle
 
     Attributes:
-        path : str -- path to the results file
-        U_hub : ndarray -- wind speed at the hub, [m/s]
-        phi : ndarray -- yaw angle, [rad]
-        theta : ndarray -- pitch angle, [rad]
-        psi : ndarray -- azimuth angle, [rad]
-        r : ndarray -- spanwise position, [m]
-        U : ndarray -- velocity, [m/s]
-        alpha : ndarray -- angle of attack, [rad]
+        path : str -- path to the .txt file
+        time : np.ndarray -- time, [s]
+        velocity_hub : np.ndarray -- wind speed at the hub, [m/s]
+        yaw : np.ndarray -- yaw angle, [rad]
+        pitch : np.ndarray -- pitch angle, [rad]
+        azimuth : np.ndarray -- azimuth angle, [rad]
+        radius : np.ndarray -- spanwise position, [m]
+        velocity : np.ndarray -- velocity, [m/s]
+        aoa : np.ndarray -- angle of attack, [rad]
     """
 
     def __init__(self, path):
@@ -47,7 +47,7 @@ class Results:
         Initialise the Results class.
 
         Parameters:
-            path : str -- path to the results file
+            path : str -- path to the .txt file
 
         Returns:
             None
@@ -55,67 +55,96 @@ class Results:
 
         self.path = path
 
-        # Check if the file exists
-        if not os.path.isfile(path):
-            print(f"No file found at {path}!")
-            sys.exit(1)
-
-        # Read the file
-        self.read()
-
-    def read(self):
-        """
-        Read the results file.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
-
         # Read the simulation results
-        data = pd.read_csv(self.path, delimiter=r"\s+", skiprows=2)
+        results = pd.read_csv(self.path, delimiter=r"\s+", skiprows=2)
 
         # Determine the number of blades
         n_blades = 0
 
-        for column in data.columns.values:
+        for column in results.columns.values:
             if "Azimuthal~Angle~BLD_" in column:
                 n_blades += 1
 
         # Determine the number of panels
         n_panels = 0
 
-        for column in data.columns.values:
+        for column in results.columns.values:
             if "Radius~BLD_1~PAN_" in column:
                 n_panels += 1
 
         # Determine the turbine properties
-        self.U_hub = data["Abs~Inflow~Vel.~at~Hub~[m/s]"]
-        self.phi = data["Yaw~Angle~[deg]"]
+        self.time = results["Time~[s]"].to_numpy()
+        self.velocity_hub = results["Abs~Inflow~Vel.~at~Hub~[m/s]"].to_numpy()
+        self.yaw = results["Yaw~Angle~[deg]"].to_numpy()
 
         # Determine the blade properties
-        self.theta = np.empty((len(data), n_blades))
-        self.psi = np.empty((len(data), n_blades))
+        self.pitch = np.empty((len(results), n_blades))
+        self.azimuth = np.empty((len(results), n_blades))
 
         for i in range(n_blades):
-            self.theta[:, i] = data[f"Pitch~Angle~BLD_{i+1}~[deg]"]
-            self.psi[:, i] = data[f"Azimuthal~Angle~BLD_{i+1}~[deg]"]
+            self.pitch[:, i] = results[f"Pitch~Angle~BLD_{i+1}~[deg]"]
+            self.azimuth[:, i] = results[f"Azimuthal~Angle~BLD_{i+1}~[deg]"]
 
         # Determine the panel properties
-        self.r = np.empty((len(data), n_blades, n_panels))
-        self.U = np.empty((len(data), n_blades, n_panels))
-        self.alpha = np.empty((len(data), n_blades, n_panels))
+        self.radius = np.empty((len(results), n_blades, n_panels))
+        self.velocity = np.empty((len(results), n_blades, n_panels))
+        self.aoa = np.empty((len(results), n_blades, n_panels))
 
         for i in range(n_blades):
             for j in range(n_panels):
-                self.r[:, i, j] = data[f"Radius~BLD_{i+1}~PAN_{j}~[m]"]
-                self.U[:, i, j] = data[f"Total~Velocity~BLD_{i+1}~PAN_{j}~[m/s]"]
-                self.alpha[:, i, j] = data[f"Angle~of~Attack~at~0.25c~BLD_{i+1}~PAN_{j}~[deg]"]
+                self.radius[:, i, j] = results[f"Radius~BLD_{i+1}~PAN_{j}~[m]"]
+                self.velocity[:, i, j] = results[f"Total~Velocity~BLD_{i+1}~PAN_{j}~[m/s]"]
+                self.aoa[:, i, j] = results[f"Angle~of~Attack~at~0.25c~BLD_{i+1}~PAN_{j}~[deg]"]
 
-        # Convert the results from [deg] to [rad]
-        self.alpha = np.radians(self.alpha)
-        self.theta = np.radians(self.theta)
-        self.phi = np.radians(self.phi)
-        self.psi = np.radians(self.psi)
+        # Convert the angles from [deg] to [rad]
+        self.yaw = np.radians(self.yaw)
+        self.pitch = np.radians(self.pitch)
+        self.azimuth = np.radians(self.azimuth)
+        self.aoa = np.radians(self.aoa)
+
+    def get(self, key, azimuth, blade, radius):
+        """
+        Get the results at a given time.
+
+        Parameters:
+            key : str -- property key
+            azimuth : int -- azimuth angle, [rad]
+            blade : int -- blade index
+            radius : np.ndarray -- spanwise position, [m]
+        
+        Returns:
+            value : np.ndarray -- property value
+        """
+
+        # Determine the time index
+        index = np.where(np.diff(np.sign(self.azimuth[:, blade] - azimuth)) > 0.0)[0]
+
+        print(index)
+
+        # Determine the value
+        if key == "time":
+            value = self.time[index]
+
+        elif key == "velocity_hub":
+            value = self.velocity_hub[index]
+
+        elif key == "yaw":
+            value = self.yaw[index]
+
+        elif key == "pitch":
+            value = self.pitch[index, blade]
+
+        elif key == "azimuth":
+            value = self.azimuth[index, blade]
+
+        elif key == "velocity":
+            value = np.interp(radius, self.radius[index, blade, :], self.velocity[index, blade, :])
+
+        elif key == "aoa":
+            value = np.interp(radius, self.radius[index, blade, :], self.aoa[index, blade, :])
+
+        else:
+            print("Key not recognised!")
+            sys.exit(1)
+
+        return value
