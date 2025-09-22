@@ -174,7 +174,7 @@ if __name__ == "__main__":
     # Open the output file
     f = open("coordinates.obj", "w", encoding="utf-8")
 
-    # Create the Turbine object
+    # Create the Simulation object
     simulation = Simulation(SIMULATION_PATH)
     turbine = simulation.turbine
     blade = turbine.blade
@@ -186,16 +186,16 @@ if __name__ == "__main__":
         psi = 2.0 * np.pi * i / turbine.n_blades
 
         # Iterate through all panels
-        for j in range(len(blade.geometry)):
+        for j in range(len(blade.radius)):
 
             # Determine the blade properties
-            radius = blade.geometry.at[j, "radius"]
-            chord = blade.geometry.at[j, "chord"]
-            twist = blade.geometry.at[j, "twist"]
-            offset_x = blade.geometry.at[j, "offset_x"]
-            offset_y = blade.geometry.at[j, "offset_y"]
-            pitch_axis = blade.geometry.at[j, "pitch_axis"]
-            airfoil = blade.geometry.at[j, "polar"].airfoil
+            radius = blade.radius[j]
+            chord = blade.chord[j]
+            twist = blade.twist[j]
+            offset_x = blade.offset_x[j]
+            offset_y = blade.offset_y[j]
+            pitch_axis = blade.pitch_axis[j]
+            airfoil = blade.polar[j].airfoil
 
             # Determine the airfoil coordinates
             x = airfoil.coordinates["x/c"] * chord
