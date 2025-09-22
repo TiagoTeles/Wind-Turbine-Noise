@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-19
+Date:     2025-09-22
 License:  GNU GPL 3.0
 
 Store the polar data.
@@ -28,7 +28,6 @@ class Polar:
 
     Methods:
         __init__ -- initialise the Polar class
-        read -- read the .plr file
 
     Attributes:
         path : str -- path to the .plr file
@@ -47,25 +46,6 @@ class Polar:
         """
 
         self.path = path
-
-        # Check if the file exists
-        if not os.path.isfile(path):
-            print(f"No file found at {path}!")
-            sys.exit(1)
-
-        # Read the file
-        self.read()
-
-    def read(self):
-        """
-        Read the .plr file.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
 
         # Open the file
         f = open(self.path, "r", encoding="utf-8")

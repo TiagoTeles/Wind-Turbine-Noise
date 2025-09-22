@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-09-22
 License:  GNU GPL 3.0
 
 Store the airfoil data.
@@ -16,9 +16,6 @@ Exceptions:
     None
 """
 
-import os
-import sys
-
 import numpy as np
 import pandas as pd
 
@@ -29,7 +26,6 @@ class Airfoil:
 
     Methods:
         __init__ -- initialise the Airfoil class
-        read -- read the .afl file
         thickness -- determine the airfoil thickness
 
     Attributes:
@@ -49,25 +45,6 @@ class Airfoil:
         """
 
         self.path = path
-
-        # Check if the file exists
-        if not os.path.isfile(path):
-            print(f"No file found at {path}!")
-            sys.exit(1)
-
-        # Read the file
-        self.read()
-
-    def read(self):
-        """
-        Read the .afl file.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
 
         # Read the airfoil coordinates
         self.coordinates = pd.read_csv(self.path, delimiter=r"\s+", names=["x/c", "y/c"], skiprows=1)
