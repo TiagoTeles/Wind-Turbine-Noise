@@ -33,9 +33,9 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
         base_10 : bool -- use base 10?
 
     Returns:
-        f_center : np.array -- center frequencies, [Hz]
-        f_lower : np.array -- lower frequencies, [Hz]
-        f_upper : np.array -- upper frequencies, [Hz]
+        f_center : np.ndarray -- center frequencies, [Hz]
+        f_lower : np.ndarray -- lower frequencies, [Hz]
+        f_upper : np.ndarray -- upper frequencies, [Hz]
     """
 
     if base_10:
@@ -68,15 +68,15 @@ def doppler_effect(f_s, x_s, x_o, v_s, v_o, c_0):
     Determine the frequency shift due to the Doppler effect.
 
     Parameters:
-        f_s : np.array -- source frequency, [Hz]
-        x_s : np.array -- source position, [m]
-        x_o : np.array -- observer position, [m]
-        v_s : np.array -- source velocity, [m/s]
-        v_o : np.array -- observer velocity, [m/s]
+        f_s : np.ndarray -- source frequency, [Hz]
+        x_s : np.ndarray -- source position, [m]
+        x_o : np.ndarray -- observer position, [m]
+        v_s : np.ndarray -- source velocity, [m/s]
+        v_o : np.ndarray -- observer velocity, [m/s]
         c_0 : float -- speed of sound, [m/s]
 
     Returns:
-        f_o : np.array -- observer frequency, [Hz]
+        f_o : np.ndarray -- observer frequency, [Hz]
     """
 
     # Determine the source-observer unit vector

@@ -29,11 +29,11 @@ def density(p, T):
     Determine the density of air.
 
     Parameters:
-        p : np.array -- pressure, [Pa]
-        T : np.array -- temperature, [K]
+        p : np.ndarray -- pressure, [Pa]
+        T : np.ndarray -- temperature, [K]
 
     Returns:
-        rho : np.array -- density, [kg/m^3]
+        rho : np.ndarray -- density, [kg/m^3]
     """
 
     # Determine the density
@@ -47,11 +47,11 @@ def kinematic_viscosity(T, rho):
     Determine the kinematic viscosity of air.
 
     Parameters:
-        T : np.array -- temperature, [K]
-        rho : np.array -- density, [kg/m^3]
+        T : np.ndarray -- temperature, [K]
+        rho : np.ndarray -- density, [kg/m^3]
 
     Returns:
-        nu : np.array -- kinematic viscosity, [m^2/s]
+        nu : np.ndarray -- kinematic viscosity, [m^2/s]
     """
 
     # Determine the dynamic viscosity
@@ -68,10 +68,10 @@ def speed_of_sound(T):
     Determine the speed of sound in air.
 
     Parameters:
-        T : np.array -- temperature, [K]
+        T : np.ndarray -- temperature, [K]
 
     Returns:
-        c : np.array -- speed of sound, [m/s]
+        c : np.ndarray -- speed of sound, [m/s]
     """
 
     # Determine the speed of sound

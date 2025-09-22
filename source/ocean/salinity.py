@@ -85,12 +85,12 @@ class Salinity:
         Get the salinity at a given latitude, longitude, and altitude.
 
         Parameters:
-            latitude : np.array -- latitude, [rad]
-            longitude : np.array -- longitude, [rad]
-            altitude : np.array -- altitude, [m]
+            latitude : np.ndarray -- latitude, [rad]
+            longitude : np.ndarray -- longitude, [rad]
+            altitude : np.ndarray -- altitude, [m]
 
         Returns:
-            salinity : np.array -- salinity, [-]
+            salinity : np.ndarray -- salinity, [-]
         """
 
         # Determine the salinity

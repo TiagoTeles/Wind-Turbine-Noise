@@ -29,13 +29,13 @@ def attenuation_coefficient(f, p, T, h):
     Determine the attenuation coefficient due to atmospheric absorption.
 
     Parameters:
-        f : np.array -- frequency, [Hz]
-        p : np.array -- pressure, [Pa]
-        T : np.array -- temperature, [K]
-        h : np.array -- molar concentration of water vapour, [-]
+        f : np.ndarray -- frequency, [Hz]
+        p : np.ndarray -- pressure, [Pa]
+        T : np.ndarray -- temperature, [K]
+        h : np.ndarray -- molar concentration of water vapour, [-]
 
     Returns:
-        alpha : np.array -- attenuation coefficient, [dB/m]
+        alpha : np.ndarray -- attenuation coefficient, [dB/m]
     """
 
     # Check for low molar concentrations of water vapour
@@ -105,12 +105,12 @@ def molar_concentration(p, T, h_r):
     Determine the molar concentration of water vapour.
 
     Parameters:
-        p : np.array -- pressure, [Pa]
-        T : np.array -- temperature, [K]
-        h_r : np.array -- relative humidity, [-]
+        p : np.ndarray -- pressure, [Pa]
+        T : np.ndarray -- temperature, [K]
+        h_r : np.ndarray -- relative humidity, [-]
 
     Returns:
-        h : np.array -- molar concentration of water vapour, [-]
+        h : np.ndarray -- molar concentration of water vapour, [-]
     """
 
     # Determine the saturation pressure of water vapour

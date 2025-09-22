@@ -85,12 +85,12 @@ class Temperature:
         Get the temperature at a given latitude, longitude, and altitude.
 
         Parameters:
-            latitude : np.array -- latitude, [rad]
-            longitude : np.array -- longitude, [rad]
-            altitude : np.array -- altitude, [m]
+            latitude : np.ndarray -- latitude, [rad]
+            longitude : np.ndarray -- longitude, [rad]
+            altitude : np.ndarray -- altitude, [m]
 
         Returns:
-            temperature : np.array -- temperature, [K]
+            temperature : np.ndarray -- temperature, [K]
         """
 
         # Determine the temperature

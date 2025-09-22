@@ -81,11 +81,11 @@ class Bathymetry:
         Get the elevation at a given latitude and longitude.
 
         Parameters:
-            latitude : np.array -- latitude, [rad]
-            longitude : np.array -- longitude, [rad]
+            latitude : np.ndarray -- latitude, [rad]
+            longitude : np.ndarray -- longitude, [rad]
 
         Returns:
-            elevation : np.array -- elevation, [m]
+            elevation : np.ndarray -- elevation, [m]
         """
 
         # Determine the elevation

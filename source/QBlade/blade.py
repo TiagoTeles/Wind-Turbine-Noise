@@ -37,15 +37,15 @@ class Blade():
 
     Attributes:
         path : str -- path to the .bld file
-        radius : np.array -- spanwise position, [m]
-        chord : np.array -- chord length, [m]
-        twist : np.array -- twist angle, [rad]
-        offset_x : np.array -- in-plane offset, [m]
-        offset_y : np.array -- out-of-plane offset, [m]
-        pitch_axis : np.array -- pitch axis position, [-]
-        polar : np.array -- polar data
-        thickness_01 : np.array -- airfoil thickness at x/c = 0.01 [-]
-        thickness_10 : np.array -- airfoil thickness at x/c = 0.10 [-]
+        radius : np.ndarray -- spanwise position, [m]
+        chord : np.ndarray -- chord length, [m]
+        twist : np.ndarray -- twist angle, [rad]
+        offset_x : np.ndarray -- in-plane offset, [m]
+        offset_y : np.ndarray -- out-of-plane offset, [m]
+        pitch_axis : np.ndarray -- pitch axis position, [-]
+        polar : np.ndarray -- polar data
+        thickness_01 : np.ndarray -- airfoil thickness at x/c = 0.01 [-]
+        thickness_10 : np.ndarray -- airfoil thickness at x/c = 0.10 [-]
     """
 
     def __init__(self, path):
@@ -97,10 +97,10 @@ class Blade():
 
         Parameters:
             key : str -- property key
-            radius : np.array -- radius, [m]
+            radius : np.ndarray -- radius, [m]
 
         Returns:
-            value : np.array -- property value
+            value : np.ndarray -- property value
         """
 
         # Determine the value
@@ -116,9 +116,9 @@ class Blade():
             AR : float -- aspect ratio, [-]
 
         Returns:
-            radius_p : np.array -- panel radiuses, [m]
-            span_p : np.array -- panel spans, [m]
-            chord_p : np.array -- panel chords, [m]
+            radius_p : np.ndarray -- panel radiuses, [m]
+            span_p : np.ndarray -- panel spans, [m]
+            chord_p : np.ndarray -- panel chords, [m]
         """
 
         radius = []

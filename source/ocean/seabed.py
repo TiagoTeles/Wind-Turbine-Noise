@@ -93,11 +93,11 @@ class Seabed:
         Get the seabed type at a given latitude and longitude.
 
         Parameters:
-            latitude : np.array -- latitude, [rad]
-            longitude : np.array -- longitude, [rad]
+            latitude : np.ndarray -- latitude, [rad]
+            longitude : np.ndarray -- longitude, [rad]
 
         Returns:
-            type : np.array -- seabed type
+            type : np.ndarray -- seabed type
         """
 
         # Determine the seabed type

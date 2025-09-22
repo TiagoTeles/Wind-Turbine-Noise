@@ -31,11 +31,11 @@ def turbulence_intensity(z, z_0):
     Determine the turbulence intensity.
 
     Parameters:
-        z : np.array -- height, [m]
-        z_0 : np.array -- surface roughness length, [m]
+        z : np.ndarray -- height, [m]
+        z_0 : np.ndarray -- surface roughness length, [m]
 
     Returns:
-        I : np.array -- turbulence intensity, [-]
+        I : np.ndarray -- turbulence intensity, [-]
     """
 
     # Determine the turbulence intensity
@@ -50,11 +50,11 @@ def turbulence_length_scale(z, z_0):
     Determine the turbulence length scale.
 
     Parameters:
-        z : np.array -- height, [m]
-        z_0 : np.array -- surface roughness length, [m]
+        z : np.ndarray -- height, [m]
+        z_0 : np.ndarray -- surface roughness length, [m]
 
     Returns:
-        L : np.array -- turbulence length scale, [m]
+        L : np.ndarray -- turbulence length scale, [m]
     """
 
     # Determine the turbulence length scale
@@ -68,13 +68,13 @@ def surface_roughness_length(u_n, z, nu, output_all=False):
     Determine the surface roughness length.
 
     Parameters:
-        u_n : np.array -- neutral wind speed, [m/s]
-        z : np.array -- height, [m]
-        nu : np.array -- kinematic viscosity, [m^2/s]
+        u_n : np.ndarray -- neutral wind speed, [m/s]
+        z : np.ndarray -- height, [m]
+        nu : np.ndarray -- kinematic viscosity, [m^2/s]
         output_all : bool -- output all contributions?
 
     Returns:
-        z_0 : np.array -- surface roughness length, [m]
+        z_0 : np.ndarray -- surface roughness length, [m]
     """
 
     # Determine R and A

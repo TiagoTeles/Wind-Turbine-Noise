@@ -28,21 +28,21 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0):
     Determine the flat plate SPL.
 
     Parameters:
-        f : np.array -- frequency, [Hz]
-        b : np.array -- span, [m]
-        c : np.array -- chord, [m]
-        I : np.array -- turbulence intensity, [-]
-        L : np.array -- turbulence length scale, [m]
-        U : np.array -- velocity, [m/s]
-        alpha : np.array -- angle of attack, [rad]
-        r_e : np.array -- retarded distance, [m]
-        theta_e : np.array -- chordwise retarded angle, [rad]
-        phi_e : np.array -- spanwise retarded angle, [rad]
+        f : np.ndarray -- frequency, [Hz]
+        b : np.ndarray -- span, [m]
+        c : np.ndarray -- chord, [m]
+        I : np.ndarray -- turbulence intensity, [-]
+        L : np.ndarray -- turbulence length scale, [m]
+        U : np.ndarray -- velocity, [m/s]
+        alpha : np.ndarray -- angle of attack, [rad]
+        r_e : np.ndarray -- retarded distance, [m]
+        theta_e : np.ndarray -- chordwise retarded angle, [rad]
+        phi_e : np.ndarray -- spanwise retarded angle, [rad]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- density, [kg/m^3]
 
     Returns:
-        spl_flat_plate : np.array -- flat plate SPL, [dB]
+        spl_flat_plate : np.ndarray -- flat plate SPL, [dB]
     """
 
     # Determine the Mach number
@@ -96,14 +96,14 @@ def airfoil_shape_correction(f, c, t_01, t_10, U):
     Determine the airfoil shape SPL correction.
 
     Args:
-        f : np.array -- frequency, [Hz]
-        c : np.array -- chord, [m]
-        t_01 : np.array -- thickness at x/c = 0.01, [-]
-        t_10 : np.array -- thickness at x/c = 0.10, [-]
-        U : np.array -- velocity, [m/s]
+        f : np.ndarray -- frequency, [Hz]
+        c : np.ndarray -- chord, [m]
+        t_01 : np.ndarray -- thickness at x/c = 0.01, [-]
+        t_10 : np.ndarray -- thickness at x/c = 0.10, [-]
+        U : np.ndarray -- velocity, [m/s]
 
     Returns:
-        delta_spl : np.array -- SPL correction, [dB]
+        delta_spl : np.ndarray -- SPL correction, [dB]
     """
 
     # Determine the angular frequency
@@ -133,15 +133,15 @@ def retarded_coordinates(x, y, z, M):
     Determine the retarded distance and angles.
 
     Parameters:
-        x : np.array -- x-coordinate, [m]
-        y : np.array -- y-coordinate, [m]
-        z : np.array -- z-coordinate, [m]
-        M : np.array -- Mach number, [-]
+        x : np.ndarray -- x-coordinate, [m]
+        y : np.ndarray -- y-coordinate, [m]
+        z : np.ndarray -- z-coordinate, [m]
+        M : np.ndarray -- Mach number, [-]
 
     Returns:
-        r_e : np.array -- retarded distance, [m]
-        theta_e : np.array -- chordwise retarded angle, [rad]
-        phi_e : np.array -- spanwise retarded angle, [rad]
+        r_e : np.ndarray -- retarded distance, [m]
+        theta_e : np.ndarray -- chordwise retarded angle, [rad]
+        phi_e : np.ndarray -- spanwise retarded angle, [rad]
     """
 
     # Determine the distance
@@ -171,23 +171,23 @@ def inflow_turbulence_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, r
     Determine the inflow turbulence noise SPL.
 
     Parameters:
-        f : np.array -- frequency, [Hz]
-        b : np.array -- span, [m]
-        c : np.array -- chord, [m]
-        I : np.array -- turbulence intensity, [-]
-        L : np.array -- turbulence length scale, [m]
-        t_01 : np.array -- thickness at x/c = 0.01, [-]
-        t_10 : np.array -- thickness at x/c = 0.10, [-]
-        U : np.array -- velocity, [m/s]
-        alpha : np.array -- angle of attack, [rad]
-        x : np.array -- x-coordinate, [m]
-        y : np.array -- y-coordinate, [m]
-        z : np.array -- z-coordinate, [m]
+        f : np.ndarray -- frequency, [Hz]
+        b : np.ndarray -- span, [m]
+        c : np.ndarray -- chord, [m]
+        I : np.ndarray -- turbulence intensity, [-]
+        L : np.ndarray -- turbulence length scale, [m]
+        t_01 : np.ndarray -- thickness at x/c = 0.01, [-]
+        t_10 : np.ndarray -- thickness at x/c = 0.10, [-]
+        U : np.ndarray -- velocity, [m/s]
+        alpha : np.ndarray -- angle of attack, [rad]
+        x : np.ndarray -- x-coordinate, [m]
+        y : np.ndarray -- y-coordinate, [m]
+        z : np.ndarray -- z-coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
 
     Returns:
-        spl : np.array -- inflow turbulence noise SPL, [dB]
+        spl : np.ndarray -- inflow turbulence noise SPL, [dB]
     """
 
     # Determine the Mach number

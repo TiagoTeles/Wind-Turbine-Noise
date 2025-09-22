@@ -95,7 +95,7 @@ def nacelle_to_turbine(tower_height, shaft_tilt, phi):
         phi : float -- yaw angle, [rad]
 
     Returns:
-        matrix : np.array -- transformation matrix
+        matrix : np.ndarray -- transformation matrix
     """
 
     return transform(0.0, 0.0, tower_height, 0.0, shaft_tilt, phi, "xyz")
@@ -111,7 +111,7 @@ def hub_to_nacelle(rotor_overhang, psi):
         psi : float -- azimuth angle, [rad]
 
     Returns:
-        matrix : np.array -- transformation matrix
+        matrix : np.ndarray -- transformation matrix
     """
 
     return transform(-rotor_overhang, 0.0, 0.0, psi, 0.0, 0.0, "xyz")
@@ -127,7 +127,7 @@ def blade_to_hub(rotor_cone, theta):
         theta : float -- pitch angle, [rad]
 
     Returns:
-        matrix : np.array -- transformation matrix
+        matrix : np.ndarray -- transformation matrix
     """
 
     return transform(0.0, 0.0, 0.0, 0.0, -rotor_cone, -theta, "xzy")
@@ -148,7 +148,7 @@ def airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, x_c):
         x_c : float -- origin position, [-]
 
     Returns:
-        matrix : np.array -- transformation matrix
+        matrix : np.ndarray -- transformation matrix
     """
 
     return transform(offset_y, offset_x, radius, np.pi/2.0, 0.0, np.pi/2.0 - twist, "xyz") \
@@ -164,7 +164,7 @@ def freestream_to_airfoil(alpha):
         alpha : float -- angle of attack, [rad]
 
     Returns:
-        matrix : np.array -- transformation matrix
+        matrix : np.ndarray -- transformation matrix
     """
 
     return transform(0.0, 0.0, 0.0, 0.0, -alpha, 0.0, "xyz")
