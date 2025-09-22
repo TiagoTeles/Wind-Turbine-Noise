@@ -46,7 +46,7 @@ class Simulation:
 
         self.path = path
 
-        # Open the file
+        # Read the file
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 

@@ -54,11 +54,11 @@ class Turbine:
 
         self.path = path
 
-        # Open the file
+        # Read the file
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
-        # Read the turbine geometry
+        # Set the turbine geometry
         self.n_blades = int(lines[12].split()[0])
         self.n_panels = int(lines[17].split()[0])
         self.rotor_overhang = float(lines[21].split()[0])

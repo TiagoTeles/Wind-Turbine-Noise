@@ -17,7 +17,6 @@ Exceptions:
 """
 
 import os
-import sys
 
 from source.QBlade.airfoil import Airfoil
 
@@ -47,7 +46,7 @@ class Polar:
 
         self.path = path
 
-        # Open the file
+        # Read the file
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
