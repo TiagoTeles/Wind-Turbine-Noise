@@ -84,7 +84,7 @@ def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
     return translation @ rotation[order]
 
 
-def nacelle_to_turbine(tower_height, shaft_tilt, phi):
+def nacelle_to_turbine(tower_height, shaft_tilt, yaw):
     """
     Determine the transformation matrix from the nacelle
     coordinate system to the turbine coordinate system.
@@ -92,45 +92,45 @@ def nacelle_to_turbine(tower_height, shaft_tilt, phi):
     Parameters:
         tower_height : float -- tower height, [m]
         shaft_tilt : float -- shaft tilt angle, [rad]
-        phi : float -- yaw angle, [rad]
+        yaw : float -- yaw angle, [rad]
 
     Returns:
         matrix : np.ndarray -- transformation matrix
     """
 
-    return transform(0.0, 0.0, tower_height, 0.0, shaft_tilt, phi, "xyz")
+    return transform(0.0, 0.0, tower_height, 0.0, shaft_tilt, yaw, "xyz")
 
 
-def hub_to_nacelle(rotor_overhang, psi):
+def hub_to_nacelle(rotor_overhang, azimuth):
     """
     Determine the transformation matrix from the hub
     coordinate system to the nacelle coordinate system.
 
     Parameters:
         rotor_overhang : float -- rotor overhang, [m]
-        psi : float -- azimuth angle, [rad]
+        azimuth : float -- azimuth angle, [rad]
 
     Returns:
         matrix : np.ndarray -- transformation matrix
     """
 
-    return transform(-rotor_overhang, 0.0, 0.0, psi, 0.0, 0.0, "xyz")
+    return transform(-rotor_overhang, 0.0, 0.0, azimuth, 0.0, 0.0, "xyz")
 
 
-def blade_to_hub(rotor_cone, theta):
+def blade_to_hub(rotor_cone, pitch):
     """
     Determine the transformation matrix from the blade
     coordinate system to the hub coordinate system.
 
     Parameters:
         rotor_cone : float -- rotor cone angle, [rad]
-        theta : float -- pitch angle, [rad]
+        pitch : float -- pitch angle, [rad]
 
     Returns:
         matrix : np.ndarray -- transformation matrix
     """
 
-    return transform(0.0, 0.0, 0.0, 0.0, -rotor_cone, -theta, "xzy")
+    return transform(0.0, 0.0, 0.0, 0.0, -rotor_cone, -pitch, "xzy")
 
 
 def airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, x_c):
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     for i in range(turbine.n_blades):
 
         # Determine the azimuth angle
-        psi = 2.0 * np.pi * i / turbine.n_blades
+        azimuth = 2.0 * np.pi * i / turbine.n_blades
 
         # Iterate through all panels
         for j in range(len(blade.radius)):
@@ -206,7 +206,7 @@ if __name__ == "__main__":
             # Determine the transformation matrices
             matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
             matrix_bh = blade_to_hub(turbine.rotor_cone, 0.0)
-            matrix_hn = hub_to_nacelle(turbine.rotor_overhang, psi)
+            matrix_hn = hub_to_nacelle(turbine.rotor_overhang, azimuth)
             matrix_nt = nacelle_to_turbine(turbine.tower_height, turbine.shaft_tilt, 0.0)
 
             # Transform the airfoil coordinates
