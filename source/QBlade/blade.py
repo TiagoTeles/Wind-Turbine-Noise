@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-09-22
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -17,7 +17,6 @@ Exceptions:
 """
 
 import os
-import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,13 +32,20 @@ class Blade():
 
     Methods:
         __init__ -- initialise the Blade class
-        read -- read the .bld file
+        get -- get the blade property at a given radius
         discretise -- discretise the blade into panels
 
     Attributes:
         path : str -- path to the .bld file
-        geometry : pd.DataFrame -- radius, chord, twist, offset_x, 
-                                   offset_y, pitch_axis, and polar
+        radius : np.array -- spanwise position, [m]
+        chord : np.array -- chord length, [m]
+        twist : np.array -- twist angle, [rad]
+        offset_x : np.array -- in-plane offset, [m]
+        offset_y : np.array -- out-of-plane offset, [m]
+        pitch_axis : np.array -- pitch axis position, [-]
+        polar : np.array -- polar data
+        thickness_01 : np.array -- airfoil thickness at x/c = 0.01 [-]
+        thickness_10 : np.array -- airfoil thickness at x/c = 0.10 [-]
     """
 
     def __init__(self, path):
@@ -55,48 +61,52 @@ class Blade():
 
         self.path = path
 
-        # Check if the file exists
-        if not os.path.isfile(path):
-            print(f"No file found at {path}!")
-            sys.exit(1)
-
-        # Read the file
-        self.read()
-
-    def read(self):
-        """
-        Read the .bld file.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
-
         # Read the blade geometry
-        self.geometry = pd.read_csv(self.path, delimiter=r"\s+", names=["radius", "chord", "twist", \
-                                    "offset_x", "offset_y", "pitch_axis", "polar_path"], skiprows=16)
+        geometry = pd.read_csv(self.path, delimiter=r"\s+", names=["radius", "chord", "twist", \
+                               "offset_x", "offset_y", "pitch_axis", "polar_path"], skiprows=16)
+
+        # Add the blade geometry
+        self.radius = geometry["radius"].to_numpy()
+        self.chord = geometry["chord"].to_numpy()
+        self.twist = geometry["twist"].to_numpy()
+        self.offset_x = geometry["offset_x"].to_numpy()
+        self.offset_y = geometry["offset_y"].to_numpy()
+        self.pitch_axis = geometry["pitch_axis"].to_numpy()
 
         # Convert the twist from [deg] to [rad]
-        self.geometry["twist"] = np.radians(self.geometry["twist"])
+        self.twist = np.radians(self.twist)
 
         # Add the Polar object
-        self.geometry["polar"] = None
+        self.polar = np.empty(self.radius.shape, dtype=Polar)
 
-        for index, panel in self.geometry.iterrows():
-            polar_path = os.path.normpath(os.path.join(os.path.dirname(self.path), panel["polar_path"]))
-            self.geometry.at[index, "polar"] = Polar(polar_path)
+        for i in range(len(self.radius)):
+            polar_path = os.path.normpath(os.path.join(os.path.dirname(self.path), geometry["polar_path"].iat[i]))
+            self.polar[i] = Polar(polar_path)
 
-        self.geometry = self.geometry.drop("polar_path", axis=1)
+        # Add the airfoil thicknesses
+        self.thickness_01 = np.empty(self.radius.shape)
+        self.thickness_10 = np.empty(self.radius.shape)
 
-        # Add the airfoil thickness at x/c = 0.01 [-] and x/c = 0.10 [-]
-        self.geometry["thickness_01"] = 0.0
-        self.geometry["thickness_10"] = 0.0
+        for i in range(len(self.radius)):
+            self.thickness_01[i] = self.polar[i].airfoil.thickness(0.01)
+            self.thickness_10[i] = self.polar[i].airfoil.thickness(0.10)
 
-        for index, panel in self.geometry.iterrows():
-            self.geometry.at[index, "thickness_01"] = panel["polar"].airfoil.thickness(0.01)
-            self.geometry.at[index, "thickness_10"] = panel["polar"].airfoil.thickness(0.10)
+    def get(self, key, radius):
+        """
+        Get the blade geometry at a given radius.
+
+        Parameters:
+            key : str -- property key
+            radius : np.array -- radius, [m]
+
+        Returns:
+            value : np.array -- property value
+        """
+
+        # Determine the value
+        value = np.interp(radius, self.radius, getattr(self, key))
+
+        return value
 
     def discretise(self, AR):
         """
@@ -115,8 +125,8 @@ class Blade():
         chord = []
 
         # Start the discretisation at the tip
-        radius.append(self.geometry["radius"].iat[-1])
-        chord.append(self.geometry["chord"].iat[-1])
+        radius.append(self.radius[-1])
+        chord.append(self.chord[-1])
 
         # Iterate though the entire blade
         while True:
@@ -137,7 +147,7 @@ class Blade():
 
                 # Update the inner panel radius and chord
                 radius_1 = radius_0 - AR * MAC_01
-                chord_1 = np.interp(radius_1, self.geometry["radius"], self.geometry["chord"])
+                chord_1 = self.get("chord", radius_1)
 
                 # Update the MAC
                 MAC_01 = (chord_0 + chord_1) / 2.0
@@ -155,11 +165,11 @@ class Blade():
                     break
 
             # Check if the end of the blade is reached
-            if radius[-1] < self.geometry.at[0, "radius"]:
+            if radius[-1] < self.radius[0]:
 
                 # Set the last panel radius and chord
-                radius[-1] = self.geometry.at[0, "radius"]
-                chord[-1] = self.geometry.at[0, "chord"]
+                radius[-1] = self.radius[0]
+                chord[-1] = self.chord[0]
 
                 break
 
@@ -191,7 +201,7 @@ if __name__ == "__main__":
 
     # Show the blade discretisation
     plt.bar(radius, chord, width=span, color="tab:blue", edgecolor="black", label="Panels", zorder=2)
-    plt.plot(blade.geometry["radius"], blade.geometry["chord"], color="tab:orange", label="Chord", zorder=3)
+    plt.plot(blade.radius, blade.chord, color="tab:orange", label="Chord", zorder=3)
 
     plt.xlabel("Radius, [m]")
     plt.ylabel("Chord, [m]")
