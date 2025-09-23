@@ -1,13 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-05
+Date:     2025-09-23
 License:  GNU GPL 3.0
 """
 
-# Universal constants
-G = 9.80665             # Gravitational acceleration, [m/s^2]
-KAPPA = 0.41            # von Karman constant, [-]
 
 # ISA model constants
 R = 287.1               # Specific gas constant, [J/(kg*K)]
@@ -25,6 +22,10 @@ P_REF_WATER = 1.0E-6    # Reference acoustic pressure in water, [Pa]
 ALPHA_CH = 0.018        # Charnock's empirical coefficient, [-]
 ALPHA_M = 0.11          # Hersbach's empirical coefficient, [-]
 P = -12.0               # Hersbach's blending factor, [-]
+
+# Universal constants
+G = 9.80665             # Gravitational acceleration, [m/s^2]
+KAPPA = 0.41            # von Karman constant, [-]
 
 # Atmospheric absorption constants
 P_REF = 101325.0        # Reference pressure, [Pa]
