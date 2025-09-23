@@ -24,6 +24,16 @@ import scipy as sp
 from source.settings import LATITUDE, LONGITUDE, SALINITY_PATH
 
 
+LABELS = {
+    0: "Mud",
+    1: "Sandy Mud",
+    2: "Muddy Sand",
+    3: "Sand",
+    4: "Mixed Sediment",
+    5: "Coarse Substrate",
+    6: "Rock and Boulders",
+}
+
 class Salinity:
     """
     A class to store the salinity data.
