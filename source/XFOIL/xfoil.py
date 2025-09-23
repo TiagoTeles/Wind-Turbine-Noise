@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-05-12
+Date:     2025-09-23
 License:  GNU GPL 3.0
 
 Run the XFOIL executable.
@@ -29,21 +29,21 @@ class XFoil:
     A class to run the XFOIL executable.
 
     Methods:
-        __init__ -- spawn an XFoil process
-        interpolate -- interpolate between two airfoil files
+        __init__ -- initialise the XFoil class
+        interpolate -- interpolate two airfoils
         run -- run XFOIL at a given Re, M, and Alpha
 
     Attributes:
-        cwd : str -- working directory
         path : str -- path to the XFOIL executable
+        cwd : str -- working directory
         process : subprocess.Popen -- XFOIL process
     """
 
     def __init__(self, path, cwd):
         """
-        Spawn an XFoil process.
+        Initialise the XFoil class.
 
-        Arguments:
+        Parameters:
             path : str -- path to the XFOIL executable
             cwd : str -- working directory
 
@@ -51,7 +51,6 @@ class XFoil:
             None
         """
 
-        # Initialise the attributes
         self.path = path
         self.cwd = cwd
 
@@ -59,13 +58,13 @@ class XFoil:
         self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd,
                                 text=True)
 
-    def interpolate(self, path_1, path_2, fraction):
+    def interpolate(self, path_0, path_1, fraction):
         """
-        Interpolate between two airfoil files.
+        Interpolate two airfoils.
 
-        Arguments:
-            path_1 : str -- input airfoil 1 file path
-            path_2 : str -- input airfoil 2 file path
+        Parameters:
+            path_0 : str -- airfoil file path
+            path_1 : str -- airfoil file path
             fraction : float -- interpolation fraction, [-]
 
         Returns:
@@ -73,8 +72,8 @@ class XFoil:
         """
 
         # Check if the file paths are too long
-        if len(path_1) > 64 or len(path_2) > 64:
-            print("File paths are too long!")
+        if len(path_0) > 64 or len(path_1) > 64:
+            print("File path is too long!")
             sys.exit(1)
 
         # Select the INTE environment
@@ -82,20 +81,20 @@ class XFoil:
 
         # Load the first airfoil file
         self.process.stdin.write("F\n")
-        self.process.stdin.write(f"{path_1}\n")
+        self.process.stdin.write(f"{path_0}\n")
 
         # Load the second airfoil file
         self.process.stdin.write("F\n")
-        self.process.stdin.write(f"{path_2}\n")
+        self.process.stdin.write(f"{path_1}\n")
 
         # Set the interpolation fraction
         self.process.stdin.write(f"{fraction}\n")
 
         # Determine the output file name and path
+        name_0 = os.path.splitext(os.path.basename(path_0))[0]
         name_1 = os.path.splitext(os.path.basename(path_1))[0]
-        name_2 = os.path.splitext(os.path.basename(path_2))[0]
 
-        name_out = f"{name_1}_{name_2}_f{fraction:.2f}"
+        name_out = f"{name_0}_{name_1}_f{fraction:.2f}"
         path_out = os.path.join("Airfoils", name_out + ".afl")
 
         # Check if the file path is too long
@@ -123,31 +122,31 @@ class XFoil:
             print("XFOIL file READ error!")
             sys.exit(1)
 
-        elif "Output file exists." in stdout:
+        elif "Output file exists" in stdout:
             print("Airfoil already exists! Skipping!")
 
         return os.path.join(self.cwd, path_out)
 
-    def run(self, path, re, mach, alpha, x_tr_top, x_tr_bot, n_crit, max_iter):
+    def run(self, path, re, mach, alpha, x_c_upper, x_c_lower, n_crit, max_iter):
         """
         Run XFOIL at a given Re, M, and Alpha.
 
-        Arguments:
+        Parameters:
             path : str -- airfoil file path
             re : float -- Reynolds number, [-]
             mach : float -- Mach number, [-]
             alpha : float -- angle of attack, [rad]
-            x_tr_top : float -- transition point on the top surface, [-]
-            x_tr_bot : float -- transition point on the bottom surface, [-]
+            x_c_upper : float -- transition point on the upper surface, [-]
+            x_c_lower : float -- transition point on the lower surface, [-]
             n_crit : float -- critical amplification factor, [-]
             max_iter : int -- maximum number of XFOIL iterations, [-]
 
         Returns:
-            bl_top : pandas.DataFrame -- boundary layer data on the top surface
-            bl_bot : pandas.DataFrame -- boundary layer data on the bottom surface
+            bl_upper : pandas.DataFrame -- boundary layer data on the upper surface
+            bl_lower : pandas.DataFrame -- boundary layer data on the lower surface
         """
 
-        # Convert the angle of attack from [rad] to [deg]
+        # Convert alpha from [rad] to [deg]
         alpha = np.degrees(alpha)
 
         # Check if the file path is too long
@@ -158,15 +157,15 @@ class XFoil:
         # Load the airfoil file
         self.process.stdin.write(f"LOAD {path}\n")
 
-        # Set the Re, Ma, and ITER in the OPER environment
+        # Set re, mach, and max_iter in the OPER environment
         self.process.stdin.write("OPER\n")
         self.process.stdin.write(f"Visc {re}\n")
         self.process.stdin.write(f"Mach {mach}\n")
         self.process.stdin.write(f"ITER {max_iter}\n")
 
-        # Set the Xtr_top, Xtr_bot, and N_crit in the VPAR environment
+        # Set x_c_upper, x_c_lower, and n_crit in the VPAR environment
         self.process.stdin.write("VPAR\n")
-        self.process.stdin.write(f"XTR {x_tr_top} {x_tr_bot}\n")
+        self.process.stdin.write(f"XTR {x_c_upper} {x_c_lower}\n")
         self.process.stdin.write(f"N {n_crit}\n")
         self.process.stdin.write("\n")
 
@@ -206,12 +205,12 @@ class XFoil:
             sys.exit(1)
 
         # Read the output file
-        data = pd.read_csv(os.path.join(self.cwd, path_out), sep=r"\s+", skiprows=1, names= \
-                           ["s/c", "x/c", "y/c", "U_e/U", "delta_star/c", "theta/c", "C_f", "H"])
+        data = pd.read_csv(os.path.join(self.cwd, path_out), delimiter=r"\s+", names=["s/c", \
+                           "x/c", "y/c", "U_e/U", "delta_star/c", "theta/c", "C_f", "H"], skiprows=1)
 
         # Filter and sort the boundary layer data
-        le_index = data["x/c"].idxmin()
-        bl_top = data[data["x/c"] <= 1.0].iloc[:le_index + 1][::-1]
-        bl_bot = data[data["x/c"] <= 1.0].iloc[le_index:]
+        index = data["x/c"].idxmin()
+        bl_upper = data[data["x/c"] <= 1.0].iloc[:index + 1][::-1]
+        bl_lower = data[data["x/c"] <= 1.0].iloc[index:]
 
-        return bl_top, bl_bot
+        return bl_upper, bl_lower
