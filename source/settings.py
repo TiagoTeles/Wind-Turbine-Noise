@@ -1,55 +1,44 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-05-15
+Date:     2025-09-23
 License:  GNU GPL 3.0
 """
 
+import numpy as np
+
+
+# Atmosphere properties
+P_0 = 101325.0  # Pressure, [Pa]
+T_0 = 288.15    # Temperature, [K]
+H_R = 0.80      # Relative humidity, [-]
+
+# Study domain properties
+LATITUDE = np.radians(41.6865)  # Study domain latitude, [rad]
+LONGITUDE = np.radians(-9.0574) # Study domain longitude, [rad]
+
+# Ocean properties
+BATHYMETRY_PATH = "data\\environments\\windfloat_atlantic\\bathymetry.csv"      # Bathymetry path
+TEMPERATURE_PATH = "data\\environments\\windfloat_atlantic\\temperature.csv"    # Temperature path
+SALINITY_PATH = "data\\environments\\windfloat_atlantic\\salinity.csv"          # Salinity path
+SEABED_PATH = "data\\environments\\windfloat_atlantic\\seabed.csv"              # Seabed path
+
 # QBlade settings
-QBLADE_PATH = "bin\\QBlade\\QBladeCE_2.0.8.6.dll"           # QBlade.dll path
-QBLADE_CL_DEVICE = 0                                        # OpenCL device
-QBLADE_GROUP_SIZE = 32                                      # OpenCL work-group size
+QBLADE_PATH = "bin\\QBlade\\QBladeCE_2.0.9.2.dll"   # QBlade.dll path
+OPENCL_DEVICE = 0                                   # OpenCL device
+OPENCL_GROUP_SIZE = 32                              # OpenCL work-group size
 
-# XFOIL settings
-XFOIL_PATH = "bin\\XFOIL\\xfoil.exe"                        # xfoil.exe path
-XFOIL_MAX_ITER = 100                                        # Iteration limit, [-]
-XFOIL_TRANSITION_TOP = 0.065                                # Top transition location, [-]
-XFOIL_TRANSITION_BOT = 0.200                                # Bottom transition location, [-]
-XFOIL_CRITICAL_AMPLIFICATION = 9.0                          # Critical amplification factor, [-]
-
-# Simulation settings
-SIMULATION_PATH = "data\\DTU_10MW_RWT\\DTU_10MW_RWT.sim"    # Simulation path
-N_TIMESTEP = 500                                            # Number of timesteps, [-]
-TIMESTEP_ID = -1                                            # Timestep index
-BLADE_ID = 0                                                # Blade index
-
-# Universal constants
-G = 9.81                                                    # Gravitational acceleration, [m/s^2]
-KAPPA = 0.41                                                # Von Karman constant, [-]
-
-# Environment properties
-C_0 = 340.3                                                 # Speed of sound, [m/s]
-RHO_0 = 1.225                                               # Air density, [kg/m^3]
-NU_0 = 1.46E-5                                              # Kinematic viscosity, [m^2/s]
+# QBlade simulation settings
+SIMULATION_PATH = "data\\turbines\\IEA_22MW_RWT\\IEA-22-280-RWT-Monopile.sim"   # Simulation path
+RESULTS_PATH = "results\\IEA_22MW_RWT\\windfloat_atlantic\\qblade.txt"          # Results path
 
 # Acoustic settings
-P_REF_AIR = 2E-5                                            # Reference pressure, [Pa]
-P_REF_WATER = 1E-6                                          # Reference pressure, [Pa]
-F_MIN = 20                                                  # Minimum frequency, [Hz]
-F_MAX = 20000                                               # Maximum frequency, [Hz]
-F_REF = 1000                                                # Reference frequency, [Hz]
-BASE_10 = True                                              # Use base 10?
+F_MIN = 20.0        # Minimum frequency, [Hz]
+F_MAX = 20000.0     # Maximum frequency, [Hz]
+F_REF = 1000.0      # Reference frequency, [Hz]
+BASE_10 = True      # Use base-10 formulation?
 
 # Aeroacoustic settings
-SPL_CORRECTION = False                                      # Use inflow noise 10dB SPL correction?
-RADIAL_CUTOFF = 0.4                                         # TBLTE noise radial cutoff, [-]
-PROBE_POSITION_TOP = 0.975                                  # Suction side probe location, [-]
-PROBE_POSITION_BOT = 0.950                                  # Pressure side probe location, [-]
-CONVECTION_VELOCITY_COEFFICIENT = 1.0/0.7                   # U / U_c, [-]
-SPANWISE_CORRELATION_COEFFICIENT = 1.5                      # Correlation coefficient, [-]
-
-# NM80 settings
-# SIMULATION_PATH = "data\\NM_2MW_RWT\\NM_2MW_RWT.sim"        # Simulation path
-# C_0 = 339.7                                                 # Speed of sound, [m/s]
-# RHO_0 = 1.252                                               # Air density, [kg/m^3]
-# NU_0 = 1.437699E-5                                          # Kinematic viscosity, [m^2/s]
+# N_AZIMUTH = 12      # Number of azimuthal positions, [-]
+# BLADE_ID = 0        # QBlade blade index
+AR = 2.0            # Panel aspect ratio, [-]
