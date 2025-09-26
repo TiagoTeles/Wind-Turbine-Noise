@@ -22,10 +22,19 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
-from source.constants import LABELS
 from source.ocean.bathymetry import Bathymetry
 from source.settings import BATHYMETRY_PATH, SEABED_PATH
 
+
+LABELS = {
+    0: "Mud",
+    1: "Sandy Mud",
+    2: "Muddy Sand",
+    3: "Sand",
+    4: "Mixed Sediment",
+    5: "Coarse Substrate",
+    6: "Rock and Boulders",
+}
 
 class Seabed:
     """
