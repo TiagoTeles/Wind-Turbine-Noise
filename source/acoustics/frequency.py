@@ -46,8 +46,8 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
 
         # Determine the center, lower and upper frequencies
         f_center = f_ref * np.pow(10.0, np.arange(min_index, max_index + 1) / 10.0)
-        f_lower = f_center / np.pow(10.0, 1.0/20.0)
-        f_upper = f_center * np.pow(10.0, 1.0/20.0)
+        f_lower = f_center / np.pow(10.0, 1.0 / 20.0)
+        f_upper = f_center * np.pow(10.0, 1.0 / 20.0)
 
     else:
 
@@ -57,8 +57,8 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
 
         # Determine the center, lower and upper frequencies
         f_center = f_ref * np.pow(2.0, np.arange(min_index, max_index + 1) / 3.0)
-        f_lower = f_center / np.pow(2.0, 1.0/6.0)
-        f_upper = f_center * np.pow(2.0, 1.0/6.0)
+        f_lower = f_center / np.pow(2.0, 1.0 / 6.0)
+        f_upper = f_center * np.pow(2.0, 1.0 / 6.0)
 
     return f_center, f_lower, f_upper
 
