@@ -76,8 +76,8 @@ def attenuation_coefficient(f, p, T, h):
     f_rO = (p / P_REF) * (24.0 + 4.04E4 * h * (0.02 + h) / (0.391 + h))
 
     # Determine the relaxation frequency of nitrogen molecules
-    f_rN = (p / P_REF) * np.pow(T / T_REF, -1.0/2.0) \
-         * (9.0 + 280.0 * h * np.exp(-4.170 * (np.pow(T / T_REF, -1.0/3.0) - 1.0)))
+    f_rN = (p / P_REF) * np.pow(T / T_REF, -1.0 / 2.0) \
+         * (9.0 + 280.0 * h * np.exp(-4.170 * (np.pow(T / T_REF, -1.0 / 3.0) - 1.0)))
 
     # Determine the maximum attenuations due to vibrational relaxation of oxygen molecules
     alpha_lambda_O = 1.559 * X_O * np.square(THETA_O / T) * np.exp(-THETA_O / T)
@@ -86,7 +86,7 @@ def attenuation_coefficient(f, p, T, h):
     alpha_lambda_N = 1.559 * X_N * np.square(THETA_N / T) * np.exp(-THETA_N / T)
 
     # Determine the classical attenuation coefficient
-    alpha_classical = 1.60E-10 * np.square(f) * np.pow(p / P_REF, -1.0) * np.pow(T / T_REF, 1.0/2.0)
+    alpha_classical = 1.60E-10 * np.square(f) * np.pow(p / P_REF, -1.0) * np.pow(T / T_REF, 1.0 / 2.0)
 
     # Determine the attenuation coefficient due to vibrational relaxation of oxygen molecules
     alpha_vib_O = alpha_lambda_O * (f / c_0) * (2.0 * (f / f_rO) * np.pow(1.0 + np.square(f / f_rO), -1.0))
