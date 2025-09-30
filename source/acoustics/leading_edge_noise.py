@@ -13,7 +13,7 @@ Functions:
     flat_plate_spl
     airfoil_shape_correction
     retarded_coordinates
-    inflow_turbulence_noise
+    leading_edge_noise
 
 Exceptions:
     None
@@ -133,9 +133,9 @@ def retarded_coordinates(x, y, z, M):
     Determine the retarded distance and angles.
 
     Parameters:
-        x : np.ndarray -- x-coordinate, [m]
-        y : np.ndarray -- y-coordinate, [m]
-        z : np.ndarray -- z-coordinate, [m]
+        x : np.ndarray -- x coordinate, [m]
+        y : np.ndarray -- y coordinate, [m]
+        z : np.ndarray -- z coordinate, [m]
         M : np.ndarray -- Mach number, [-]
 
     Returns:
@@ -166,7 +166,7 @@ def retarded_coordinates(x, y, z, M):
     return r_e, theta_e, phi_e
 
 
-def inflow_turbulence_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0):
+def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0):
     """
     Determine the inflow turbulence noise SPL.
 
@@ -180,9 +180,9 @@ def inflow_turbulence_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, r
         t_10 : np.ndarray -- thickness at x/c = 0.10, [-]
         U : np.ndarray -- velocity, [m/s]
         alpha : np.ndarray -- angle of attack, [rad]
-        x : np.ndarray -- x-coordinate, [m]
-        y : np.ndarray -- y-coordinate, [m]
-        z : np.ndarray -- z-coordinate, [m]
+        x : np.ndarray -- x coordinate, [m]
+        y : np.ndarray -- y coordinate, [m]
+        z : np.ndarray -- z coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
 
