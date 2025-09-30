@@ -117,7 +117,7 @@ class Results:
         """
 
         # Determine the time index
-        offset = (self.azimuth[:, blade] - azimuth + np.pi) % (2 * np.pi) - np.pi
+        offset = (self.azimuth[:, blade] - azimuth + np.pi) % (2.0 * np.pi) - np.pi
         index = np.where(np.diff(np.sign(offset)) > 0.0)[0][-1]
 
         # Determine the value
