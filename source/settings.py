@@ -24,7 +24,7 @@ SALINITY_PATH = "data\\environments\\windfloat_atlantic\\salinity.csv"          
 SEABED_PATH = "data\\environments\\windfloat_atlantic\\seabed.csv"              # Seabed path
 
 # QBlade settings
-QBLADE_PATH = "bin\\QBlade\\QBladeCE_2.0.9.2.dll"   # QBlade.dll path
+QBLADE_PATH = "bin\\QBlade\\QBladeCE_2.0.9.3.dll"   # QBlade.dll path
 OPENCL_DEVICE = 0                                   # OpenCL device
 OPENCL_GROUP_SIZE = 32                              # OpenCL work-group size
 
