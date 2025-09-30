@@ -67,7 +67,7 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0):
     # Determine the high-frequency SPL (P_REF_AIR = 2.0E-5 [Pa])
     spl_h = 10.0 * np.log10(np.pow(M, 5.0) * (L * b) / (2.0 * np.square(r_e)) * np.square(I) \
                             * np.square(rho_0) * np.pow(c_0, 4.0) * np.pow(K_x_hat, 3.0) \
-                            / np.pow(1.0 + np.square(K_x_hat), 7.0/3.0) * D_line) + 78.4
+                            / np.pow(1.0 + np.square(K_x_hat), 7.0 / 3.0) * D_line) + 78.4
 
     # Determine the non-dimensional wavenumber
     K_x_line = K_x * c / 2.0
