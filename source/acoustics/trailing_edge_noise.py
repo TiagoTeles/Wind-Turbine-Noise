@@ -29,17 +29,17 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c):
     Determine the far-field acoustic PSD.
 
     Parameters:
-        f : np.array -- frequency, [Hz]
-        b : np.array -- span, [m]
-        c : np.array -- chord, [m]
-        U : np.array -- velocity, [m/s]
-        Phi_pp : np.array -- wall pressure PSD, [Pa^2/Hz]
-        l_y : np.array -- spanwise correlation length, [m]
-        x : np.array -- x coordinate, [m]
-        y : np.array -- y coordinate, [m]
-        z : np.array -- z coordinate, [m]
+        f : np.ndarray -- frequency, [Hz]
+        b : np.ndarray -- span, [m]
+        c : np.ndarray -- chord, [m]
+        U : np.ndarray -- velocity, [m/s]
+        Phi_pp : np.ndarray -- wall pressure PSD, [Pa^2/Hz]
+        l_y : np.ndarray -- spanwise correlation length, [m]
+        x : np.ndarray -- x coordinate, [m]
+        y : np.ndarray -- y coordinate, [m]
+        z : np.ndarray -- z coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
-        alpha_c : np.array -- speed ratio, [-]
+        alpha_c : np.ndarray -- speed ratio, [-]
 
     Returns:
         S_pp : np.ndarray -- farfield acoustic PSD, [Pa^2/Hz]
@@ -132,10 +132,10 @@ def E(x):
     Determine the Fresnel integral.
 
     Parameters:
-        x : np.array -- function argument, [-]
+        x : np.ndarray -- function argument, [-]
 
     Returns:
-        E : np.array -- Fresnel integral, [-]
+        E : np.ndarray -- Fresnel integral, [-]
     """
 
     S_2, C_2 = sp.special.fresnel(np.sqrt(2 * x / np.pi))
