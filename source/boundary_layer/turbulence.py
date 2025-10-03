@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-01
+Date:     2025-10-03
 License:  GNU GPL 3.0
 
 Determine the turbulent boundary layer statistics.
@@ -20,12 +20,12 @@ Exceptions:
 import numpy as np
 
 
-def wall_pressure_spectrum(K, U, delta_star, rho_0):
+def wall_pressure_spectrum(f, U, delta_star, rho_0):
     """
     Determine the wall pressure spectrum.
 
     Parameters:
-        K : np.ndarray -- streamwise aerodynamic wavenumber, [1/m]
+        f : np.ndarray -- frequency, [Hz]
         U : np.ndarray -- velocity, [m/s]
         delta_star : np.ndarray -- boundary layer displacement thickness, [m]
         rho_0 : float -- air density, [kg/m^3]
@@ -33,6 +33,12 @@ def wall_pressure_spectrum(K, U, delta_star, rho_0):
     Returns:
         Phi_pp : np.ndarray -- wall pressure spectrum, [Pa^2/Hz]
     """
+
+    # Determine the angular frequency
+    omega = 2.0 * np.pi * f
+
+    # Determine the convective wavenumber
+    K = omega / U
 
     # Determine omega_tilde
     omega_tilde = K * delta_star
@@ -47,13 +53,13 @@ def wall_pressure_spectrum(K, U, delta_star, rho_0):
     return Phi_pp
 
 
-def spanwise_correlation_length(omega, U_c, delta_star, K_2, b_c, alpha_c):
+def spanwise_correlation_length(f, U, delta_star, K_2, b_c, alpha_c):
     """
     Determine the spanwise correlation length.
 
     Parameters:
-        omega : np.ndarray -- angular frequency, [rad/s]
-        U_c : np.ndarray -- convection velocity, [m/s]
+        f : np.ndarray -- frequency, [Hz]
+        U : np.ndarray -- velocity, [m/s]
         delta_star : np.ndarray -- boundary layer displacement thickness, [m]
         K_2 : np.ndarray -- spanwise aerodynamic wavenumber, [1/m]
         b_c : float -- spanwise correlation coefficient, [-]
@@ -63,11 +69,17 @@ def spanwise_correlation_length(omega, U_c, delta_star, K_2, b_c, alpha_c):
         l_y : np.ndarray -- spanwise correlation length, [m]
     """
 
+    # Determine the angular frequency
+    omega = 2.0 * np.pi * f
+
+    # Determine the convective velocity
+    U_c = U / alpha_c
+
     # Determine the spanwise correlation length
     l_y = (omega / (b_c * U_c)) / (np.square(K_2) + np.square(omega) / np.square(b_c * U_c))
 
     # Determine the convective wavenumber
-    K = omega / (U_c * alpha_c)
+    K = omega / U
 
     # Determine omega_tilde
     omega_tilde = K * delta_star
