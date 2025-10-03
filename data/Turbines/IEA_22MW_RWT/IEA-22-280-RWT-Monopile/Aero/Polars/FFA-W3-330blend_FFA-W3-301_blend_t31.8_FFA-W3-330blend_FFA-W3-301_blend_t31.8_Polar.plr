@@ -1,15 +1,15 @@
 ----------------------------------------QBlade Multi RE Polar File--------------------------------------------------
-Generated with : QBlade CE v2.0.9_beta windows
+Generated with : QBlade CE v2.0.9.3_beta windows
 Archive Format: 310039
-Time : 15:53:12
-Date : 25.06.2025
+Time : 12:21:50
+Date : 03.10.2025
 
 ----------------------------------------Object Names----------------------------------------------------------------
 FFA-W3-330blend_FFA-W3-301_blend_t31.8_Polar                           POLARNAME          - the polar name
 ../Airfoils/FFA-W3-330blend_FFA-W3-301_blend_t31.8.afl                 FOILNAME           - the airfoil name to which the polar(s) belong OR path to airfoil file
 
 ----------------------------------------Parameters------------------------------------------------------------------
-31.9                                               THICKNESS          - the name of the blade
+31.9                                               THICKNESS          - the thickness of the airfoil in % of chord
 false                                              ISDECOMPOSED       - is the polar decomposed (imports Cl_Sep, Cl_att and f_st columns) [bool]
 REYNOLDS            1.7414E+07          - the list of Reynolds numbers for the imported polars
 

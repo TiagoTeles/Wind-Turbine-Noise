@@ -1,15 +1,15 @@
 ----------------------------------------QBlade Multi RE Polar File--------------------------------------------------
-Generated with : QBlade CE v2.0.9_beta windows
+Generated with : QBlade CE v2.0.9.3_beta windows
 Archive Format: 310039
-Time : 15:53:11
-Date : 25.06.2025
+Time : 12:21:50
+Date : 03.10.2025
 
 ----------------------------------------Object Names----------------------------------------------------------------
 circular_FB90_blend_t96.5_Polar                                        POLARNAME          - the polar name
 ../Airfoils/circular_FB90_blend_t96.5.afl                              FOILNAME           - the airfoil name to which the polar(s) belong OR path to airfoil file
 
 ----------------------------------------Parameters------------------------------------------------------------------
-96.5                                               THICKNESS          - the name of the blade
+96.5                                               THICKNESS          - the thickness of the airfoil in % of chord
 false                                              ISDECOMPOSED       - is the polar decomposed (imports Cl_Sep, Cl_att and f_st columns) [bool]
 REYNOLDS            5.4405E+06          - the list of Reynolds numbers for the imported polars
 
