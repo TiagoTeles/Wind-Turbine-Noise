@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-23
+Date:     2025-10-06
 License:  GNU GPL 3.0
 """
 
@@ -41,4 +41,4 @@ BASE_10 = True      # Use base-10 formulation?
 # Aeroacoustic settings
 # N_AZIMUTH = 12      # Number of azimuthal positions, [-]
 # BLADE_ID = 0        # QBlade blade index
-AR = 2.0            # Panel aspect ratio, [-]
+# AR = 2.0            # Panel aspect ratio, [-]

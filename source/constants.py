@@ -1,14 +1,14 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-23
+Date:     2025-10-06
 License:  GNU GPL 3.0
 """
 
 
 # ISA model constants
-R = 287.1               # Specific gas constant, [J/(kg*K)]
-GAMMA = 1.40            # Specific heat capacity ratio, [-]
+R = 287.1               # Specific gas constant, [J/(k*Kg)]
+GAMMA = 1.4             # Specific heat capacity ratio, [-]
 
 # Sutherland's model constants
 S = 110.4               # Sutherland's empirical coefficient, [K]
