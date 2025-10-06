@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-10-06
 License:  GNU GPL 3.0
 
 Store the seabed data.
@@ -31,8 +31,8 @@ LABELS = {
     1: "Sandy Mud",
     2: "Muddy Sand",
     3: "Sand",
-    4: "Mixed Sediment",
-    5: "Coarse Substrate",
+    4: "Coarse Substrate",
+    5: "Mixed Sediment",
     6: "Rock and Boulders",
 }
 
@@ -42,14 +42,14 @@ class Seabed:
 
     Methods:
         __init__ -- initialise the Seabed class
-        get -- get the seabed type at a given latitude and longitude
+        get -- get the seabed classification at a given latitude and longitude
         show -- show the seabed data
 
     Attributes:
         path : str -- path to the seabed file
         latitude : np.ndarray -- latitude, [rad]
         longitude : np.ndarray -- longitude, [rad]
-        type : np.ndarray -- seabed type
+        classification : np.ndarray -- seabed classification
         interpolator : RegularGridInterpolator -- 2D interpolator
     """
 
@@ -76,7 +76,7 @@ class Seabed:
         # Reshape the data from a 1D array into a 2D array
         self.latitude = np.reshape(data["latitude"], (n_latitude, n_longitude))
         self.longitude = np.reshape(data["longitude"], (n_latitude, n_longitude))
-        self.type = np.reshape(data["type"], (n_latitude, n_longitude))
+        self.classification = np.reshape(data["classification"], (n_latitude, n_longitude))
 
         # Convert the coordinates from [deg] to [rad]
         self.latitude = np.radians(self.latitude)
@@ -86,24 +86,24 @@ class Seabed:
         latitude = self.latitude[:, 0]
         longitude = self.longitude[0, :]
 
-        self.interpolator = sp.interpolate.RegularGridInterpolator((latitude, longitude), self.type, method="nearest")
+        self.interpolator = sp.interpolate.RegularGridInterpolator((latitude, longitude), self.classification, method="nearest")
 
     def get(self, latitude, longitude):
         """
-        Get the seabed type at a given latitude and longitude.
+        Get the seabed classification at a given latitude and longitude.
 
         Parameters:
             latitude : np.ndarray -- latitude, [rad]
             longitude : np.ndarray -- longitude, [rad]
 
         Returns:
-            type : np.ndarray -- seabed type
+            classification : np.ndarray -- seabed classification
         """
 
-        # Determine the seabed type
-        type = self.interpolator((latitude, longitude))
+        # Determine the seabed classification
+        classification = self.interpolator((latitude, longitude))
 
-        return type
+        return classification
 
     def show(self, c_map, bathymetry):
         """
@@ -124,11 +124,11 @@ class Seabed:
 
         extent = [lon_min, lon_max, lat_min, lat_max]
 
-        # Plot the seabed type
+        # Plot the seabed classification
         v_min = 0
         v_max = plt.get_cmap(c_map).N - 1
 
-        img = plt.imshow(self.type, cmap=c_map, vmin=v_min, vmax=v_max, origin="lower", extent=extent)
+        img = plt.imshow(self.classification, cmap=c_map, vmin=v_min, vmax=v_max, origin="lower", extent=extent)
 
         # Set the legend
         patches = []
@@ -162,6 +162,6 @@ if __name__ == "__main__":
     # Get the bathymetry
     bathymetry = Bathymetry(BATHYMETRY_PATH)
 
-    # Show the seabed type
+    # Show the seabed classification
     seabed = Seabed(SEABED_PATH)
     seabed.show("tab10", bathymetry)

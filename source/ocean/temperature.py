@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-10-06
 License:  GNU GPL 3.0
 
 Store the temperature data.
@@ -145,4 +145,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     temperature = Temperature(TEMPERATURE_PATH)
-    temperature.show(LATITUDE, LONGITUDE, 287.0, 290.0)
+    temperature.show(LATITUDE, LONGITUDE, 286.0, 290.0)
