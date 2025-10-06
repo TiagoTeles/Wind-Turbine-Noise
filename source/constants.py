@@ -5,7 +5,6 @@ Date:     2025-10-06
 License:  GNU GPL 3.0
 """
 
-
 # ISA model constants
 R = 287.1               # Specific gas constant, [J/(k*Kg)]
 GAMMA = 1.4             # Specific heat capacity ratio, [-]
