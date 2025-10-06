@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-10-06
 License:  GNU GPL 3.0
 
 Determine the octave frequency bands.
@@ -99,4 +99,4 @@ if __name__ == "__main__":
 
     # Show the base-10 one-third octave frequency bands
     f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, F_REF, True)
-    print("Base-2 centre frequency:\n" + str(f_c) + " [Hz] \n")
+    print("Base-10 centre frequency:\n" + str(f_c) + " [Hz] \n")
