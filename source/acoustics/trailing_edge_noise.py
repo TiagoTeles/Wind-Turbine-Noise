@@ -143,22 +143,52 @@ def E(x):
     return C_2 - 1j * S_2
 
 
-def trailing_edge_noise(f, b, c, U, x, y, z, c_0, alpha_c):
+def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, b_c, alpha_c, p_ref):
     """
     Determine the TBLTE noise SPL.
 
     Parameters:
-        TODO
+        f : np.ndarray -- frequency, [Hz]
+        b : np.ndarray -- span, [m]
+        c : np.ndarray -- chord, [m]
+        U : np.ndarray -- velocity, [m/s]
+        delta_star : np.ndarray -- boundary layer displacement thickness, [m]
+        x : np.ndarray -- x coordinate, [m]
+        y : np.ndarray -- y coordinate, [m]
+        z : np.ndarray -- z coordinate, [m]
+        c_0 : float -- speed of sound, [m/s]
+        rho_0 : float -- air density, [kg/m^3]
+        b_c : np.ndarray -- correlation coefficient, [-]
+        alpha_c : np.ndarray -- speed ratio, [-]
+        p_ref : float -- reference pressure, [Pa]
 
     Returns:
         spl : np.ndarray -- TBLTE noise SPL, [dB]
     """
 
     # Determine the wall pressure spectrum using Schlinker's model
-    Phi_pp = wall_pressure_spectrum(TODO)
+    Phi_pp = wall_pressure_spectrum(f, U, delta_star, rho_0)
+
+    # Determine the angular frequency
+    omega = 2.0 * np.pi * f
+
+    # Determine the acoustic wavenumber
+    k = omega / c_0
+
+    # Determine the Mach number
+    M = U / c_0
+
+    # Determine the Prandtl-Glauert factor
+    beta = np.sqrt(1.0 - np.square(M))
+
+    # Determine the distance corrected for convection effects
+    S_0 = np.sqrt(np.square(x) + np.square(beta) * (np.square(y) + np.square(z)))
+
+    # Determine the spanwise wavenumber
+    K_2 = k * y / S_0
 
     # Determine the spanwise correlation length using Corcos' model
-    l_y = spanwise_correlation_length(TODO)
+    l_y = spanwise_correlation_length(f, U, delta_star, K_2, b_c, alpha_c)
 
     # Determine the far-field acoustic PSD
     S_pp = farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c)
