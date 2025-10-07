@@ -55,7 +55,7 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c):
     # Determine the Prandtl-Glauert factor
     beta = np.sqrt(1.0 - np.square(M))
 
-    # Determine the corrected source-observer distance
+    # Determine the distance corrected for convection effects
     S_0 = np.sqrt(np.square(x) + np.square(beta) * (np.square(y) + np.square(z)))
 
     # Determine the angular frequency
