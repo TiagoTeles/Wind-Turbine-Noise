@@ -132,9 +132,8 @@ class Blade():
         while radius[-1] > self.radius[0]:
 
             # Assume an initial guess
-            b_panel = 0
             c_panel = chord[-1]
-            AR_panel = b_panel / c_panel
+            AR_panel = 0.0
 
             # Loop until the AR is reached
             while np.abs(AR_panel - AR) > 1.0E-3:
