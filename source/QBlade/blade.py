@@ -124,54 +124,37 @@ class Blade():
         radius = []
         chord = []
 
-        # Start the discretisation at the tip
+        # Start at the rotor blade tip
         radius.append(self.radius[-1])
         chord.append(self.chord[-1])
 
-        # Iterate though the entire blade
-        while True:
+        # Loop until the blade root is reached
+        while radius[-1] > self.radius[0]:
 
-            # Set the outer panel radius and chord
-            radius_0 = radius[-1]
-            chord_0 = chord[-1]
+            # Assume an initial guess
+            b_panel = 0
+            c_panel = chord[-1]
+            AR_panel = b_panel / c_panel
 
-            # Guess the inner panel radius and chord
-            radius_1 = radius_0
-            chord_1 = chord_0
+            # Loop until the AR is reached
+            while np.abs(AR_panel - AR) > 1.0E-3:
 
-            # Guess the MAC
-            MAC_01 = (chord_0 + chord_1) / 2.0
+                # Determine the radius and chord
+                r_new = radius[-1] - AR * c_panel
+                c_new = self.get("chord", r_new)
 
-            # Iterate until the AR is correct
-            while True:
+                # Determine the aspect ratio
+                b_panel = radius[-1] - r_new
+                c_panel = (chord[-1] + c_new) / 2.0
+                AR_panel = b_panel / c_panel
 
-                # Update the inner panel radius and chord
-                radius_1 = radius_0 - AR * MAC_01
-                chord_1 = self.get("chord", radius_1)
+            # Save the new radius and chord
+            radius.append(r_new)
+            chord.append(c_new)
 
-                # Update the MAC
-                MAC_01 = (chord_0 + chord_1) / 2.0
-
-                # Determine the current AR
-                AR_01 = (radius_0 - radius_1) / MAC_01
-
-                # Check if the AR is correct
-                if np.abs(AR_01 - AR) < 1.0E-3:
-
-                    # Set the inner panel radius and chord
-                    radius.append(radius_1)
-                    chord.append(chord_1)
-
-                    break
-
-            # Check if the end of the blade is reached
-            if radius[-1] < self.radius[0]:
-
-                # Set the last panel radius and chord
-                radius[-1] = self.radius[0]
-                chord[-1] = self.chord[0]
-
-                break
+        # Include the rotor blade root
+        radius[-1] = self.radius[0]
+        chord[-1] = self.chord[0]
 
         # Invert the radius and chord lists
         radius = np.array(radius[::-1])
@@ -229,7 +212,7 @@ if __name__ == "__main__":
     # Show the number of panels
     plt.plot(AR_list, n_list)
 
-    plt.xlabel("Aspect Ratio, [-]")
+    plt.xlabel("Panel Aspect Ratio, [-]")
     plt.ylabel("Number of Panels, [-]")
 
     plt.xlim(1.0, 10.0)
