@@ -18,6 +18,7 @@ Exceptions:
 
 import os
 
+import numpy as np
 import pandas as pd
 
 from source.QBlade.turbine import Turbine
@@ -81,6 +82,13 @@ class Simulation:
 
         # Read the results
         self.results = pd.read_csv(path, delimiter=r"\s+", skiprows=2)
+
+        # Determine the start and end of the last revolution
+        index_0 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-2] + 1
+        index_1 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-1] + 1
+
+        # Keep the last revolution
+        self.results = self.results.iloc[index_0:index_1]
 
         # Read the Simulation results
         self.time = self.results["Time~[s]"].to_numpy()
