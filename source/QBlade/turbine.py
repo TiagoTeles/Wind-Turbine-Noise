@@ -17,6 +17,7 @@ Exceptions:
 """
 
 import os
+import sys
 
 import numpy as np
 
@@ -113,3 +114,22 @@ class Turbine:
 
         # Read the Blade results
         self.blade.read_results(results)
+
+    def get_results(self, key, azimuth):
+        """
+        Get the simulation results.
+
+        Parameters:
+            key : str -- member key
+            azimuth : float -- azimuth angle, [deg]
+        """
+
+        if key in ["tip_speed_ratio", "yaw", "power_coefficient", \
+                   "torque_coefficient", "thrust_coefficient"]:
+            value = np.interp(azimuth, self.blade.azimuth, getattr(self, key))
+
+        else:
+            print("Invalid key!")
+            sys.exit(1)
+
+        return value
