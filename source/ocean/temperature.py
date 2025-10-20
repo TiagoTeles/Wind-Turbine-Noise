@@ -145,4 +145,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     temperature = Temperature(TEMPERATURE_PATH)
-    temperature.show(LATITUDE, LONGITUDE, 286.0, 290.0)
+    temperature.show(LATITUDE, LONGITUDE, 286.0, 291.0)
