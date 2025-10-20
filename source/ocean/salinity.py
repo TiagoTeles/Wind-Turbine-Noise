@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-06
+Date:     2025-10-20
 License:  GNU GPL 3.0
 
 Store the salinity data.
@@ -136,6 +136,9 @@ class Salinity:
         # Set the axis limits
         plt.xlim(s_min, s_max)
         plt.ylim(np.min(altitude), 0.0)
+
+        # Use scientific notation on the x-axis
+        plt.ticklabel_format(axis="x", style="scientific", scilimits=(-3, -3))
 
         # Show the plot
         plt.grid()
