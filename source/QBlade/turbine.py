@@ -124,8 +124,11 @@ class Turbine:
             azimuth : float -- azimuth angle, [deg]
         """
 
+        # Check if the key is valid
         if key in ["tip_speed_ratio", "yaw", "power_coefficient", \
                    "torque_coefficient", "thrust_coefficient"]:
+
+            # interpolate the results
             value = np.interp(azimuth, self.blade.azimuth, getattr(self, key))
 
         else:

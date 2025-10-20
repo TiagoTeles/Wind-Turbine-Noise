@@ -108,7 +108,10 @@ class Simulation:
             azimuth : float -- azimuth angle, [deg]
         """
 
+        # Check if the key is valid
         if key in ["time", "inflow_velocity"]:
+
+            # Interpolate the results
             value = np.interp(azimuth, self.turbine.blade.azimuth, getattr(self, key))
 
         else:
