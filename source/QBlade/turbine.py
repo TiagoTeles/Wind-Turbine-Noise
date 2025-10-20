@@ -39,6 +39,11 @@ class Turbine:
         rotor_cone : float -- rotor cone angle, [rad]
         tower_height : float -- tower height, [m]
         blade: Blade -- blade object
+        tip_speed_ratio : np.ndarray -- tip speed ratio, [-]
+        yaw : np.ndarray -- yaw angle, [rad]
+        power_coefficient : np.ndarray -- power coefficient, [-]
+        torque_coefficient : np.ndarray -- torque coefficient, [-]
+        thrust_coefficient : np.ndarray -- thrust coefficient, [-]
     """
 
     def __init__(self, path):
@@ -76,3 +81,34 @@ class Turbine:
 
         # Close the file
         f.close()
+
+        # Initialise the results
+        self.tip_speed_ratio = None
+        self.yaw = None
+        self.power_coefficient = None
+        self.torque_coefficient  = None
+        self.thrust_coefficient  = None
+
+    def read_results(self, results):
+        """
+        Read the simulation results.
+
+        Parameters:
+            results : pd.DataFrame -- simulation results
+
+        Returns:
+            None
+        """
+
+        # Read the Turbine results
+        self.tip_speed_ratio = results["Tip~Speed~Ratio~[-]"].to_numpy()
+        self.yaw = results["Yaw~Angle~[deg]"].to_numpy()
+        self.power_coefficient = results["Power~Coefficient~[-]"].to_numpy()
+        self.torque_coefficient = results["Torque~Coefficient~[-]"].to_numpy()
+        self.thrust_coefficient = results["Thrust~Coefficient~[-]"].to_numpy()
+
+        # Convert the yaw from [deg] to [rad]
+        self.yaw = np.radians(self.yaw)
+
+        # Read the Blade results
+        self.blade.read_results(results)
