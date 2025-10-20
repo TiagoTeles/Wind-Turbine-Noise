@@ -50,8 +50,7 @@ class Blade():
         polar : np.ndarray -- polar data
         thickness_01 : np.ndarray -- airfoil thickness at x/c = 0.01 [-]
         thickness_10 : np.ndarray -- airfoil thickness at x/c = 0.10 [-]
-        pitch : np.ndarray -- pitch angle, [rad]
-        azimuth : np.ndarray -- azimuthal angle, [rad]
+        azimuth : np.ndarray -- azimuth angle, [deg]
         angle_of_attack : np.ndarray -- angle of attack, [rad]
         panel_radius : np.ndarray -- panel radius, [m]
         axial_force : np.ndarray -- axial force per unit span, [N/m]
@@ -106,7 +105,6 @@ class Blade():
             self.thickness_10[i] = self.polar[i].airfoil.thickness(0.10)
 
         # Initialise the results attributes
-        self.pitch = None
         self.azimuth = None
         self.angle_of_attack = None
         self.panel_radius = None
@@ -166,9 +164,9 @@ class Blade():
         for i in range(n_panels):
             self.panel_radius[i] = results[f"Radius~BLD_1~PAN_{i}~[m]"].iloc[0]
 
-        # Read the Blade results
-        self.pitch = results["Pitch~Angle~BLD_1~[deg]"].to_numpy()
+        # Read the azimuth angle
         self.azimuth = results["Azimuthal~Angle~BLD_1~[deg]"].to_numpy()
+        self.azimuth = np.radians(self.azimuth)
 
         # Read the aerodynamic blade distributions
         self.angle_of_attack = np.empty((n_timesteps, n_panels))
@@ -191,12 +189,10 @@ class Blade():
             self.radial_twist[:, i] = results[f"Z_b~Rot.Def.~BLD_1~pos~{(i / (n_beams - 1)):.3f}~[deg]"]
 
         # Convert the angles from [deg] to [rad]
-        self.pitch = np.radians(self.pitch)
-        self.azimuth = np.radians(self.azimuth)
         self.angle_of_attack = np.radians(self.angle_of_attack)
         self.radial_twist = np.radians(self.radial_twist)
 
-    def get_results(self, key, azimuth, radius=None):
+    def get_results(self, key, azimuth, radius):
         """
         Get the simulation results.
 
@@ -207,12 +203,7 @@ class Blade():
         """
 
         # Check if the key is valid
-        if key in ["pitch", "azimuth"]:
-
-            # Interpolate the results
-            value = np.interp(azimuth, self.azimuth, getattr(self, key))
-
-        elif key in ["angle_of_attack", "axial_force", "tangential_force", "velocity"]:
+        if key in ["angle_of_attack", "axial_force", "tangential_force", "velocity"]:
 
             # Create a 2D interpolator
             interpolator = sp.interpolate.RegularGridInterpolator((self.azimuth, self.panel_radius), \

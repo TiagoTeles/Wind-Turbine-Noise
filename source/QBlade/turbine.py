@@ -41,11 +41,13 @@ class Turbine:
         rotor_cone : float -- rotor cone angle, [rad]
         tower_height : float -- tower height, [m]
         blade: Blade -- blade object
+        azimuth : np.ndarray -- azimuth angle, [deg]
         tip_speed_ratio : np.ndarray -- tip speed ratio, [-]
         yaw : np.ndarray -- yaw angle, [rad]
         power_coefficient : np.ndarray -- power coefficient, [-]
         torque_coefficient : np.ndarray -- torque coefficient, [-]
         thrust_coefficient : np.ndarray -- thrust coefficient, [-]
+        pitch : np.ndarray -- pitch angle, [deg]
     """
 
     def __init__(self, path):
@@ -85,11 +87,13 @@ class Turbine:
         f.close()
 
         # Initialise the results attributes
+        self.azimuth = None
         self.tip_speed_ratio = None
         self.yaw = None
         self.power_coefficient = None
         self.torque_coefficient  = None
         self.thrust_coefficient  = None
+        self.pitch = None
 
     def read_results(self, results):
         """
@@ -103,14 +107,18 @@ class Turbine:
         """
 
         # Read the Turbine results
+        self.azimuth = results["Azimuthal~Angle~BLD_1~[deg]"].to_numpy()
         self.tip_speed_ratio = results["Tip~Speed~Ratio~[-]"].to_numpy()
         self.yaw = results["Yaw~Angle~[deg]"].to_numpy()
         self.power_coefficient = results["Power~Coefficient~[-]"].to_numpy()
         self.torque_coefficient = results["Torque~Coefficient~[-]"].to_numpy()
         self.thrust_coefficient = results["Thrust~Coefficient~[-]"].to_numpy()
+        self.pitch = results["Pitch~Angle~BLD_1~[deg]"].to_numpy()
 
-        # Convert the yaw from [deg] to [rad]
+        # Convert the angles from [deg] to [rad]
+        self.azimuth = np.radians(self.azimuth)
         self.yaw = np.radians(self.yaw)
+        self.pitch = np.radians(self.pitch)
 
         # Read the Blade results
         self.blade.read_results(results)
@@ -125,8 +133,8 @@ class Turbine:
         """
 
         # Check if the key is valid
-        if key in ["tip_speed_ratio", "yaw", "power_coefficient", \
-                   "torque_coefficient", "thrust_coefficient"]:
+        if key in ["azimuth", "tip_speed_ratio", "yaw", "power_coefficient", \
+                   "torque_coefficient", "thrust_coefficient", "pitch"]:
 
             # interpolate the results
             value = np.interp(azimuth, self.blade.azimuth, getattr(self, key))
