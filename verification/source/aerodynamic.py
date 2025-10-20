@@ -11,6 +11,7 @@ import numpy as np
 
 from source.QBlade.simulation import Simulation
 from source.settings import QBLADE_SIMULATION_PATH, QBLADE_RESULTS_PATH
+from verification.settings import HAWC2_PATH, OPENFAST_PATH
 
 
 # Read the simulation results
@@ -18,8 +19,8 @@ simulation = Simulation(QBLADE_SIMULATION_PATH)
 simulation.read_results(QBLADE_RESULTS_PATH)
 
 # Read the verification data
-data_hawc2 = pd.read_csv("verification/data/aerodynamics/HAWC2.csv")
-data_openfast = pd.read_csv("verification/data/aerodynamics/OpenFAST.csv")
+data_hawc2 = pd.read_csv(HAWC2_PATH)
+data_openfast = pd.read_csv(OPENFAST_PATH)
 
 # Determine the azimuth angles
 azimuth = np.linspace(0.0, 2.0 * np.pi, 180)
