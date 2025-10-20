@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-22
+Date:     2025-10-20
 License:  GNU GPL 3.0
 
 Store the simulation data.
@@ -17,6 +17,7 @@ Exceptions:
 """
 
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -31,6 +32,7 @@ class Simulation:
     Methods:
         __init__ -- initialise the Simulation class
         read_results -- read the simulation results
+        get_results -- get the simulation results
 
     Attributes:
         path : str -- path to the .sim file
@@ -96,3 +98,21 @@ class Simulation:
 
         # Read the Turbine results
         self.turbine.read_results(self.results)
+
+    def get_results(self, key, azimuth):
+        """
+        Get the simulation results.
+
+        Parameters:
+            key : str -- member key
+            azimuth : float -- azimuth angle, [deg]
+        """
+
+        if key in ["time", "inflow_velocity"]:
+            value = np.interp(azimuth, self.turbine.blade.azimuth, getattr(self, key))
+
+        else:
+            print("Invalid key!")
+            sys.exit(1)
+
+        return value
