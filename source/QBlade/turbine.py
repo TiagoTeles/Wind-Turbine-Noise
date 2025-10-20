@@ -29,6 +29,7 @@ class Turbine:
 
     Methods:
         __init__ -- initialise the Turbine class
+        read_results -- read the simulation results
 
     Attributes:
         path : str -- path to the .trb file

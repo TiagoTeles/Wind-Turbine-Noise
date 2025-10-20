@@ -29,6 +29,7 @@ class Simulation:
 
     Methods:
         __init__ -- initialise the Simulation class
+        read_results -- read the simulation results
 
     Attributes:
         path : str -- path to the .sim file
