@@ -196,7 +196,7 @@ class Blade():
         self.angle_of_attack = np.radians(self.angle_of_attack)
         self.radial_twist = np.radians(self.radial_twist)
 
-    def get_results(self, key, azimuth, radius):
+    def get_results(self, key, azimuth, radius=None):
         """
         Get the simulation results.
 
