@@ -63,7 +63,7 @@ class Simulation:
         # Close the file
         f.close()
 
-        # Initialise the results
+        # Initialise the results attributes
         self.results = None
         self.time = None
         self.inflow_velocity = None

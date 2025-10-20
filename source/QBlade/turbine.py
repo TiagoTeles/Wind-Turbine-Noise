@@ -83,7 +83,7 @@ class Turbine:
         # Close the file
         f.close()
 
-        # Initialise the results
+        # Initialise the results attributes
         self.tip_speed_ratio = None
         self.yaw = None
         self.power_coefficient = None
