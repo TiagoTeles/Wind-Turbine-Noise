@@ -1,8 +1,8 @@
 ----------------------------------------QBlade Turbine Definition File----------------------------------------------
-Generated with : QBlade CE v2.0.9.3_beta windows
+Generated with : QBlade CE v2.0.9.4_beta windows
 Archive Format: 310039
-Time : 12:33:47
-Date : 15.10.2025
+Time : 11:58:09
+Date : 21.10.2025
 
 ----------------------------------------Object Name-----------------------------------------------------------------
 IEA-22-280-RWT-Monopile                            OBJECTNAME         - the name of the turbine object
@@ -98,5 +98,5 @@ false                                              AEROPANELLOADS     - enable d
 
 ----------------------------------------Turbine Controller-----------------------------------------------------------
 2                                                  CONTROLLERTYPE     - the type of turbine controller 0 = none, 1 = BLADED, 2 = DTU, 3 = TUB
-dtu_we_controller_64                               CONTROLLERFILE     - the controller file name, WITHOUT file ending (.dll or .so ) - leave blank if unused
+dtu_we_controller_64                               CONTROLLERFILE     - the controller file name, WITHOUT file ending (.dll or .so ) - leave blank if unused, this file must be located in the /ControllerFiles subdirectory of QBlade
 Control/dtu_we_Params_DTU_IEA_22MW_Mono.htc        PARAMETERFILE      - the controller parameter file name (leave blank if unused)
