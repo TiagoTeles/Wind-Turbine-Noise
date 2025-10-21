@@ -41,13 +41,13 @@ class Turbine:
         rotor_cone : float -- rotor cone angle, [rad]
         tower_height : float -- tower height, [m]
         blade: Blade -- blade object
-        azimuth : np.ndarray -- azimuth angle, [deg]
+        azimuth : np.ndarray -- azimuth angle, [rad]
         tip_speed_ratio : np.ndarray -- tip speed ratio, [-]
         yaw : np.ndarray -- yaw angle, [rad]
         power_coefficient : np.ndarray -- power coefficient, [-]
         torque_coefficient : np.ndarray -- torque coefficient, [-]
         thrust_coefficient : np.ndarray -- thrust coefficient, [-]
-        pitch : np.ndarray -- pitch angle, [deg]
+        pitch : np.ndarray -- pitch angle, [rad]
     """
 
     def __init__(self, path):
@@ -129,7 +129,7 @@ class Turbine:
 
         Parameters:
             key : str -- member key
-            azimuth : float -- azimuth angle, [deg]
+            azimuth : float -- azimuth angle, [rad]
         """
 
         # Check if the key is valid
