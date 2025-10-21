@@ -104,7 +104,7 @@ class Simulation:
         Get the simulation results.
 
         Parameters:
-            key : str -- member key
+            key : str -- member name
             azimuth : float -- azimuth angle, [deg]
         """
 
