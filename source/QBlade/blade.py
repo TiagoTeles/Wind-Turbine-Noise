@@ -34,7 +34,7 @@ class Blade():
 
     Methods:
         __init__ -- initialise the Blade class
-        get -- get the blade geometry
+        get_geometry -- get the blade geometry
         read_results -- read the simulation results
         get_results -- get the simulation results
         discretise -- discretise the blade into panels
@@ -50,7 +50,7 @@ class Blade():
         polar : np.ndarray -- polar data
         thickness_01 : np.ndarray -- airfoil thickness at x/c = 0.01 [-]
         thickness_10 : np.ndarray -- airfoil thickness at x/c = 0.10 [-]
-        azimuth : np.ndarray -- azimuth angle, [deg]
+        azimuth : np.ndarray -- azimuth angle, [rad]
         angle_of_attack : np.ndarray -- angle of attack, [rad]
         panel_radius : np.ndarray -- panel radius, [m]
         axial_force : np.ndarray -- axial force per unit span, [N/m]
@@ -115,12 +115,12 @@ class Blade():
         self.axial_deflection = None
         self.radial_twist = None
 
-    def get(self, key, radius):
+    def get_geometry(self, key, radius):
         """
         Get the blade geometry.
 
         Parameters:
-            key : str -- property key
+            key : str -- member name
             radius : np.ndarray -- radius, [m]
 
         Returns:
@@ -157,12 +157,12 @@ class Blade():
             if "X_l~For.~BLD_1~pos~" in column:
                 n_beams += 1
 
-        # Read the panel and beam radiuses
+        # Read the panel radius and beam radius
         self.panel_radius = np.empty(n_panels)
         self.beam_radius = np.linspace(self.radius[0], self.radius[-1], n_beams, endpoint=True)
 
         for i in range(n_panels):
-            self.panel_radius[i] = results[f"Radius~BLD_1~PAN_{i}~[m]"].iloc[0]
+            self.panel_radius[i] = results[f"Radius~BLD_1~PAN_{i}~[m]"].iat[0]
 
         # Read the azimuth angle
         self.azimuth = results["Azimuthal~Angle~BLD_1~[deg]"].to_numpy()
@@ -198,7 +198,7 @@ class Blade():
 
         Parameters:
             key : str -- member key
-            azimuth : float -- azimuth angle, [deg]
+            azimuth : float -- azimuth angle, [rad]
             radius : np.ndarray -- radius, [m]
         """
 
@@ -220,7 +220,7 @@ class Blade():
             # Create a 2D interpolator
             interpolator = sp.interpolate.RegularGridInterpolator((self.azimuth, self.beam_radius), \
                            getattr(self, key), bounds_error=False, fill_value=None)
-            
+
             # Determine the meshgrid
             azimuth, radius = np.meshgrid(azimuth, radius, indexing="ij")
 
@@ -265,7 +265,7 @@ class Blade():
 
                 # Determine the radius and chord
                 r_new = radius[-1] - AR * c_panel
-                c_new = self.get("chord", r_new)
+                c_new = self.get_geometry("chord", r_new)
 
                 # Determine the aspect ratio
                 b_panel = radius[-1] - r_new
@@ -309,13 +309,10 @@ if __name__ == "__main__":
     # Show the blade discretisation
     plt.bar(radius, chord, width=span, color="tab:blue", edgecolor="black", label="Panels", zorder=2)
     plt.plot(blade.radius, blade.chord, color="tab:orange", label="Chord", zorder=3)
-
     plt.xlabel("Radius, [m]")
     plt.ylabel("Chord, [m]")
-
-    plt.xlim(0.0, 146.2)
+    plt.xlim(blade.radius[0], blade.radius[-1])
     plt.ylim(0.0, 8.0)
-
     plt.legend()
     plt.grid(zorder=0)
     plt.show()
@@ -335,12 +332,9 @@ if __name__ == "__main__":
 
     # Show the number of panels
     plt.plot(AR_list, n_list)
-
     plt.xlabel("Panel Aspect Ratio, [-]")
     plt.ylabel("Number of Panels, [-]")
-
     plt.xlim(1.0, 10.0)
     plt.ylim(0.0, 40.0)
-
     plt.grid()
     plt.show()
