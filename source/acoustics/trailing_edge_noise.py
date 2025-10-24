@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-30
+Date:     2025-10-24
 License:  GNU GPL 3.0
 
 Determine the TBLTE noise spectra.
@@ -21,10 +21,11 @@ Exceptions:
 import numpy as np
 import scipy as sp
 
-from boundary_layer.turbulence import spanwise_correlation_length, wall_pressure_spectrum
+from source.boundary_layer.turbulence import spanwise_correlation_length, wall_pressure_spectrum
+from source.constants import ALPHA_C
 
 
-def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c):
+def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0):
     """
     Determine the far-field acoustic PSD.
 
@@ -39,7 +40,6 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c):
         y : np.ndarray -- y coordinate, [m]
         z : np.ndarray -- z coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
-        alpha_c : np.ndarray -- speed ratio, [-]
 
     Returns:
         S_pp : np.ndarray -- farfield acoustic PSD, [Pa^2/Hz]
@@ -68,7 +68,7 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c):
     K = omega / U
 
     # Determine the aerodynamic wavenumbers
-    K_1 = alpha_c * K
+    K_1 = ALPHA_C * K
     K_2 = k * y / S_0
 
     # Determine the non-dimensional wavenumbers
@@ -105,7 +105,7 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c):
     Theta = np.sqrt((K_1_line + mu_line * M + kappa_line) / (K_line + mu_line * M + kappa_line))
 
     H = ((1.0 + 1j) * np.exp(-4.0 * 1j * kappa_line) * (1.0 - np.square(Theta))) \
-      / (2.0 * np.sqrt(np.pi) * (alpha_c - 1.0) * K_line * np.sqrt(B))
+      / (2.0 * np.sqrt(np.pi) * (ALPHA_C - 1.0) * K_line * np.sqrt(B))
 
     f_2 = np.exp(4.0 * 1j * kappa_line) * (1.0 - (1.0 + 1j) * E(4.0 * kappa_line))
 
@@ -143,7 +143,7 @@ def E(x):
     return C_2 - 1j * S_2
 
 
-def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, b_c, alpha_c, p_ref):
+def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, p_ref):
     """
     Determine the TBLTE noise SPL.
 
@@ -158,8 +158,6 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, b_c, alpha_
         z : np.ndarray -- z coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
-        b_c : np.ndarray -- correlation coefficient, [-]
-        alpha_c : np.ndarray -- speed ratio, [-]
         p_ref : float -- reference pressure, [Pa]
 
     Returns:
@@ -188,10 +186,10 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, b_c, alpha_
     K_2 = k * y / S_0
 
     # Determine the spanwise correlation length using Corcos' model
-    l_y = spanwise_correlation_length(f, U, delta_star, K_2, b_c, alpha_c)
+    l_y = spanwise_correlation_length(f, U, delta_star, K_2)
 
     # Determine the far-field acoustic PSD
-    S_pp = farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0, alpha_c)
+    S_pp = farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0)
 
     # Determine the bandwidth
     delta_omega = 2.0 * np.pi * (0.231 * f)
