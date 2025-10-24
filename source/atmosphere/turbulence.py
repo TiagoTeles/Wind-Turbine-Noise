@@ -139,7 +139,7 @@ if __name__ == "__main__":
     plt.xlabel("Neutral Wind Speed, [m/s]")
     plt.ylabel("Surface Roughness Length, [m]")
     plt.xlim(0.0, 12.0)
-    plt.ylim(1E-5, 1E-3)
+    plt.ylim(1.0E-5, 1.0E-3)
     plt.grid(which="both")
     plt.legend()
     plt.show()
