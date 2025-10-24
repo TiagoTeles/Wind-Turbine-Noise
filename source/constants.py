@@ -26,6 +26,10 @@ P = -12.0               # Hersbach's blending factor, [-]
 G = 9.80665             # Gravitational acceleration, [m/s^2]
 KAPPA = 0.41            # von Karman constant, [-]
 
+# Aeroacoustic settings
+ALPHA_C = 1.0 / 0.7     # Freestream-Convection velocity ratio, [-]
+B_C = 1.5               # Spanwise correlation coefficient, [-]
+
 # Atmospheric absorption constants
 P_REF = 101325.0        # Reference pressure, [Pa]
 T_REF = 293.15          # Reference temperature, [K]
