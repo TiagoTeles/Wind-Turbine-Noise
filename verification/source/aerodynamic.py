@@ -11,7 +11,7 @@ import numpy as np
 
 from source.QBlade.simulation import Simulation
 from source.settings import QBLADE_SIMULATION_PATH, QBLADE_RESULTS_PATH
-from verification.settings import HAWC2_PATH, OPENFAST_PATH
+from verification.source.settings import HAWC2_PATH, OPENFAST_PATH
 
 
 # Read the simulation results
