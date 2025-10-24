@@ -19,6 +19,8 @@ Exceptions:
 
 import numpy as np
 
+from source.constants import ALPHA_C, B_C
+
 
 def wall_pressure_spectrum(f, U, delta_star, rho_0):
     """
@@ -53,7 +55,7 @@ def wall_pressure_spectrum(f, U, delta_star, rho_0):
     return Phi_pp
 
 
-def spanwise_correlation_length(f, U, delta_star, K_2, b_c, alpha_c):
+def spanwise_correlation_length(f, U, delta_star, K_2):
     """
     Determine the spanwise correlation length.
 
@@ -62,8 +64,6 @@ def spanwise_correlation_length(f, U, delta_star, K_2, b_c, alpha_c):
         U : np.ndarray -- velocity, [m/s]
         delta_star : np.ndarray -- boundary layer displacement thickness, [m]
         K_2 : np.ndarray -- spanwise aerodynamic wavenumber, [1/m]
-        b_c : float -- spanwise correlation coefficient, [-]
-        alpha_c : float -- speed ratio, [-]
 
     Returns:
         l_y : np.ndarray -- spanwise correlation length, [m]
@@ -73,10 +73,10 @@ def spanwise_correlation_length(f, U, delta_star, K_2, b_c, alpha_c):
     omega = 2.0 * np.pi * f
 
     # Determine the convective velocity
-    U_c = U / alpha_c
+    U_c = U / ALPHA_C
 
     # Determine the spanwise correlation length
-    l_y = (omega / (b_c * U_c)) / (np.square(K_2) + np.square(omega) / np.square(b_c * U_c))
+    l_y = (omega / (B_C * U_c)) / (np.square(K_2) + np.square(omega) / np.square(B_C * U_c))
 
     # Determine the convective wavenumber
     K = omega / U
