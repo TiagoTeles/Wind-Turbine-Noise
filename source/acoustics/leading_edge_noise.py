@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-09-24
 License:  GNU GPL 3.0
 
 Determine the inflow turbulence noise spectra.
@@ -12,7 +12,6 @@ Classes:
 Functions:
     flat_plate_spl
     airfoil_shape_correction
-    retarded_coordinates
     leading_edge_noise
 
 Exceptions:
@@ -23,7 +22,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0):
+def flat_plate_spl(f, b, c, I, L, U, alpha, x_e, y_e, z_e, c_0, rho_0):
     """
     Determine the flat plate SPL.
 
@@ -35,9 +34,9 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0):
         L : np.ndarray -- turbulence length scale, [m]
         U : np.ndarray -- velocity, [m/s]
         alpha : np.ndarray -- angle of attack, [rad]
-        r_e : np.ndarray -- retarded distance, [m]
-        theta_e : np.ndarray -- chordwise retarded angle, [rad]
-        phi_e : np.ndarray -- spanwise retarded angle, [rad]
+        x_e : np.ndarray -- x retarded coordinate, [m]
+        y_e : np.ndarray -- y retarded coordinate, [m]
+        z_e : np.ndarray -- z retarded coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- density, [kg/m^3]
 
@@ -59,6 +58,15 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0):
 
     # Determine the normalised wavenumber
     K_x_hat = K_x / K_e
+
+    # Determine the retarded radius
+    r_e = np.sqrt(np.square(x_e) + np.square(y_e) + np.square(z_e))
+
+    # Determine the retarded chordwise angle
+    theta_e = np.arccos(x_e / r_e)
+
+    # Determine the retarded spanwise angle
+    phi_e = np.arctan2(z_e, y_e)
 
     # Determine the low-frequency directivity pattern
     D_line = np.square(np.sin(theta_e)) * np.square(np.sin(phi_e)) \
@@ -128,45 +136,7 @@ def airfoil_shape_correction(f, c, t_01, t_10, U):
     return delta_spl
 
 
-def retarded_coordinates(x, y, z, M):
-    """
-    Determine the retarded distance and angles.
-
-    Parameters:
-        x : np.ndarray -- x coordinate, [m]
-        y : np.ndarray -- y coordinate, [m]
-        z : np.ndarray -- z coordinate, [m]
-        M : np.ndarray -- Mach number, [-]
-
-    Returns:
-        r_e : np.ndarray -- retarded distance, [m]
-        theta_e : np.ndarray -- chordwise retarded angle, [rad]
-        phi_e : np.ndarray -- spanwise retarded angle, [rad]
-    """
-
-    # Determine the distance
-    r = np.sqrt(np.square(x) + np.square(y) + np.square(z))
-
-    # Determine the chordwise angle
-    theta = np.arccos(x / r)
-
-    # Determine the spanwise angle
-    phi = np.arctan2(z, y)
-
-    # Determine the chordwise retarded angle
-    theta_e = np.arccos(np.sqrt(1.0 - np.square(M) * np.square(np.sin(theta))) * np.cos(theta) \
-                        - M * np.square(np.sin(theta)))
-
-    # Determine the retarded distance
-    r_e = r * np.sin(theta) / np.sin(theta_e)
-
-    # Determine the spanwise retarded angle
-    phi_e = phi
-
-    return r_e, theta_e, phi_e
-
-
-def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0):
+def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x_e, y_e, z_e, c_0, rho_0):
     """
     Determine the inflow turbulence noise SPL.
 
@@ -180,9 +150,9 @@ def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0)
         t_10 : np.ndarray -- thickness at x/c = 0.10, [-]
         U : np.ndarray -- velocity, [m/s]
         alpha : np.ndarray -- angle of attack, [rad]
-        x : np.ndarray -- x coordinate, [m]
-        y : np.ndarray -- y coordinate, [m]
-        z : np.ndarray -- z coordinate, [m]
+        x_e : np.ndarray -- x retarded coordinate, [m]
+        y_e : np.ndarray -- y retarded coordinate, [m]
+        z_e : np.ndarray -- z retarded coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
 
@@ -190,14 +160,8 @@ def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0)
         spl : np.ndarray -- inflow turbulence noise SPL, [dB]
     """
 
-    # Determine the Mach number
-    M = U / c_0
-
-    # Determine the retarded coordinates
-    r_e, theta_e, phi_e = retarded_coordinates(x, y, z, M)
-
     # Determine the flat plate SPL
-    spl_amiet = flat_plate_spl(f, b, c, I, L, U, alpha, r_e, theta_e, phi_e, c_0, rho_0)
+    spl_amiet = flat_plate_spl(f, b, c, I, L, U, alpha, x_e, y_e, z_e, c_0, rho_0)
 
     # Determine the airfoil shape SPL correction
     delta_spl = airfoil_shape_correction(f, c, t_01, t_10, U)
