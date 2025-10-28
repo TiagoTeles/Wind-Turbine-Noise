@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-24
+Date:     2025-10-28
 License:  GNU GPL 3.0
 
 Determine the TBLTE noise spectra.
@@ -46,7 +46,7 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0):
     """
 
     # Check for low aspect ratios
-    if np.any(b/c < 3.0):
+    if np.any(b / c < 3.0):
         print("Low aspect ratio detected! AR < 3 [-].")
 
     # Determine the Mach number
