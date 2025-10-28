@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-06
+Date:     2025-10-28
 License:  GNU GPL 3.0
 
 Determine the octave frequency bands.
@@ -11,7 +11,7 @@ Classes:
 
 Functions:
     one_third_octave
-    doppler_effect
+    doppler_factor
 
 Exceptions:
     None
@@ -63,12 +63,11 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
     return f_center, f_lower, f_upper
 
 
-def doppler_effect(f_s, x_s, x_o, v_s, v_o, c_0):
+def doppler_factor(x_s, x_o, v_s, v_o, c_0):
     """
     Determine the frequency shift due to the Doppler effect.
 
     Parameters:
-        f_s : np.ndarray -- source frequency, [Hz]
         x_s : np.ndarray -- source position, [m]
         x_o : np.ndarray -- observer position, [m]
         v_s : np.ndarray -- source velocity, [m/s]
@@ -76,7 +75,7 @@ def doppler_effect(f_s, x_s, x_o, v_s, v_o, c_0):
         c_0 : float -- speed of sound, [m/s]
 
     Returns:
-        f_o : np.ndarray -- observer frequency, [Hz]
+        factor : np.ndarray -- f_o / f_s, [-]
     """
 
     # Determine the source-observer unit vector
@@ -86,10 +85,10 @@ def doppler_effect(f_s, x_s, x_o, v_s, v_o, c_0):
     v_s_r_so = np.sum(v_s * r_so, axis=0)
     v_o_r_so = np.sum(v_o * r_so, axis=0)
 
-    # Determine the observer frequency
-    f_o = f_s * (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
+    # Determine the doppler factor
+    factor = (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
 
-    return f_o
+    return factor
 
 if __name__ == "__main__":
 
