@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-20
+Date:     2025-10-28
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -205,6 +205,9 @@ class Blade():
         # Check if the key is valid
         if key in ["angle_of_attack", "axial_force", "tangential_force", "velocity"]:
 
+            # Clamp the azimuth angle
+            azimuth = azimuth % (2 * np.pi)
+
             # Create a 2D interpolator
             interpolator = sp.interpolate.RegularGridInterpolator((self.azimuth, self.panel_radius), \
                            getattr(self, key), bounds_error=False, fill_value=None)
@@ -216,6 +219,9 @@ class Blade():
             value = interpolator((azimuth, radius))
 
         elif key in ["axial_deflection", "radial_twist"]:
+
+            # Clamp the azimuth angle
+            azimuth = azimuth % (2 * np.pi)
 
             # Create a 2D interpolator
             interpolator = sp.interpolate.RegularGridInterpolator((self.azimuth, self.beam_radius), \

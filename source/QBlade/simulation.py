@@ -111,6 +111,9 @@ class Simulation:
         # Check if the key is valid
         if key in ["time", "inflow_velocity"]:
 
+            # Clamp the azimuth angle
+            azimuth = azimuth % (2 * np.pi)
+
             # Interpolate the results
             value = np.interp(azimuth, self.turbine.blade.azimuth, getattr(self, key))
 
