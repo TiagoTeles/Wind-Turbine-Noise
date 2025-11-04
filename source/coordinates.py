@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-11-04
 License:  GNU GPL 3.0
 
 Determine the coordinate system transformations.
@@ -25,7 +25,7 @@ import sys
 
 import numpy as np
 
-from source.settings import SIMULATION_PATH
+from source.settings import QBLADE_SIMULATION_PATH
 from source.QBlade.simulation import Simulation
 
 
@@ -175,7 +175,7 @@ if __name__ == "__main__":
     f = open("coordinates.obj", "w", encoding="utf-8")
 
     # Create the Simulation object
-    simulation = Simulation(SIMULATION_PATH)
+    simulation = Simulation(QBLADE_SIMULATION_PATH)
     turbine = simulation.turbine
     blade = turbine.blade
 
