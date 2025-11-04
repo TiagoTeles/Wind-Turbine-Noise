@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-20
+Date:     2025-11-04
 License:  GNU GPL 3.0
 """
 
@@ -30,6 +30,9 @@ root_radius = simulation.turbine.blade.radius[0]
 tip_radius = simulation.turbine.blade.radius[-1]
 radius = np.linspace(root_radius, tip_radius, 1000)
 
+# Determine the meshgrid for the radius and azimuth
+RADIUS, AZIMUTH = np.meshgrid(radius, azimuth)
+
 # Show the steady-state operating conditions
 inflow_velocity = simulation.get_results("inflow_velocity", azimuth)
 tip_speed_ratio = simulation.turbine.get_results("tip_speed_ratio", azimuth)
@@ -57,8 +60,8 @@ print(f"Torque coefficient: {torque_coefficient} [-]")
 print(f"Power coefficient: {power_coefficient} [-]")
 
 # Show the steady-state force distributions
-axial_force = simulation.turbine.blade.get_results("axial_force", azimuth, radius)
-tangential_force = simulation.turbine.blade.get_results("tangential_force", azimuth, radius)
+axial_force = simulation.turbine.blade.get_results("axial_force", AZIMUTH, RADIUS)
+tangential_force = simulation.turbine.blade.get_results("tangential_force", AZIMUTH, RADIUS)
 
 axial_force = np.mean(axial_force, axis=0)
 tangential_force = np.mean(tangential_force, axis=0)
@@ -86,8 +89,8 @@ plt.legend()
 plt.show()
 
 # Show the steady-state blade deflections
-axial_deflection = simulation.turbine.blade.get_results("axial_deflection", azimuth, radius)
-radial_twist = simulation.turbine.blade.get_results("radial_twist", azimuth, radius)
+axial_deflection = simulation.turbine.blade.get_results("axial_deflection", AZIMUTH, RADIUS)
+radial_twist = simulation.turbine.blade.get_results("radial_twist", AZIMUTH, RADIUS)
 
 axial_deflection = np.mean(axial_deflection, axis=0)
 radial_twist = np.degrees(np.mean(radial_twist, axis=0))
