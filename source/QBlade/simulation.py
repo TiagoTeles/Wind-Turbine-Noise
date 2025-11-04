@@ -121,7 +121,6 @@ class Simulation:
 
         return value
 
-
 if __name__ == "__main__":
 
     # Read the QBlade simulation
