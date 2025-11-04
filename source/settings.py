@@ -43,3 +43,4 @@ BASE_10 = True      # Use base-10 formulation?
 # Aeroacoustic settings
 N_AZIMUTH = 12  # Number of azimuthal positions, [-]
 AR = 2.0        # Panel aspect ratio, [-]
+CUTOFF = 0.40   # Radial cutoff, [-]
