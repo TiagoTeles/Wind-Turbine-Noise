@@ -47,6 +47,9 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, x, y, z, c_0, rho_0):
     # Determine the Mach number
     M = U / c_0
 
+    # Determine the retarded distance
+    r = np.sqrt(np.square(x) + np.square(y) + np.square(z))
+
     # Determine the angular frequency
     omega = 2.0 * np.pi * f
 
@@ -59,13 +62,10 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, x, y, z, c_0, rho_0):
     # Determine the normalised wavenumber
     K_x_hat = K_x / K_e
 
-    # Determine the distance
-    r = np.sqrt(np.square(x) + np.square(y) + np.square(z))
-
-    # Determine the chordwise angle
+    # Determine the retarded chordwise angle
     theta = np.arccos(x / r)
 
-    # Determine the spanwise angle
+    # Determine the retarded spanwise angle
     phi = np.arctan2(z, y)
 
     # Determine the low-frequency directivity pattern
