@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 
 from source.QBlade.turbine import Turbine
+from source.settings import QBLADE_SIMULATION_PATH, QBLADE_RESULTS_PATH
 
 
 class Simulation:
@@ -119,3 +120,12 @@ class Simulation:
             sys.exit(1)
 
         return value
+
+
+if __name__ == "__main__":
+
+    # Read the QBlade simulation
+    simulation = Simulation(QBLADE_SIMULATION_PATH)
+
+    # Read the QBlade results
+    simulation.read_results(QBLADE_RESULTS_PATH)
