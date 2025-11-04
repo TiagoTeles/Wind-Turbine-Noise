@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-28
+Date:     2025-11-04
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -19,13 +19,11 @@ Exceptions:
 import os
 import sys
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy as sp
 
 from source.QBlade.polar import Polar
-from source.settings import QBLADE_SIMULATION_PATH, AR
 
 
 class Blade():
@@ -166,7 +164,6 @@ class Blade():
 
         # Read the azimuth angle
         self.azimuth = results["Azimuthal~Angle~BLD_1~[deg]"].to_numpy()
-        self.azimuth = np.radians(self.azimuth)
 
         # Read the aerodynamic blade distributions
         self.angle_of_attack = np.empty((n_timesteps, n_panels))
@@ -189,6 +186,7 @@ class Blade():
             self.radial_twist[:, i] = results[f"Z_b~Rot.Def.~BLD_1~pos~{(i / (n_beams - 1)):.3f}~[deg]"]
 
         # Convert the angles from [deg] to [rad]
+        self.azimuth = np.radians(self.azimuth)
         self.angle_of_attack = np.radians(self.angle_of_attack)
         self.radial_twist = np.radians(self.radial_twist)
 
@@ -198,149 +196,31 @@ class Blade():
 
         Parameters:
             key : str -- member key
-            azimuth : float -- azimuth angle, [rad]
+            azimuth : np.array -- azimuth angle, [rad]
             radius : np.ndarray -- radius, [m]
         """
+    
+        # Clamp the azimuth angle
+        azimuth = azimuth % (2 * np.pi)
 
         # Check if the key is valid
         if key in ["angle_of_attack", "axial_force", "tangential_force", "velocity"]:
 
-            # Clamp the azimuth angle
-            azimuth = azimuth % (2 * np.pi)
-
             # Create a 2D interpolator
             interpolator = sp.interpolate.RegularGridInterpolator((self.azimuth, self.panel_radius), \
                            getattr(self, key), bounds_error=False, fill_value=None)
-            
-            # Determine the meshgrid
-            azimuth, radius = np.meshgrid(azimuth, radius, indexing="ij")
-
-            # Interpolate the results
-            value = interpolator((azimuth, radius))
 
         elif key in ["axial_deflection", "radial_twist"]:
-
-            # Clamp the azimuth angle
-            azimuth = azimuth % (2 * np.pi)
 
             # Create a 2D interpolator
             interpolator = sp.interpolate.RegularGridInterpolator((self.azimuth, self.beam_radius), \
                            getattr(self, key), bounds_error=False, fill_value=None)
 
-            # Determine the meshgrid
-            azimuth, radius = np.meshgrid(azimuth, radius, indexing="ij")
-
-            # Interpolate the results
-            value = interpolator((azimuth, radius))
-
         else:
             print("Invalid key!")
             sys.exit(1)
 
+        # Interpolate the results
+        value = interpolator((azimuth, radius))
+
         return value
-
-    def discretise(self, AR):
-        """
-        Discretise the blade into panels.
-
-        Parameters:
-            AR : float -- aspect ratio, [-]
-
-        Returns:
-            radius_p : np.ndarray -- panel radiuses, [m]
-            span_p : np.ndarray -- panel spans, [m]
-            chord_p : np.ndarray -- panel chords, [m]
-        """
-
-        radius = []
-        chord = []
-
-        # Start at the rotor blade tip
-        radius.append(self.radius[-1])
-        chord.append(self.chord[-1])
-
-        # Loop until the blade root is reached
-        while radius[-1] > self.radius[0]:
-
-            # Assume an initial guess
-            c_panel = chord[-1]
-            AR_panel = 0.0
-
-            # Loop until the AR is reached
-            while np.abs(AR_panel - AR) > 1.0E-3:
-
-                # Determine the radius and chord
-                r_new = radius[-1] - AR * c_panel
-                c_new = self.get_geometry("chord", r_new)
-
-                # Determine the aspect ratio
-                b_panel = radius[-1] - r_new
-                c_panel = (chord[-1] + c_new) / 2.0
-                AR_panel = b_panel / c_panel
-
-            # Save the new radius and chord
-            radius.append(r_new)
-            chord.append(c_new)
-
-        # Include the rotor blade root
-        radius[-1] = self.radius[0]
-        chord[-1] = self.chord[0]
-
-        # Invert the radius and chord lists
-        radius = np.array(radius[::-1])
-        chord = np.array(chord[::-1])
-
-        # Determine the panel radius and chord
-        radius_p = (radius[1:] + radius[:-1]) / 2.0
-        chord_p = (chord[1:] + chord[:-1]) / 2.0
-
-        # Determine the panel span
-        span_p = np.diff(radius)
-
-        return radius_p, span_p, chord_p
-
-if __name__ == "__main__":
-
-    # Import the Simulation class
-    from source.QBlade.simulation import Simulation
-
-    # Create the Blade object
-    simulation = Simulation(QBLADE_SIMULATION_PATH)
-    turbine = simulation.turbine
-    blade = turbine.blade
-
-    # Discretise the blade
-    radius, span, chord = blade.discretise(AR)
-
-    # Show the blade discretisation
-    plt.bar(radius, chord, width=span, color="tab:blue", edgecolor="black", label="Panels", zorder=2)
-    plt.plot(blade.radius, blade.chord, color="tab:orange", label="Chord", zorder=3)
-    plt.xlabel("Radius, [m]")
-    plt.ylabel("Chord, [m]")
-    plt.xlim(blade.radius[0], blade.radius[-1])
-    plt.ylim(0.0, 8.0)
-    plt.legend()
-    plt.grid(zorder=0)
-    plt.show()
-
-    # Determine the number of panels for different ARs
-    AR_list = []
-    n_list = []
-
-    for AR in np.linspace(1.0, 10.0, 1000):
-
-        # Discretise the blade
-        radius, span, chord = blade.discretise(AR)
-
-        # Save the AR and number of panels
-        AR_list.append(AR)
-        n_list.append(len(radius))
-
-    # Show the number of panels
-    plt.plot(AR_list, n_list)
-    plt.xlabel("Panel Aspect Ratio, [-]")
-    plt.ylabel("Number of Panels, [-]")
-    plt.xlim(1.0, 10.0)
-    plt.ylim(0.0, 40.0)
-    plt.grid()
-    plt.show()
