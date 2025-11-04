@@ -19,11 +19,13 @@ Exceptions:
 import os
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy as sp
 
 from source.QBlade.polar import Polar
+from source.settings import QBLADE_SIMULATION_PATH, AR
 
 
 class Blade():
@@ -224,3 +226,118 @@ class Blade():
         value = interpolator((azimuth, radius))
 
         return value
+
+    def discretise(self, AR, cutoff):
+        """
+        Discretise the blade into panels.
+
+        Parameters:
+            AR : float -- aspect ratio, [-]
+            cutoff : float -- radial cutoff, [-]
+
+        Returns:
+            radius_p : np.ndarray -- panel radiuses, [m]
+            span_p : np.ndarray -- panel spans, [m]
+            chord_p : np.ndarray -- panel chords, [m]
+        """
+
+        radius = []
+        chord = []
+
+        # Start at the rotor blade tip
+        radius.append(self.radius[-1])
+        chord.append(self.chord[-1])
+
+        # Loop until the rotor blade root
+        while radius[-1] > self.radius[0]:
+
+            # Assume an initial guess
+            c_panel = chord[-1]
+            AR_panel = 0.0
+
+            # Loop until the AR is reached
+            while np.abs(AR_panel - AR) > 1.0E-3:
+
+                # Determine the radius and chord
+                r_new = radius[-1] - AR * c_panel
+                c_new = self.get_geometry("chord", r_new)
+
+                # Determine the aspect ratio
+                b_panel = radius[-1] - r_new
+                c_panel = (chord[-1] + c_new) / 2.0
+                AR_panel = b_panel / c_panel
+
+            # Save the new radius and chord
+            radius.append(r_new)
+            chord.append(c_new)
+
+        # Add the rotor blade root
+        radius[-1] = self.radius[0]
+        chord[-1] = self.chord[0]
+
+        # Invert the radius and chord lists
+        radius = np.array(radius[::-1])
+        chord = np.array(chord[::-1])
+
+        # Determine the panel radius and chord
+        radius_p = (radius[1:] + radius[:-1]) / 2.0
+        chord_p = (chord[1:] + chord[:-1]) / 2.0
+
+        # Determine the panel span
+        span_p = np.diff(radius)
+
+        # Determine the radial cutoff
+        mask = (radius_p >= cutoff * self.radius[-1])
+
+        # Apply the radial cutoff
+        radius_p = radius_p[mask]
+        span_p = span_p[mask]
+        chord_p = chord_p[mask]
+
+        return radius_p, span_p, chord_p
+
+if __name__ == "__main__":
+
+    # Import the Simulation class
+    from source.QBlade.simulation import Simulation
+
+    # Create the Blade object
+    simulation = Simulation(QBLADE_SIMULATION_PATH)
+    turbine = simulation.turbine
+    blade = turbine.blade
+
+    # Discretise the blade
+    radius, span, chord = blade.discretise(AR, 0.0)
+
+    # Show the blade discretisation
+    plt.bar(radius, chord, width=span, color="tab:blue", edgecolor="black", label="Panels", zorder=2)
+    plt.plot(blade.radius, blade.chord, color="tab:orange", label="Chord", zorder=3)
+    plt.xlabel("Radius, [m]")
+    plt.ylabel("Chord, [m]")
+    plt.xlim(blade.radius[0], blade.radius[-1])
+    plt.ylim(0.0, 8.0)
+    plt.legend()
+    plt.grid(zorder=0)
+    plt.show()
+
+    # Determine the number of panels for different ARs
+    AR_list = []
+    n_list = []
+
+    for AR in np.linspace(1.0, 10.0, 1000):
+
+        # Discretise the blade
+        radius, span, chord = blade.discretise(AR, 0.0)
+
+        # Save the AR and number of panels
+        AR_list.append(AR)
+        n_list.append(len(radius))
+
+    # Show the number of panels
+    plt.plot(AR_list, n_list)
+    plt.xlabel("Panel Aspect Ratio, [-]")
+    plt.ylabel("Number of Panels, [-]")
+    plt.xlim(1.0, 10.0)
+    plt.ylim(0.0, 40.0)
+    plt.grid()
+    plt.show()
