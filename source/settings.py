@@ -30,7 +30,9 @@ QBLADE_OPENCL_GROUP_SIZE = 32                           # OpenCL work-group size
 
 # QBlade simulation settings
 QBLADE_SIMULATION_PATH = "data\\wind_turbine\\IEA_22MW_RWT\\IEA-22-280-RWT-Monopile.sim"    # Simulation path
-QBLADE_RESULTS_PATH = "results\\IEA_22MW_RWT\\windfloat_atlantic\\qblade.txt"               # Results path
+QBLADE_RESULTS_PATH = "results\\wind_turbine\\IEA_22MW_RWT\\qblade.txt"                     # Results path
+# QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
+# QBLADE_RESULTS_PATH = "results\\wind_turbine\\NM_2MW_RWT\\qblade.txt"                       # Results path
 
 # Acoustic settings
 F_MIN = 20.0        # Minimum frequency, [Hz]
