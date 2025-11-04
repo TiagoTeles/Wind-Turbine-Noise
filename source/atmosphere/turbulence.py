@@ -118,7 +118,7 @@ if __name__ == "__main__":
     plt.show()
 
     # Show the turbulence length scale
-    z = np.linspace(1.0E-3, 200.0, 1000)
+    z = np.linspace(0.0, 200.0, 1000)
     L = turbulence_length_scale(z, z_0)
 
     plt.plot(L, z)
