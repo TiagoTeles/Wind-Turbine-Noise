@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-22
+Date:     2025-11-04
 License:  GNU GPL 3.0
 
 Store the turbine data.
@@ -31,6 +31,7 @@ class Turbine:
     Methods:
         __init__ -- initialise the Turbine class
         read_results -- read the simulation results
+        get_results -- get the simulation results
 
     Attributes:
         path : str -- path to the .trb file
@@ -135,12 +136,9 @@ class Turbine:
         # Check if the key is valid
         if key in ["azimuth", "tip_speed_ratio", "yaw", "power_coefficient", \
                    "torque_coefficient", "thrust_coefficient", "pitch"]:
-            
-            # Clamp the azimuth angle
-            azimuth = azimuth % (2 * np.pi)
 
             # Interpolate the results
-            value = np.interp(azimuth, self.blade.azimuth, getattr(self, key))
+            value = np.interp(azimuth, self.azimuth, getattr(self, key), period=2*np.pi)
 
         else:
             print("Invalid key!")
