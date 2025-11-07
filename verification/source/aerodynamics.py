@@ -40,11 +40,11 @@ blade_pitch = simulation.turbine.get_results("pitch", azimuth)
 
 inflow_velocity = np.mean(inflow_velocity)
 tip_speed_ratio = np.mean(tip_speed_ratio)
-blade_pitch = np.degrees(np.mean(blade_pitch))
+blade_pitch = np.mean(blade_pitch)
 
 print(f"Inflow Velocity: {inflow_velocity} [m/s]")
 print(f"Tip Speed Ratio: {tip_speed_ratio} [-]")
-print(f"Blade Pitch Angle: {blade_pitch} [deg]")
+print(f"Blade Pitch Angle: {np.degrees(blade_pitch)} [deg]")
 
 # Show the steady-state rotor performance
 thrust_coefficient = simulation.turbine.get_results("thrust_coefficient", azimuth)
@@ -93,7 +93,7 @@ axial_deflection = simulation.turbine.blade.get_results("axial_deflection", AZIM
 radial_twist = simulation.turbine.blade.get_results("radial_twist", AZIMUTH, RADIUS)
 
 axial_deflection = np.mean(axial_deflection, axis=0)
-radial_twist = np.degrees(np.mean(radial_twist, axis=0))
+radial_twist = np.mean(radial_twist, axis=0)
 
 plt.plot(radius, axial_deflection, label="QBlade")
 plt.plot(hawc2["radius"], hawc2["delta_x"], ls="--", label="HAWC2")
@@ -106,7 +106,7 @@ plt.grid()
 plt.legend()
 plt.show()
 
-plt.plot(radius, radial_twist, label="QBlade")
+plt.plot(radius, np.degrees(radial_twist), label="QBlade")
 plt.plot(hawc2["radius"], hawc2["theta_z"], ls="--", label="HAWC2")
 plt.plot(openfast["radius"], openfast["theta_z"], ls="--", label="OpenFAST")
 plt.xlabel("Radius, [m]")
