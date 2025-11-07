@@ -143,13 +143,13 @@ class Blade():
 
         return value
 
-    def get_airfoil(self, xfoil_path, radius):
+    def get_airfoil(self, radius, xfoil_path):
         """
         Get the blade airfoil.
 
         Parameters:
-            xfoil_path : str -- path to the XFOIL executable
             radius : np.ndarray -- radius, [m]
+            xfoil_path : str -- path to the XFOIL executable
 
         Returns:
             paths : np.ndarray -- airfoil paths
