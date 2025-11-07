@@ -31,8 +31,6 @@ QBLADE_OPENCL_GROUP_SIZE = 32                           # OpenCL work-group size
 # QBlade simulation settings
 QBLADE_SIMULATION_PATH = "data\\wind_turbine\\IEA_22MW_RWT\\IEA-22-280-RWT-Monopile.sim"    # Simulation path
 QBLADE_RESULTS_PATH = "results\\wind_turbine\\IEA_22MW_RWT\\qblade.txt"                     # Results path
-# QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
-# QBLADE_RESULTS_PATH = "results\\wind_turbine\\NM_2MW_RWT\\qblade.txt"                       # Results path
 
 # Acoustic settings
 F_MIN = 20.0        # Minimum frequency, [Hz]
@@ -49,3 +47,7 @@ XFOIL_MAX_ITERATIONS = 100              # Iteration limit, [-]
 XFOIL_UPPER_TRANSITION = 0.065          # Upper transition location, [-]
 XFOIL_LOWER_TRANSITION = 0.200          # Lower transition location, [-]
 XFOIL_AMPLIFICATION = 9.0               # Critical amplification factor, [-]
+
+# TE noise settings
+PROBE_UPPER = 0.975 # Suction side probe location, [-]
+PROBE_LOWER = 0.950 # Pressure side probe location, [-]
