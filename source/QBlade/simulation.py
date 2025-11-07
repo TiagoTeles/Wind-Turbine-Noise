@@ -23,7 +23,6 @@ import numpy as np
 import pandas as pd
 
 from source.QBlade.turbine import Turbine
-from source.settings import QBLADE_SIMULATION_PATH, QBLADE_RESULTS_PATH
 
 
 class Simulation:
@@ -61,7 +60,10 @@ class Simulation:
         lines = f.readlines()
 
         # Add the Turbine object
-        turbine_path = os.path.normpath(os.path.join(os.path.dirname(self.path), lines[16].split()[0]))
+        turbine_directory = os.path.dirname(self.path)
+        turbine_name = lines[16].split()[0]
+        turbine_path = os.path.normpath(os.path.join(turbine_directory, turbine_name))
+
         self.turbine = Turbine(turbine_path)
 
         # Close the file
@@ -120,11 +122,3 @@ class Simulation:
             sys.exit(1)
 
         return value
-
-if __name__ == "__main__":
-
-    # Read the QBlade simulation
-    simulation = Simulation(QBLADE_SIMULATION_PATH)
-
-    # Read the QBlade results
-    simulation.read_results(QBLADE_RESULTS_PATH)
