@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-04
+Date:     2025-11-07
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -25,7 +25,8 @@ import pandas as pd
 import scipy as sp
 
 from source.QBlade.polar import Polar
-from source.settings import QBLADE_SIMULATION_PATH, AR
+from source.settings import QBLADE_SIMULATION_PATH, ASPECT_RATIO
+from source.XFOIL.xfoil import XFoil
 
 
 class Blade():
@@ -35,6 +36,7 @@ class Blade():
     Methods:
         __init__ -- initialise the Blade class
         get_geometry -- get the blade geometry
+        get_airfoil -- get the blade airfoil
         read_results -- read the simulation results
         get_results -- get the simulation results
         discretise -- discretise the blade into panels
@@ -93,7 +95,9 @@ class Blade():
         self.polar = np.empty(self.radius.shape, dtype=Polar)
 
         for i in range(len(self.radius)):
-            polar_path = os.path.normpath(os.path.join(os.path.dirname(self.path), geometry["polar_path"].iat[i]))
+            polar_directory = os.path.dirname(self.path)
+            polar_name = geometry["polar_path"].iat[i]
+            polar_path = os.path.normpath(os.path.join(polar_directory, polar_name))
             self.polar[i] = Polar(polar_path)
 
         # Add the airfoil thicknesses
@@ -127,10 +131,73 @@ class Blade():
             value : np.ndarray -- property value
         """
 
-        # Determine the value
-        value = np.interp(radius, self.radius, getattr(self, key))
+        if key in ["chord", "twist", "offset_x", "offset_y", \
+                   "pitch_axis", "thickness_01", "thickness_10"]:
+
+            # Determine the value
+            value = np.interp(radius, self.radius, getattr(self, key))
+
+        else:
+            print("Invalid key!")
+            sys.exit(1)
 
         return value
+
+    def get_airfoil(self, xfoil_path, radius):
+        """
+        Get the blade airfoil.
+
+        Parameters:
+            xfoil_path : str -- path to the XFOIL executable
+            radius : np.ndarray -- radius, [m]
+
+        Returns:
+            paths : np.ndarray -- airfoil paths
+        """
+
+        # Determine the position indices
+        indices = np.searchsorted(self.radius, radius)
+
+        # Initialise the airfoil array
+        paths = np.empty(len(radius), dtype=object)
+
+        # Interpolate the airfoils
+        for i in range(len(radius)):
+
+            # Determine the neighbour indices
+            index_0 = indices[i] - 1
+            index_1 = indices[i]
+
+            # Determine the neighbour radiuses
+            radius_0 = self.radius[index_0]
+            radius_1 = self.radius[index_1]
+
+            # Determine the absolute airfoil paths
+            path_abs_0 = self.polar[index_0].airfoil.path
+            path_abs_1 = self.polar[index_1].airfoil.path
+
+            # Determine the relative airfoil paths
+            path_rel_0 = os.path.basename(path_abs_0)
+            path_rel_1 = os.path.basename(path_abs_1)
+
+            # Determine the current working directory
+            cwd = os.path.dirname(path_abs_0)
+
+            # Determine the output airfoil path
+            path_rel_out = f"interpolated_airfoil_{radius[i]:.3f}.afl"
+            path_abs_out = os.path.join(cwd, path_rel_out)
+
+            # Determine the interpolation fraction
+            fraction = (radius[i] - radius_0) / (radius_1 - radius_0)
+
+            # Initialise XFoil
+            xfoil = XFoil(xfoil_path, cwd)
+
+            # Interpolate the airfoil
+            xfoil.interpolate(path_rel_0, path_rel_1, path_rel_out, fraction)
+
+            # Add the airfoil path
+            paths[i] = path_abs_out
 
     def read_results(self, results):
         """
@@ -307,7 +374,7 @@ if __name__ == "__main__":
     blade = turbine.blade
 
     # Discretise the blade
-    radius, span, chord = blade.discretise(AR, 0.0)
+    radius, span, chord = blade.discretise(ASPECT_RATIO, 0.0)
 
     # Show the blade discretisation
     plt.bar(radius, chord, width=span, color="tab:blue", edgecolor="black", label="Panels", zorder=2)
