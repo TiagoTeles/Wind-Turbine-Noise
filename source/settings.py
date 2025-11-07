@@ -14,8 +14,8 @@ T_0 = 288.15    # Temperature, [K]
 H_R = 0.80      # Relative humidity, [-]
 
 # Study domain properties
-LATITUDE = np.radians(41.6865)  # Study domain latitude, [rad]
-LONGITUDE = np.radians(-9.0574) # Study domain longitude, [rad]
+LAT = np.radians(41.6865)   # Latitude, [rad]
+LON = np.radians(-9.0574)   # Longitude, [rad]
 
 # Ocean properties
 BATHYMETRY_PATH = "data\\study_domain\\windfloat_atlantic\\bathymetry.csv"      # Bathymetry path
@@ -37,10 +37,15 @@ QBLADE_RESULTS_PATH = "results\\wind_turbine\\IEA_22MW_RWT\\qblade.txt"         
 # Acoustic settings
 F_MIN = 20.0        # Minimum frequency, [Hz]
 F_MAX = 20000.0     # Maximum frequency, [Hz]
-F_REF = 1000.0      # Reference frequency, [Hz]
-BASE_10 = True      # Use base-10 formulation?
 
 # Aeroacoustic settings
-N_AZIMUTH = 12  # Number of azimuthal positions, [-]
-AR = 2.0        # Panel aspect ratio, [-]
-CUTOFF = 0.4    # Radial cutoff, [-]
+N_AZIMUTH = 12      # Number of azimuthal positions, [-]
+ASPECT_RATIO = 2.0  # Panel aspect ratio, [-]
+THRESHOLD = 0.4     # Radial cutoff, [-]
+
+# XFOIL settings
+XFOIL_PATH = "bin\\XFOIL\\xfoil.exe"    # xfoil.exe path
+XFOIL_MAX_ITERATIONS = 100              # Iteration limit, [-]
+XFOIL_UPPER_TRANSITION = 0.065          # Upper transition location, [-]
+XFOIL_LOWER_TRANSITION = 0.200          # Lower transition location, [-]
+XFOIL_AMPLIFICATION = 9.0               # Critical amplification factor, [-]
