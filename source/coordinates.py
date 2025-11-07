@@ -41,6 +41,9 @@ def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
         r_y : float -- rotation about the y-axis, [rad]
         r_z : float -- rotation about the z-axis, [rad]
         order : str -- rotation order
+
+    Returns:
+        matrix : np.ndarray -- transformation matrix
     """
 
     # Determine the rotation matrix about the x-axis
@@ -81,7 +84,9 @@ def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
         print("Invalid order of rotation!")
         sys.exit(1)
 
-    return translation @ rotation[order]
+    matrix = translation @ rotation[order]
+
+    return matrix
 
 
 def nacelle_to_turbine(tower_height, shaft_tilt, yaw):
