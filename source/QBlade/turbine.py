@@ -81,7 +81,10 @@ class Turbine:
         self.rotor_cone = np.radians(self.rotor_cone)
 
         # Add the Blade object
-        blade_path = os.path.normpath(os.path.join(os.path.dirname(self.path), lines[10].split()[0]))
+        blade_directory = os.path.dirname(self.path)
+        blade_name = lines[10].split()[0]
+        blade_path = os.path.normpath(os.path.join(blade_directory, blade_name))
+
         self.blade = Blade(blade_path)
 
         # Close the file
