@@ -54,7 +54,6 @@ class Polar:
         airfoil_directory = os.path.dirname(self.path)
         airfoil_name = lines[8].split()[0]
         airfoil_path = os.path.normpath(os.path.join(airfoil_directory, airfoil_name))
-
         self.airfoil = Airfoil(airfoil_path)
 
         # Close the file

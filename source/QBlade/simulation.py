@@ -63,7 +63,6 @@ class Simulation:
         turbine_directory = os.path.dirname(self.path)
         turbine_name = lines[16].split()[0]
         turbine_path = os.path.normpath(os.path.join(turbine_directory, turbine_name))
-
         self.turbine = Turbine(turbine_path)
 
         # Close the file
