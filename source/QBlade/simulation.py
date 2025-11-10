@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-20
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Store the simulation data.
@@ -91,7 +91,7 @@ class Simulation:
         index_0 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-2] + 1
         index_1 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-1] + 1
 
-        # Keep the last revolution
+        # Only keep the last revolution
         self.results = self.results.iloc[index_0:index_1]
 
         # Read the Simulation results
