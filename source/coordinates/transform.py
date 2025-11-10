@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-04
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Determine the coordinate system transformations.
@@ -25,8 +25,8 @@ import sys
 
 import numpy as np
 
-from source.settings import QBLADE_SIMULATION_PATH
 from source.QBlade.simulation import Simulation
+from source.settings import QBLADE_SIMULATION_PATH
 
 
 def transform(t_x, t_y, t_z, r_x, r_y, r_z, order):
@@ -176,13 +176,13 @@ def freestream_to_airfoil(alpha):
 
 if __name__ == "__main__":
 
-    # Open the output file
-    f = open("coordinates.obj", "w", encoding="utf-8")
-
     # Create the Simulation object
     simulation = Simulation(QBLADE_SIMULATION_PATH)
     turbine = simulation.turbine
     blade = turbine.blade
+
+    # Open the output file
+    f = open("coordinates.obj", "w", encoding="utf-8")
 
     # Iterate through all blades
     for i in range(turbine.n_blades):
