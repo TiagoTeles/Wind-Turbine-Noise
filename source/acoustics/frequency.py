@@ -75,7 +75,7 @@ def doppler_factor(x_s, x_o, v_s, v_o, c_0):
         c_0 : float -- speed of sound, [m/s]
 
     Returns:
-        factor : np.ndarray -- f_o / f_s, [-]
+        doppler_factor : np.ndarray -- f_o / f_s, [-]
     """
 
     # Determine the source-observer unit vector
@@ -86,9 +86,9 @@ def doppler_factor(x_s, x_o, v_s, v_o, c_0):
     v_o_r_so = np.sum(v_o * r_so, axis=0)
 
     # Determine the doppler factor
-    factor = (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
+    doppler_factor = (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
 
-    return factor
+    return doppler_factor
 
 if __name__ == "__main__":
 
