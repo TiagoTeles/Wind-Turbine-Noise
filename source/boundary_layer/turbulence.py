@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-03
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Determine the turbulent boundary layer statistics.
@@ -30,7 +30,7 @@ def wall_pressure_spectrum(f, U, delta_star, rho_0):
         f : np.ndarray -- frequency, [Hz]
         U : np.ndarray -- velocity, [m/s]
         delta_star : np.ndarray -- boundary layer displacement thickness, [m]
-        rho_0 : float -- air density, [kg/m^3]
+        rho_0 : float -- density, [kg/m^3]
 
     Returns:
         Phi_pp : np.ndarray -- wall pressure spectrum, [Pa^2/Hz]
