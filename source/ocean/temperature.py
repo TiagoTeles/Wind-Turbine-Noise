@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-06
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Store the temperature data.
@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
-from source.settings import LATITUDE, LONGITUDE, TEMPERATURE_PATH
+from source.settings import LAT, LON, TEMPERATURE_PATH
 
 
 class Temperature:
@@ -145,4 +145,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     temperature = Temperature(TEMPERATURE_PATH)
-    temperature.show(LATITUDE, LONGITUDE, 286.0, 291.0)
+    temperature.show(LAT, LON, 286.0, 291.0)

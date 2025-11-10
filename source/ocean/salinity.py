@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-20
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Store the salinity data.
@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
-from source.settings import LATITUDE, LONGITUDE, SALINITY_PATH
+from source.settings import LAT, LON, SALINITY_PATH
 
 
 class Salinity:
@@ -148,4 +148,4 @@ if __name__ == "__main__":
 
     # Show the temperature profile
     salinity = Salinity(SALINITY_PATH)
-    salinity.show(LATITUDE, LONGITUDE, 0.035, 0.036)
+    salinity.show(LAT, LON, 0.035, 0.036)
