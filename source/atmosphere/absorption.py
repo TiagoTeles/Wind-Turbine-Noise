@@ -70,7 +70,7 @@ def attenuation_coefficient(f, p, T, h):
     c_0 = 343.2 * np.sqrt(T / T_REF)
 
     # Convert the molar concentration of water vapour from [-] to [%]
-    h *= 100.0
+    h = h * 100.0
 
     # Determine the relaxation frequency of oxygen molecules
     f_rO = (p / P_REF) * (24.0 + 4.04E4 * h * (0.02 + h) / (0.391 + h))
