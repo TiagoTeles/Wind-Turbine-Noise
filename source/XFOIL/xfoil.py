@@ -55,7 +55,7 @@ class XFoil:
         self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd,
                                 text=True)
 
-    def run(self, path_0, path_1, fraction, path_out, re, mach, alpha, max_iter, x_c_upper, x_c_lower, n_crit):
+    def run(self, path_0, path_1, fraction, path_out, re, alpha, max_iter, x_c_upper, x_c_lower, n_crit):
         """
         Run XFOIL at a given Re, M, and Alpha.
 
@@ -65,7 +65,6 @@ class XFoil:
             fraction : float -- interpolation fraction, [-]
             path_out : str -- dump file path
             re : float -- Reynolds number, [-]
-            mach : float -- Mach number, [-]
             alpha : float -- angle of attack, [rad]
             max_iter : int -- maximum number of XFOIL iterations, [-]
             x_c_upper : float -- upper transition position, [-]
@@ -99,10 +98,9 @@ class XFoil:
         self.process.stdin.write(f"interpolated_airfoil\n")
         self.process.stdin.write("PCOP\n")
 
-        # Set re, mach, and max_iter in the OPER environment
+        # Set re and max_iter in the OPER environment
         self.process.stdin.write("OPER\n")
         self.process.stdin.write(f"Visc {re}\n")
-        self.process.stdin.write(f"Mach {mach}\n")
         self.process.stdin.write(f"ITER {max_iter}\n")
 
         # Set x_c_upper, x_c_lower, and n_crit in the VPAR environment
