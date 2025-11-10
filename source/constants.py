@@ -1,15 +1,15 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-06
+Date:     2025-11-10
 License:  GNU GPL 3.0
 """
 
-# Acoustic constants
-BASE_10 = True          # One-third octave band formulation
-F_REF = 1000.0          # Reference frequency, [Hz]
-P_REF_AIR = 2.0E-5      # Reference acoustic pressure in air, [Pa]
-P_REF_WATER = 1.0E-6    # Reference acoustic pressure in water, [Pa]
+# Atmosphere constants
+R = 287.1               # Specific gas constant, [J/(k*Kg)]
+S = 110.4               # Sutherland's empirical coefficient, [K]
+BETA_S = 1.458E-6       # Sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
+GAMMA = 1.4             # Specific heat capacity ratio, [-]
 
 # Atmospheric absorption constants
 P_REF = 101325.0        # Reference pressure, [Pa]
@@ -24,16 +24,15 @@ THETA_O = 2239.1        # Characteristic vibrational temperature of oxygen, [K]
 ALPHA_C = 1.0 / 0.7     # Freestream-Convection velocity ratio, [-]
 B_C = 1.5               # Spanwise correlation coefficient, [-]
 
-# Hersbach's model constants
+# One-Third octave constants
+F_REF = 1000.0          # Reference frequency, [Hz]
+P_REF_AIR = 2.0E-5      # Reference acoustic pressure in air, [Pa]
+P_REF_WATER = 1.0E-6    # Reference acoustic pressure in water, [Pa]
+
+# Surface roughness length constants
 ALPHA_CH = 0.018        # Charnock's empirical coefficient, [-]
 ALPHA_M = 0.11          # Hersbach's empirical coefficient, [-]
 P = -12.0               # Hersbach's blending factor, [-]
-
-# ISA constants
-R = 287.1               # Specific gas constant, [J/(k*Kg)]
-S = 110.4               # Sutherland's empirical coefficient, [K]
-BETA_S = 1.458E-6       # Sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
-GAMMA = 1.4             # Specific heat capacity ratio, [-]
 
 # Universal constants
 G = 9.80665             # Gravitational acceleration, [m/s^2]
