@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-28
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Determine the TBLTE noise spectra.
@@ -21,7 +21,7 @@ Exceptions:
 import numpy as np
 import scipy as sp
 
-from source.boundary_layer.turbulence import spanwise_correlation_length, wall_pressure_spectrum
+from source.boundary_layer.statistics import spanwise_correlation_length, wall_pressure_spectrum
 from source.constants import ALPHA_C
 
 
@@ -194,7 +194,7 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, p_ref):
     # Determine the bandwidth
     delta_omega = 2.0 * np.pi * (0.231 * f)
 
-    # Determine the 1/3 octave band SPL
+    # Determine the one-third octave band SPL
     spl = 10.0 * np.log10(2.0 * S_pp * delta_omega / np.square(p_ref))
 
     return spl
