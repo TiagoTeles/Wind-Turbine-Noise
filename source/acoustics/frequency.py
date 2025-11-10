@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-10-28
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
-Determine the octave frequency bands.
+Determine the one-third octave frequency bands.
 
 Classes:
     None
@@ -19,18 +19,18 @@ Exceptions:
 
 import numpy as np
 
-from source.settings import F_MIN, F_MAX, F_REF
+from source.constants import F_REF
+from source.settings import F_MIN, F_MAX
 
 
-def one_third_octave(f_min, f_max, f_ref, base_10):
+def one_third_octave(f_min, f_max, base_10):
     """
-    Determine the center, lower, and upper frequencies of the 1/3 octave frequency bands.
+    Determine the center, lower, and upper frequencies of the one-third octave frequency bands.
 
     Parameters:
         f_min : float -- minimum frequency, [Hz]
         f_max : float -- maximum frequency, [Hz]
-        f_ref : float -- reference frequency, [Hz]
-        base_10 : bool -- use base 10?
+        base_10 : bool -- use base-10 formulation?
 
     Returns:
         f_center : np.ndarray -- center frequencies, [Hz]
@@ -41,22 +41,22 @@ def one_third_octave(f_min, f_max, f_ref, base_10):
     if base_10:
 
         # Determine the smallest and largest index
-        min_index = np.floor(10.0 * np.log10(f_min / f_ref))
-        max_index = np.ceil(10.0 * np.log10(f_max / f_ref))
+        min_index = np.floor(10.0 * np.log10(f_min / F_REF))
+        max_index = np.ceil(10.0 * np.log10(f_max / F_REF))
 
         # Determine the center, lower and upper frequencies
-        f_center = f_ref * np.pow(10.0, np.arange(min_index, max_index + 1) / 10.0)
+        f_center = F_REF * np.pow(10.0, np.arange(min_index, max_index + 1) / 10.0)
         f_lower = f_center / np.pow(10.0, 1.0 / 20.0)
         f_upper = f_center * np.pow(10.0, 1.0 / 20.0)
 
     else:
 
         # Determine the smallest and largest index
-        min_index = np.floor(3.0 * np.log2(f_min / f_ref))
-        max_index = np.ceil(3.0 * np.log2(f_max / f_ref))
+        min_index = np.floor(3.0 * np.log2(f_min / F_REF))
+        max_index = np.ceil(3.0 * np.log2(f_max / F_REF))
 
         # Determine the center, lower and upper frequencies
-        f_center = f_ref * np.pow(2.0, np.arange(min_index, max_index + 1) / 3.0)
+        f_center = F_REF * np.pow(2.0, np.arange(min_index, max_index + 1) / 3.0)
         f_lower = f_center / np.pow(2.0, 1.0 / 6.0)
         f_upper = f_center * np.pow(2.0, 1.0 / 6.0)
 
@@ -93,9 +93,9 @@ def doppler_factor(x_s, x_o, v_s, v_o, c_0):
 if __name__ == "__main__":
 
     # Show the base-2 one-third octave frequency bands
-    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, F_REF, False)
-    print("Base-2 centre frequency:\n" + str(f_c) + " [Hz] \n")
+    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, False)
+    print(f"Base-2 centre frequency:\n {f_c} [Hz] \n")
 
     # Show the base-10 one-third octave frequency bands
-    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, F_REF, True)
-    print("Base-10 centre frequency:\n" + str(f_c) + " [Hz] \n")
+    f_c, f_l, f_u = one_third_octave(F_MIN, F_MAX, True)
+    print(f"Base-10 centre frequency:\n {f_c} [Hz] \n")
