@@ -41,8 +41,8 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         x_c_upper : float -- transition position on the upper surface, [-]
         x_c_lower : float -- transition position on the lower surface, [-]
         n_crit : float -- critical amplification factor, [-]
-        probe_upper : np.ndarray -- probe position on the upper surface, [-]
-        probe_lower : np.ndarray -- probe position on the lower surface, [-]
+        probe_upper : float -- probe position on the upper surface, [-]
+        probe_lower : float -- probe position on the lower surface, [-]
 
     Returns:
         delta_star_upper : np.ndarray -- upper displacement thickness, [m]
@@ -78,18 +78,18 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         cwd = os.path.dirname(path_0)
 
         # Determine the output dump paths
-        path_out = os.path.join(cwd, f"xfoil_dump_{i:2d}.csv")
+        path_out = os.path.join(cwd, f"xfoil_dump_{i:02d}.csv")
 
         # Initialise XFOIL
         xfoil = XFoil(xfoil_path, cwd)
 
         # Determine the relative paths
-        path_0 = os.path.basename(path_0)
-        path_1 = os.path.basename(path_1)
-        path_out = os.path.basename(path_out)
+        name_0 = os.path.basename(path_0)
+        name_1 = os.path.basename(path_1)
+        name_out = os.path.basename(path_out)
 
         # Run the XFOIL simulation
-        xfoil.run(path_0, path_1, fraction, path_out, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
+        xfoil.run(name_0, name_1, fraction, name_out, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
 
         # Read the output file
         data = pd.read_csv(path_out, delimiter=r"\s+", names=["s/c", "x/c", "y/c", "U_e/U", \
