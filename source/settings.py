@@ -53,10 +53,10 @@ XFOIL_AMPLIFICATION = 9.0               # Critical amplification factor, [-]
 PROBE_UPPER = 0.975 # Upper probe position, [-]
 PROBE_LOWER = 0.950 # Lower probe position, [-]
 
-# # NM80 settings
-# # P_0 = 101325.0  # Pressure, [Pa]
-# # T_0 = 292.15    # Temperature, [K]
-# # H_R = 0.70      # Relative humidity, [-]
+# NM80 settings
+# P_0 = 101325.0  # Pressure, [Pa]
+# T_0 = 292.15    # Temperature, [K]
+# H_R = 0.70      # Relative humidity, [-]
 
-# # QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
-# # QBLADE_RESULTS_PATH = "results\\wind_turbine\\NM_2MW_RWT\\qblade.txt"                       # Results path
+# QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
+# QBLADE_RESULTS_PATH = "results\\wind_turbine\\NM_2MW_RWT\\qblade.txt"                       # Results path
