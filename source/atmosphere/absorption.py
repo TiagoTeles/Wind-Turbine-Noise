@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Determine the attenuation coefficient due to atmospheric absorption.
@@ -86,7 +86,7 @@ def attenuation_coefficient(f, p, T, h):
     alpha_lambda_N = 1.559 * X_N * np.square(THETA_N / T) * np.exp(-THETA_N / T)
 
     # Determine the classical attenuation coefficient
-    alpha_classical = 1.60E-10 * np.square(f) * np.pow(p / P_REF, -1.0) * np.pow(T / T_REF, 1.0 / 2.0)
+    alpha_classical = 1.60E-10 * np.square(f) * np.pow(p / P_REF, -1.0) * np.sqrt(T / T_REF)
 
     # Determine the attenuation coefficient due to vibrational relaxation of oxygen molecules
     alpha_vib_O = alpha_lambda_O * (f / c_0) * (2.0 * (f / f_rO) * np.pow(1.0 + np.square(f / f_rO), -1.0))
