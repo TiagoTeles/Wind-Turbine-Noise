@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Determine the international standard atmosphere.
