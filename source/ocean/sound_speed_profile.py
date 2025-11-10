@@ -23,16 +23,15 @@ import numpy as np
 from source.constants import G
 from source.ocean.salinity import Salinity
 from source.ocean.temperature import Temperature
-from source.settings import P_0, LAT, LON, SALINITY_PATH, TEMPERATURE_PATH
+from source.settings import LAT, LON, SALINITY_PATH, TEMPERATURE_PATH
 
 
-def pressure(z, p_0, rho):
+def pressure(z, rho):
     """
     Determine the ocean pressure.
 
     Parameters:
         z : np.ndarray -- altitude, [m]
-        p_0 : float -- pressure, [Pa]
         rho : np.ndarray -- density, [kg/m^3]
 
     Returns:
@@ -44,7 +43,7 @@ def pressure(z, p_0, rho):
         print("Positive altitude detected! z > 0.0 [m].")
 
     # Determine the pressure
-    p = p_0 - rho * G * z
+    p = -rho * G * z
 
     return p
 
@@ -126,12 +125,10 @@ if __name__ == "__main__":
     latitude = LAT * np.ones(altitude.shape)
     longitude = LON * np.ones(altitude.shape)
 
-    # Determine the salinity and temperature
+    # Determine the salinity, temperature, and pressure
     S = salinity.get(latitude, longitude, altitude)
     T = temperature.get(latitude, longitude, altitude)
-
-    # Determine the pressure
-    P = pressure(altitude, P_0, 1025.0)
+    P = pressure(altitude, 1025.0)
 
     # Determine the sound speed profile
     c = sound_speed_profile(T, S, P)
