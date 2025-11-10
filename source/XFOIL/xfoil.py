@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-07
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Run the XFOIL executable.
@@ -28,7 +28,6 @@ class XFoil:
 
     Methods:
         __init__ -- initialise the XFoil class
-        interpolate -- interpolate two airfoils
         run -- run XFOIL at a given Re, M, and Alpha
 
     Attributes:
@@ -56,21 +55,31 @@ class XFoil:
         self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd,
                                 text=True)
 
-    def interpolate(self, path_0, path_1, path_out, fraction):
+    def run(self, path_0, path_1, fraction, path_out, re, mach, alpha, max_iter, x_c_upper, x_c_lower, n_crit):
         """
-        Interpolate two airfoils.
+        Run XFOIL at a given Re, M, and Alpha.
 
         Parameters:
-            path_0 : str -- input airfoil file path
-            path_1 : str -- input airfoil file path
-            path_out : str -- output airfoil file path
+            path_0 : str -- airfoil file path
+            path_1 : str -- airfoil file path
             fraction : float -- interpolation fraction, [-]
+            path_out : str -- dump file path
+            re : float -- Reynolds number, [-]
+            mach : float -- Mach number, [-]
+            alpha : float -- angle of attack, [rad]
+            max_iter : int -- maximum number of XFOIL iterations, [-]
+            x_c_upper : float -- upper transition position, [-]
+            x_c_lower : float -- lower transition position, [-]
+            n_crit : float -- critical amplification factor, [-]
         """
 
         # Check if the file paths are too long
         if len(path_0) > 64 or len(path_1) > 64 or len(path_out) > 64:
             print("File path is too long!")
             sys.exit(1)
+
+        # Convert alpha from [rad] to [deg]
+        alpha = np.degrees(alpha)
 
         # Select the INTE environment
         self.process.stdin.write("INTE\n")
@@ -86,52 +95,9 @@ class XFoil:
         # Set the interpolation fraction
         self.process.stdin.write(f"{fraction}\n")
 
-        # Save the interpolated airfoil file
+        # Set the current airfoil
         self.process.stdin.write(f"interpolated_airfoil\n")
         self.process.stdin.write("PCOP\n")
-        self.process.stdin.write(f"SAVE {path_out}\n")
-
-        # Run the XFOIL commands
-        stdout, _ = self.process.communicate()
-
-        # Check for errors
-        if "File OPEN error" in stdout:
-            print("XFOIL file OPEN error!")
-            sys.exit(1)
-
-        elif "File READ error" in stdout:
-            print("XFOIL file READ error!")
-            sys.exit(1)
-
-        elif "Output file exists" in stdout:
-            print("Airfoil already exists! Skipping!")
-
-    def run(self, path_in, path_out, re, mach, alpha, x_c_upper, x_c_lower, n_crit, max_iter):
-        """
-        Run XFOIL at a given Re, M, and Alpha.
-
-        Parameters:
-            path_in : str -- airfoil file path
-            path_out : str -- dump file path
-            re : float -- Reynolds number, [-]
-            mach : float -- Mach number, [-]
-            alpha : float -- angle of attack, [rad]
-            x_c_upper : float -- transition point on the upper surface, [-]
-            x_c_lower : float -- transition point on the lower surface, [-]
-            n_crit : float -- critical amplification factor, [-]
-            max_iter : int -- maximum number of XFOIL iterations, [-]
-        """
-
-        # Check if the file path is too long
-        if len(path_in) > 64 or len(path_out) > 64:
-            print("File path is too long!")
-            sys.exit(1)
-
-        # Convert alpha from [rad] to [deg]
-        alpha = np.degrees(alpha)
-
-        # Load the airfoil file
-        self.process.stdin.write(f"LOAD {path_in}\n")
 
         # Set re, mach, and max_iter in the OPER environment
         self.process.stdin.write("OPER\n")
