@@ -52,10 +52,6 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
     # Determine the Reynolds number
     re = U * c / nu
 
-    # Determine the airfoil indices
-    index_0 = np.searchsorted(blade.radius, r) - 1
-    index_1 = np.searchsorted(blade.radius, r)
-
     # Initialise the displacement thickness arrays
     delta_star_upper = np.empty(r.shape)
     delta_star_lower = np.empty(r.shape)
@@ -63,32 +59,37 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
     # Iterate over the blade panels
     for i in range(len(r)):
 
+        # Determine the airfoil indices
+        index_0 = np.searchsorted(blade.radius, r[i]) - 1
+        index_1 = np.searchsorted(blade.radius, r[i])
+
+        # Determine the airfoil radiuses
+        radius_0 = blade.radius[index_0]
+        radius_1 = blade.radius[index_1]
+
         # Determine the airfoil paths
         path_0 = blade.polar[index_0].airfoil.path
         path_1 = blade.polar[index_1].airfoil.path
 
+        # Determine the interpolation fraction
+        fraction = (r[i] - radius_0) / (radius_1 - radius_0)
+
         # Determine the current working directory
         cwd = os.path.dirname(path_0)
 
-        # Determine the relative airfoil paths
-        path_rel_0 = os.path.basename(path_0)
-        path_rel_1 = os.path.basename(path_1)
-
         # Determine the output dump paths
-        path_rel_out = f"xfoil_dump_{i:2d}.csv"
-        path_out = os.path.join(cwd, path_out)
-
-        # Determine the interpolation fraction
-        radius_0 = blade.radius[index_0]
-        radius_1 = blade.radius[index_1]
-
-        fraction = (r[i] - radius_0) / (radius_1 - radius_0)
+        path_out = os.path.join(cwd, f"xfoil_dump_{i:2d}.csv")
 
         # Initialise XFOIL
         xfoil = XFoil(xfoil_path, cwd)
 
+        # Determine the relative paths
+        path_0 = os.path.basename(path_0)
+        path_1 = os.path.basename(path_1)
+        path_out = os.path.basename(path_out)
+
         # Run the XFOIL simulation
-        xfoil.run(path_0, path_1, fraction, path_rel_out, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
+        xfoil.run(path_0, path_1, fraction, path_out, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
 
         # Read the output file
         data = pd.read_csv(path_out, delimiter=r"\s+", names=["s/c", "x/c", "y/c", "U_e/U", \
