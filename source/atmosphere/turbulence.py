@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-09-17
+Date:     2025-11-10
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -92,7 +92,7 @@ def surface_roughness_length(u_n, z, nu, output_all=False):
     z_0 = z / (np.exp(b_n_fit) - 1.0)
 
     if output_all:
-        return z_0, z_0_nu, z_0_alpha
+        return z_0_nu, z_0_alpha, z_0
     else:
         return z_0
 
@@ -131,10 +131,10 @@ if __name__ == "__main__":
 
     # Show the surface roughness length
     u_n = np.linspace(1.0E-3, 12.0, 1000)
-    z_0, z_0_nu, z_0_alpha = surface_roughness_length(u_n, 170.0, nu, True)
+    z_0_nu, z_0_alpha, z_0 = surface_roughness_length(u_n, 170.0, nu, True)
 
-    plt.semilogy(u_n, z_0_nu, label="Kinematic Viscosity")
-    plt.semilogy(u_n, z_0_alpha, label="Charnock's Relation")
+    plt.semilogy(u_n, z_0_nu, label="Light Winds")
+    plt.semilogy(u_n, z_0_alpha, label="Strong Winds")
     plt.semilogy(u_n, z_0, label="Empirical Fit")
     plt.xlabel("Neutral Wind Speed, [m/s]")
     plt.ylabel("Surface Roughness Length, [m]")
