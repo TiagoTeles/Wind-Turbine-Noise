@@ -1,23 +1,23 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 """
 
 import numpy as np
 
 
-# Atmosphere properties
+# Atmosphere settings
 P_0 = 101325.0  # Pressure, [Pa]
 T_0 = 288.15    # Temperature, [K]
 H_R = 0.80      # Relative humidity, [-]
 
-# Wind turbine properties
+# Wind turbine settings
 LAT = np.radians(41.6865)   # Latitude, [rad]
 LON = np.radians(-9.0574)   # Longitude, [rad]
 
-# Ocean properties
+# Ocean settings
 BATHYMETRY_PATH = "data\\study_domain\\windfloat_atlantic\\bathymetry.csv"      # Bathymetry path
 TEMPERATURE_PATH = "data\\study_domain\\windfloat_atlantic\\temperature.csv"    # Temperature path
 SALINITY_PATH = "data\\study_domain\\windfloat_atlantic\\salinity.csv"          # Salinity path
@@ -49,13 +49,13 @@ XFOIL_TRANSITION_UPPER = 0.065          # Upper transition position, [-]
 XFOIL_TRANSITION_LOWER = 0.200          # Lower transition position, [-]
 XFOIL_AMPLIFICATION = 9.0               # Critical amplification factor, [-]
 
-# Probe settings
+# Boundary layer settings
 PROBE_UPPER = 0.975 # Upper probe position, [-]
 PROBE_LOWER = 0.950 # Lower probe position, [-]
 
-# NM80 settings
-# P_0 = 101326.2  # Pressure, [Pa]
-# T_0 = 287.15    # Temperature, [K]
+# # NM80 settings
+# P_0 = 103236.2  # Pressure, [Pa]
+# T_0 = 292.15    # Temperature, [K]
 # H_R = 0.70      # Relative humidity, [-]
 
 # QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
