@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Store the simulation data.
@@ -59,10 +59,12 @@ class Simulation:
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
-        # Add the Turbine object
+        # Determine the Turbine path
         turbine_directory = os.path.dirname(self.path)
         turbine_name = lines[16].split()[0]
         turbine_path = os.path.normpath(os.path.join(turbine_directory, turbine_name))
+
+        # Add the Turbine object
         self.turbine = Turbine(turbine_path)
 
         # Close the file
@@ -87,11 +89,11 @@ class Simulation:
         # Read the results
         self.results = pd.read_csv(path, delimiter=r"\s+", skiprows=2)
 
-        # Determine the start and end of the last revolution
+        # Determine the start and end indices of the last revolution
         index_0 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-2] + 1
         index_1 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-1] + 1
 
-        # Only keep the last revolution
+        # Keep the last full revolution
         self.results = self.results.iloc[index_0:index_1]
 
         # Read the Simulation results
@@ -107,7 +109,7 @@ class Simulation:
 
         Parameters:
             key : str -- member name
-            azimuth : float -- azimuth angle, [deg]
+            azimuth : float -- azimuth angle, [rad]
         """
 
         # Check if the key is valid
