@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Store the turbine data.
@@ -68,7 +68,7 @@ class Turbine:
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
-        # Set the turbine geometry
+        # Determine the turbine geometry
         self.n_blades = int(lines[12].split()[0])
         self.n_panels = int(lines[17].split()[0])
         self.rotor_overhang = float(lines[21].split()[0])
@@ -80,10 +80,12 @@ class Turbine:
         self.shaft_tilt = np.radians(self.shaft_tilt)
         self.rotor_cone = np.radians(self.rotor_cone)
 
-        # Add the Blade object
+        # Determine the Blade path
         blade_directory = os.path.dirname(self.path)
         blade_name = lines[10].split()[0]
         blade_path = os.path.normpath(os.path.join(blade_directory, blade_name))
+
+        # Add the Blade object
         self.blade = Blade(blade_path)
 
         # Close the file
