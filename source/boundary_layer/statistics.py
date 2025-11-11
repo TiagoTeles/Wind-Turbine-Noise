@@ -22,7 +22,7 @@ import numpy as np
 from source.constants import ALPHA_C, B_C
 
 
-def wall_pressure_spectrum(f, U, delta_star, rho_0):
+def wall_pressure_spectrum(f, U, delta_star, rho):
     """
     Determine the wall pressure spectrum.
 
@@ -30,7 +30,7 @@ def wall_pressure_spectrum(f, U, delta_star, rho_0):
         f : np.ndarray -- frequency, [Hz]
         U : np.ndarray -- velocity, [m/s]
         delta_star : np.ndarray -- displacement thickness, [m]
-        rho_0 : float -- density, [kg/m^3]
+        rho : float -- density, [kg/m^3]
 
     Returns:
         Phi_pp : np.ndarray -- wall pressure spectrum, [Pa^2/Hz]
@@ -50,7 +50,7 @@ def wall_pressure_spectrum(f, U, delta_star, rho_0):
       + 0.1505 * np.pow(omega_tilde, 5.0))
 
     # Determine the wall pressure spectrum
-    Phi_pp = np.square(0.5 * rho_0 * np.square(U)) * (delta_star / U) * 2.0E-5 * F
+    Phi_pp = np.square(0.5 * rho * np.square(U)) * (delta_star / U) * 2.0E-5 * F
 
     return Phi_pp
 
