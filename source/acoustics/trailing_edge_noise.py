@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Determine the TBLTE noise spectra.
@@ -83,7 +83,8 @@ def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0):
     # Determine the correction factor
     epsilon = np.pow(1.0 + 1.0 / (4.0 * mu_line), -1.0 / 2.0)
 
-    # Determine the first-order main scattering term. Neglect the term np.exp(-2 * 1j * C)
+    # Determine the first-order main scattering term
+    # Neglect the term np.exp(-2 * 1j * C)
     B = K_1_line + M * mu_line + kappa_line
     C = K_1_line - mu_line * (x / S_0 - M)
 
@@ -162,6 +163,16 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0):
     Returns:
         spl : np.ndarray -- TBLTE noise SPL, [dB]
     """
+
+    # Reshape the input arrays for broadcasting
+    f = f[:, :, :]
+    b = b[np.newaxis, :, np.newaxis]
+    c = c[np.newaxis, :, np.newaxis]
+    U = U[np.newaxis, :, np.newaxis]
+    delta_star = delta_star[np.newaxis, :, np.newaxis]
+    x = x[np.newaxis, :, :]
+    y = x[np.newaxis, :, :]
+    z = x[np.newaxis, :, :]
 
     # Determine the wall pressure spectrum using Schlinker's model
     Phi_pp = wall_pressure_spectrum(f, U, delta_star, rho_0)
