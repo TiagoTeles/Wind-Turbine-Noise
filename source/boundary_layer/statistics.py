@@ -1,10 +1,10 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
-Determine the turbulent boundary layer statistics.
+Determine the boundary layer statistics.
 
 Classes:
     None
@@ -29,7 +29,7 @@ def wall_pressure_spectrum(f, U, delta_star, rho_0):
     Parameters:
         f : np.ndarray -- frequency, [Hz]
         U : np.ndarray -- velocity, [m/s]
-        delta_star : np.ndarray -- boundary layer displacement thickness, [m]
+        delta_star : np.ndarray -- displacement thickness, [m]
         rho_0 : float -- density, [kg/m^3]
 
     Returns:
@@ -42,7 +42,7 @@ def wall_pressure_spectrum(f, U, delta_star, rho_0):
     # Determine the convective wavenumber
     K = omega / U
 
-    # Determine omega_tilde
+    # Determine the non-dimensional wavenumber
     omega_tilde = K * delta_star
 
     # Determine the spectrum function
@@ -62,7 +62,7 @@ def spanwise_correlation_length(f, U, delta_star, K_2):
     Parameters:
         f : np.ndarray -- frequency, [Hz]
         U : np.ndarray -- velocity, [m/s]
-        delta_star : np.ndarray -- boundary layer displacement thickness, [m]
+        delta_star : np.ndarray -- displacement thickness, [m]
         K_2 : np.ndarray -- spanwise aerodynamic wavenumber, [1/m]
 
     Returns:
@@ -81,7 +81,7 @@ def spanwise_correlation_length(f, U, delta_star, K_2):
     # Determine the convective wavenumber
     K = omega / U
 
-    # Determine omega_tilde
+    # Determine the non-dimensional wavenumber
     omega_tilde = K * delta_star
 
     # Apply the correction proposed by Casalino et al. (2022)
