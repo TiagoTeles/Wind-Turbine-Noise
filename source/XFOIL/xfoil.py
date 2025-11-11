@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Run the XFOIL executable.
@@ -28,7 +28,7 @@ class XFoil:
 
     Methods:
         __init__ -- initialise the XFoil class
-        run -- run XFOIL at a given Re, M, and Alpha
+        run -- run XFOIL at a given Re and Alpha
 
     Attributes:
         path : str -- path to the XFOIL executable
@@ -52,18 +52,18 @@ class XFoil:
         self.cwd = cwd
 
         # Create the XFOIL process
-        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd,
-                                text=True)
+        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, \
+                                stderr=sp.PIPE, cwd=cwd, text=True)
 
-    def run(self, path_0, path_1, fraction, path_out, re, alpha, max_iter, x_c_upper, x_c_lower, n_crit):
+    def run(self, path_0, path_1, path_out, fraction, re, alpha, max_iter, x_c_upper, x_c_lower, n_crit):
         """
         Run XFOIL at a given Re, M, and Alpha.
 
         Parameters:
             path_0 : str -- airfoil file path
             path_1 : str -- airfoil file path
-            fraction : float -- interpolation fraction, [-]
             path_out : str -- dump file path
+            fraction : float -- interpolation fraction, [-]
             re : float -- Reynolds number, [-]
             alpha : float -- angle of attack, [rad]
             max_iter : int -- maximum number of XFOIL iterations, [-]
@@ -83,19 +83,21 @@ class XFoil:
         # Select the INTE environment
         self.process.stdin.write("INTE\n")
 
-        # Load the first airfoil file
+        # Load the first airfoil
         self.process.stdin.write("F\n")
         self.process.stdin.write(f"{path_0}\n")
 
-        # Load the second airfoil file
+        # Load the second airfoil
         self.process.stdin.write("F\n")
         self.process.stdin.write(f"{path_1}\n")
 
         # Set the interpolation fraction
         self.process.stdin.write(f"{fraction}\n")
 
-        # Set the current airfoil
+        # Set the airfoil name
         self.process.stdin.write(f"interpolated_airfoil\n")
+
+        # Set the current airfoil
         self.process.stdin.write("PCOP\n")
 
         # Set re and max_iter in the OPER environment
