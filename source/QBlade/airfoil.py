@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Store the airfoil data.
@@ -62,11 +62,11 @@ class Airfoil:
 
         # Separate the upper and lower airfoil surfaces
         index = self.coordinates["x/c"].idxmin()
-        upper = self.coordinates.iloc[:index + 1][::-1]
-        lower = self.coordinates.iloc[index:]
+        coordinates_upper = self.coordinates.iloc[:index + 1][::-1]
+        coordinates_lower = self.coordinates.iloc[index:]
 
         # Determine the airfoil thickness
-        y_c_upper = np.interp(x_c, upper["x/c"], upper["y/c"])
-        y_c_lower = np.interp(x_c, lower["x/c"], lower["y/c"])
+        y_c_upper = np.interp(x_c, coordinates_upper["x/c"], coordinates_upper["y/c"])
+        y_c_lower = np.interp(x_c, coordinates_lower["x/c"], coordinates_lower["y/c"])
 
         return y_c_upper - y_c_lower
