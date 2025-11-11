@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Store the polar data.
@@ -50,10 +50,12 @@ class Polar:
         f = open(self.path, "r", encoding="utf-8")
         lines = f.readlines()
 
-        # Add the Airfoil object
+        # Determine the airfoil path
         airfoil_directory = os.path.dirname(self.path)
         airfoil_name = lines[8].split()[0]
         airfoil_path = os.path.normpath(os.path.join(airfoil_directory, airfoil_name))
+
+        # Add the Airfoil object
         self.airfoil = Airfoil(airfoil_path)
 
         # Close the file
