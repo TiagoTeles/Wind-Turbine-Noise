@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 """
 
@@ -11,7 +11,7 @@ S = 110.4               # Sutherland's empirical coefficient, [K]
 BETA_S = 1.458E-6       # Sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
 GAMMA = 1.4             # Specific heat capacity ratio, [-]
 
-# Atmospheric absorption constants
+# Absorption constants
 P_REF = 101325.0        # Reference pressure, [Pa]
 T_REF = 293.15          # Reference temperature, [K]
 T_01 = 273.16           # Triple-point temperature of water, [K]
