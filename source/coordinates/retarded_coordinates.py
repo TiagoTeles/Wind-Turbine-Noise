@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Determine the retarded source and observer coordinates.
@@ -22,15 +22,15 @@ from source.coordinates.transform import nacelle_to_turbine, hub_to_nacelle, bla
 from source.coordinates.transform import airfoil_to_blade, freestream_to_airfoil
 
 
-def retarded_coordinates(simulation, azimuth, radius, x_o_t, c_0):
+def retarded_coordinates(simulation, x_o_t, azimuth, radius, c_0):
     """
     Determine the retarded source and observer coordinates.
 
     Parameters:
         simulation : Simulation -- QBlade simulation
+        x_o_t : np.ndarray -- observer coordinates in the turbine coordinate system, [m]
         azimuth : float -- azimuth angle at reception, [rad]
         radius : np.ndarray -- radius, [m]
-        x_o_t : np.ndarray -- observer coordinates in the turbine coordinate system, [m]
         c_0 : float -- speed of sound, [m/s]
 
     Returns:
@@ -91,7 +91,7 @@ def retarded_coordinates(simulation, azimuth, radius, x_o_t, c_0):
                 matrix_ab = airfoil_to_blade(radius[i], chord[i], twist[i], offset_x[i], offset_y[i], pitch_axis[i], 0.5)
                 matrix_fa = freestream_to_airfoil(angle_of_attack)
 
-                # Determine the overall transformation matrix
+                # Determine the complete transformation matrix
                 matrix_ft = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab @ matrix_fa
 
                 # Determine the source coordinates
@@ -128,7 +128,7 @@ def retarded_coordinates(simulation, azimuth, radius, x_o_t, c_0):
             matrix_ab = airfoil_to_blade(radius[i], chord[i], twist[i], offset_x[i], offset_y[i], pitch_axis[i], 0.5)
             matrix_fa = freestream_to_airfoil(angle_of_attack)
 
-            # Determine the overall transformation matrix
+            # Determine the complete transformation matrix
             matrix_ft = matrix_nt @ matrix_hn @ matrix_bh @ matrix_ab @ matrix_fa
 
             # Determine the observer coordinates
