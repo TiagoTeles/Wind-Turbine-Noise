@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Determine the coordinate system transformations.
@@ -204,9 +204,9 @@ if __name__ == "__main__":
 
             # Determine the airfoil coordinates
             x = airfoil.coordinates["x/c"] * chord
-            y = np.zeros(len(x))
+            y = np.zeros(x.shape)
             z = airfoil.coordinates["y/c"] * chord
-            w = np.ones(len(x))
+            w = np.ones(x.shape)
 
             # Determine the transformation matrices
             matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
