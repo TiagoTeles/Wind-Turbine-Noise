@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -35,21 +35,21 @@ class Blade():
     Methods:
         __init__ -- initialise the Blade class
         get_geometry -- get the blade geometry
+        discretise -- discretise the blade
         read_results -- read the simulation results
         get_results -- get the simulation results
-        discretise -- discretise the blade into panels
 
     Attributes:
         path : str -- path to the .bld file
-        radius : np.ndarray -- spanwise position, [m]
-        chord : np.ndarray -- chord length, [m]
+        radius : np.ndarray -- radius, [m]
+        chord : np.ndarray -- chord, [m]
         twist : np.ndarray -- twist angle, [rad]
         offset_x : np.ndarray -- in-plane offset, [m]
         offset_y : np.ndarray -- out-of-plane offset, [m]
         pitch_axis : np.ndarray -- pitch axis position, [-]
-        polar : np.ndarray -- polar data
-        thickness_01 : np.ndarray -- airfoil thickness at x/c = 0.01 [-]
-        thickness_10 : np.ndarray -- airfoil thickness at x/c = 0.10 [-]
+        polar : np.ndarray -- polar object
+        thickness_01 : np.ndarray -- airfoil thickness at x/c = 0.01 [-], [-]
+        thickness_10 : np.ndarray -- airfoil thickness at x/c = 0.10 [-], [-]
         azimuth : np.ndarray -- azimuth angle, [rad]
         angle_of_attack : np.ndarray -- angle of attack, [rad]
         panel_radius : np.ndarray -- panel radius, [m]
@@ -58,7 +58,7 @@ class Blade():
         velocity : np.ndarray -- velocity, [m/s]
         beam_radius : np.ndarray -- beam radius, [m]
         axial_deflection : np.ndarray -- axial deflection, [m]
-        radial_twist : np.ndarray -- radial twist, [rad]
+        radial_twist : np.ndarray -- radial twist angle, [rad]
     """
 
     def __init__(self, path):
@@ -93,9 +93,13 @@ class Blade():
         self.polar = np.empty(self.radius.shape, dtype=Polar)
 
         for i in range(len(self.radius)):
+
+            # Determine the Polar path
             polar_directory = os.path.dirname(self.path)
             polar_name = geometry["polar_path"].iat[i]
             polar_path = os.path.normpath(os.path.join(polar_directory, polar_name))
+
+            # Add the Polar object
             self.polar[i] = Polar(polar_path)
 
         # Add the airfoil thicknesses
@@ -140,6 +144,75 @@ class Blade():
 
         return value
 
+    def discretise(self, AR, cutoff):
+        """
+        Discretise the blade.
+
+        Parameters:
+            AR : float -- aspect ratio, [-]
+            cutoff : float -- radial cutoff, [-]
+
+        Returns:
+            radius_p : np.ndarray -- panel radiuses, [m]
+            span_p : np.ndarray -- panel spans, [m]
+            chord_p : np.ndarray -- panel chords, [m]
+        """
+
+        radius = []
+        chord = []
+
+        # Start at the rotor blade tip
+        radius.append(self.radius[-1])
+        chord.append(self.chord[-1])
+
+        # Loop until the rotor blade root
+        while radius[-1] > self.radius[0]:
+
+            # Assume an initial guess
+            c_panel = chord[-1]
+            AR_panel = 0.0
+
+            # Loop until the AR is reached
+            while np.abs(AR_panel - AR) > 1.0E-3:
+
+                # Determine the radius and chord
+                r_new = radius[-1] - AR * c_panel
+                c_new = self.get_geometry("chord", r_new)
+
+                # Determine the aspect ratio
+                b_panel = radius[-1] - r_new
+                c_panel = (chord[-1] + c_new) / 2.0
+                AR_panel = b_panel / c_panel
+
+            # Save the new radius and chord
+            radius.append(r_new)
+            chord.append(c_new)
+
+        # Add the rotor blade root
+        radius[-1] = self.radius[0]
+        chord[-1] = self.chord[0]
+
+        # Invert the radius and chord lists
+        radius = np.array(radius[::-1])
+        chord = np.array(chord[::-1])
+
+        # Determine the panel radius and chord
+        radius_p = (radius[1:] + radius[:-1]) / 2.0
+        chord_p = (chord[1:] + chord[:-1]) / 2.0
+
+        # Determine the panel span
+        span_p = np.diff(radius)
+
+        # Determine the radial cutoff mask
+        mask = (radius_p >= cutoff * self.radius[-1])
+
+        # Apply the radial cutoff mask
+        radius_p = radius_p[mask]
+        span_p = span_p[mask]
+        chord_p = chord_p[mask]
+
+        return radius_p, span_p, chord_p
+
     def read_results(self, results):
         """
         Read the simulation results.
@@ -165,12 +238,14 @@ class Blade():
             if "X_l~For.~BLD_1~pos~" in column:
                 n_beams += 1
 
-        # Read the panel radius and beam radius
+        # Read the panel radius
         self.panel_radius = np.empty(n_panels)
-        self.beam_radius = np.linspace(self.radius[0], self.radius[-1], n_beams, endpoint=True)
 
         for i in range(n_panels):
             self.panel_radius[i] = results[f"Radius~BLD_1~PAN_{i}~[m]"].iat[0]
+
+        # Determine the beam radius
+        self.beam_radius = np.linspace(self.radius[0], self.radius[-1], n_beams)
 
         # Read the azimuth angle
         self.azimuth = results["Azimuthal~Angle~BLD_1~[deg]"].to_numpy()
@@ -235,75 +310,6 @@ class Blade():
 
         return value
 
-    def discretise(self, AR, cutoff):
-        """
-        Discretise the blade into panels.
-
-        Parameters:
-            AR : float -- aspect ratio, [-]
-            cutoff : float -- radial cutoff, [-]
-
-        Returns:
-            radius_p : np.ndarray -- panel radiuses, [m]
-            span_p : np.ndarray -- panel spans, [m]
-            chord_p : np.ndarray -- panel chords, [m]
-        """
-
-        radius = []
-        chord = []
-
-        # Start at the rotor blade tip
-        radius.append(self.radius[-1])
-        chord.append(self.chord[-1])
-
-        # Loop until the rotor blade root
-        while radius[-1] > self.radius[0]:
-
-            # Assume an initial guess
-            c_panel = chord[-1]
-            AR_panel = 0.0
-
-            # Loop until the AR is reached
-            while np.abs(AR_panel - AR) > 1.0E-3:
-
-                # Determine the radius and chord
-                r_new = radius[-1] - AR * c_panel
-                c_new = self.get_geometry("chord", r_new)
-
-                # Determine the aspect ratio
-                b_panel = radius[-1] - r_new
-                c_panel = (chord[-1] + c_new) / 2.0
-                AR_panel = b_panel / c_panel
-
-            # Save the new radius and chord
-            radius.append(r_new)
-            chord.append(c_new)
-
-        # Add the rotor blade root
-        radius[-1] = self.radius[0]
-        chord[-1] = self.chord[0]
-
-        # Invert the radius and chord lists
-        radius = np.array(radius[::-1])
-        chord = np.array(chord[::-1])
-
-        # Determine the panel radius and chord
-        radius_p = (radius[1:] + radius[:-1]) / 2.0
-        chord_p = (chord[1:] + chord[:-1]) / 2.0
-
-        # Determine the panel span
-        span_p = np.diff(radius)
-
-        # Determine the radial cutoff
-        mask = (radius_p >= cutoff * self.radius[-1])
-
-        # Apply the radial cutoff
-        radius_p = radius_p[mask]
-        span_p = span_p[mask]
-        chord_p = chord_p[mask]
-
-        return radius_p, span_p, chord_p
-
 if __name__ == "__main__":
 
     # Import the Simulation class
@@ -329,20 +335,20 @@ if __name__ == "__main__":
     plt.show()
 
     # Determine the number of panels for different ARs
-    AR_list = []
-    n_list = []
+    aspect_ratios = []
+    n_panels = []
 
-    for AR in np.linspace(1.0, 10.0, 1000):
+    for aspect_ratio in np.linspace(1.0, 10.0, 1000):
 
         # Discretise the blade
-        radius, span, chord = blade.discretise(AR, 0.0)
+        radius, span, chord = blade.discretise(aspect_ratio, 0.0)
 
         # Save the AR and number of panels
-        AR_list.append(AR)
-        n_list.append(len(radius))
+        aspect_ratios.append(aspect_ratio)
+        n_panels.append(len(radius))
 
     # Show the number of panels
-    plt.plot(AR_list, n_list)
+    plt.plot(aspect_ratios, n_panels)
     plt.xlabel("Panel Aspect Ratio, [-]")
     plt.ylabel("Number of Panels, [-]")
     plt.xlim(1.0, 10.0)
