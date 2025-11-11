@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Manage the QBlade library.
@@ -21,16 +21,16 @@ from ctypes import CDLL, c_bool, c_char_p, c_int, c_void_p
 
 class QBlade:
     """
-    A class to interact with the QBlade library.
+    A class to manage the QBlade library.
 
     Methods:
         __init__ : initialise the QBlade class
         set_library_path : set the QBlade library path
         create_instance : create the QBlade instance
-        load_sim_definition : load the simulation definition file
-        initialise_simulation : initialise the simulation
-        run_full_simulation : run the simulation
-        export_results : export the simulation results
+        load_sim_definition : load the QBlade simulation definition file
+        initialise_simulation : initialise the QBlade simulation
+        run_full_simulation : run the QBlade simulation
+        export_results : export the QBlade simulation results
         close_instance : close the QBlade instance
 
     Attributes:
@@ -51,10 +51,10 @@ class QBlade:
 
         self.path = path
 
-        # Load the library
+        # Load the QBlade library
         self.lib = CDLL(self.path)
 
-        # Set the library path
+        # Set the QBlade library path
         self.set_library_path(self.path)
 
     def set_library_path(self, path):
@@ -83,7 +83,7 @@ class QBlade:
 
         Parameters:
             cl_device : int -- OpenCL device
-            group_size : int -- work group size
+            group_size : int -- OpenCL work-group size
 
         Returns:
             success : bool -- status
@@ -100,10 +100,10 @@ class QBlade:
 
     def load_sim_definition(self, path):
         """
-        Load the simulation definition file.
+        Load the QBlade simulation definition file.
 
         Parameters:
-            path : str -- path to the simulation definition file
+            path : str -- path to the QBlade simulation definition file
 
         Returns:
             None
@@ -120,7 +120,7 @@ class QBlade:
 
     def initialise_simulation(self):
         """
-        Initialise the simulation.
+        Initialise the QBlade simulation.
 
         Parameters:
             None
@@ -140,7 +140,7 @@ class QBlade:
 
     def run_full_simulation(self):
         """
-        Run the simulation.
+        Run the QBlade simulation.
 
         Parameters:
             None
@@ -160,13 +160,13 @@ class QBlade:
 
     def export_results(self, type, directory, name, filter):
         """
-        Export the simulation results.
+        Export the QBlade simulation results.
 
         Parameters:
-            type : int -- results file type
-            directory : str -- results directory
-            name : str -- results file name
-            filter : str -- results filter
+            type : int -- file type
+            directory : str -- directory
+            name : str -- name
+            filter : str -- filter
 
         Returns:
             None
