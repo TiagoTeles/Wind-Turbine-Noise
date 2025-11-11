@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -133,8 +133,8 @@ if __name__ == "__main__":
     u_n = np.linspace(1.0E-3, 12.0, 1000)
     z_0_nu, z_0_alpha, z_0 = surface_roughness_length(u_n, 170.0, nu, True)
 
-    plt.semilogy(u_n, z_0_nu, label="Light Winds")
-    plt.semilogy(u_n, z_0_alpha, label="Strong Winds")
+    plt.semilogy(u_n, z_0_nu, label="Light Wind")
+    plt.semilogy(u_n, z_0_alpha, label="Strong Wind")
     plt.semilogy(u_n, z_0, label="Empirical Fit")
     plt.xlabel("Neutral Wind Speed, [m/s]")
     plt.ylabel("Surface Roughness Length, [m]")
