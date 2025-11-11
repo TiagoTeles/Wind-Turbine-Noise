@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Store the salinity data.
@@ -116,8 +116,8 @@ class Salinity:
         altitude = self.altitude[0, 0, :]
 
         # Determine the latitude and longitude arrays
-        latitude = latitude * np.ones(len(altitude))
-        longitude = longitude * np.ones(len(altitude))
+        latitude = latitude * np.ones(altitude.shape)
+        longitude = longitude * np.ones(altitude.shape)
 
         # Determine the salinity profile
         salinity = self.get(latitude, longitude, altitude)
