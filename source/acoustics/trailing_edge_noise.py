@@ -22,7 +22,7 @@ import numpy as np
 import scipy as sp
 
 from source.boundary_layer.statistics import spanwise_correlation_length, wall_pressure_spectrum
-from source.constants import ALPHA_C
+from source.constants import P_REF_AIR, ALPHA_C
 
 
 def farfield_acoustic_psd(f, b, c, U, Phi_pp, l_y, x, y, z, c_0):
@@ -143,7 +143,7 @@ def E(x):
     return C_2 - 1j * S_2
 
 
-def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, p_ref):
+def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0):
     """
     Determine the TBLTE noise SPL.
 
@@ -158,7 +158,6 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, p_ref):
         z : np.ndarray -- z coordinate, [m]
         c_0 : float -- speed of sound, [m/s]
         rho_0 : float -- air density, [kg/m^3]
-        p_ref : float -- reference pressure, [Pa]
 
     Returns:
         spl : np.ndarray -- TBLTE noise SPL, [dB]
@@ -195,6 +194,6 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0, p_ref):
     delta_omega = 2.0 * np.pi * (0.231 * f)
 
     # Determine the one-third octave band SPL
-    spl = 10.0 * np.log10(2.0 * S_pp * delta_omega / np.square(p_ref))
+    spl = 10.0 * np.log10(2.0 * S_pp * delta_omega / np.square(P_REF_AIR))
 
     return spl
