@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Determine the sound speed profile.
@@ -10,8 +10,8 @@ Classes:
     None 
 
 Functions:
-    pressure
     sound_speed_profile
+    pressure
 
 Exceptions:
     None
@@ -24,28 +24,6 @@ from source.constants import G
 from source.ocean.salinity import Salinity
 from source.ocean.temperature import Temperature
 from source.settings import LAT, LON, SALINITY_PATH, TEMPERATURE_PATH
-
-
-def pressure(z, rho):
-    """
-    Determine the ocean pressure.
-
-    Parameters:
-        z : np.ndarray -- altitude, [m]
-        rho : np.ndarray -- density, [kg/m^3]
-
-    Returns:
-        p : np.ndarray -- pressure, [Pa]
-    """
-
-    # Check for positive altitudes
-    if np.any(z > 0.0):
-        print("Positive altitude detected! z > 0.0 [m].")
-
-    # Determine the pressure
-    p = -rho * G * z
-
-    return p
 
 
 def sound_speed_profile(T, S, P):
@@ -81,10 +59,10 @@ def sound_speed_profile(T, S, P):
     T = T - 273.15
 
     # Convert the salinity from [-] to [ppt]
-    S = S * 1E3
+    S = S * 1.0E3
 
     # Convert the pressure from [Pa] to [bar]
-    P = P / 1E5
+    P = P / 1.0E5
 
     # Define the UNESCO model coefficients
     c_coeffs = np.array([[  1402.388,    5.03830, -5.81090E-2,   3.3432E-4, -1.47797E-6, 3.1419E-9],
@@ -114,14 +92,39 @@ def sound_speed_profile(T, S, P):
 
     return c
 
+
+def pressure(z, rho):
+    """
+    Determine the ocean pressure.
+
+    Parameters:
+        z : np.ndarray -- altitude, [m]
+        rho : np.ndarray -- density, [kg/m^3]
+
+    Returns:
+        p : np.ndarray -- pressure, [Pa]
+    """
+
+    # Check for positive altitudes
+    if np.any(z > 0.0):
+        print("Positive altitude detected! z > 0.0 [m].")
+
+    # Determine the pressure
+    p = -rho * G * z
+
+    return p
+
+
 if __name__ == "__main__":
 
     # Read the study domain data
     salinity = Salinity(SALINITY_PATH)
     temperature = Temperature(TEMPERATURE_PATH)
 
-    # Determine the altitude, latitude, longitude 
+    # Determine the altitude array
     altitude = salinity.altitude[0, 0, :]
+
+    # Determine the latitude and longitude arrays
     latitude = LAT * np.ones(altitude.shape)
     longitude = LON * np.ones(altitude.shape)
 
