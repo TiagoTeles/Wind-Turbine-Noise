@@ -1,16 +1,16 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
-Determine the boundary layer displacement thickness using XFOIL.
+Determine the displacement thickness.
 
 Classes:
     None
 
 Functions:
-    displacement_thickness -- Determine the boundary layer displacement thickness using XFOIL.
+    displacement_thickness -- Determine the displacement thickness.
 
 Exceptions:
     None
@@ -27,7 +27,7 @@ from source.XFOIL.xfoil import XFoil
 def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
                            x_c_upper, x_c_lower, n_crit, probe_upper, probe_lower):
     """
-    Determine the boundary layer displacement thickness using XFOIL.
+    Determine the displacement thickness.
 
     Arguments:
         blade : Blade -- blade object
@@ -45,8 +45,8 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         probe_lower : float -- probe position on the lower surface, [-]
 
     Returns:
-        delta_star_upper : np.ndarray -- upper displacement thickness, [m]
-        delta_star_lower : np.ndarray -- lower displacement thickness, [m]
+        delta_star_upper : np.ndarray -- displacement thickness on the upper surface, [m]
+        delta_star_lower : np.ndarray -- displacement thickness on the upper surface, [m]
     """
 
     # Determine the Reynolds number
@@ -77,32 +77,32 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         # Determine the current working directory
         cwd = os.path.dirname(path_0)
 
-        # Determine the output dump paths
-        path_out = os.path.join(cwd, f"xfoil_dump_{i:02d}.csv")
-
-        # Initialise XFOIL
-        xfoil = XFoil(xfoil_path, cwd)
+        # Determine the output path
+        path_out = os.path.join(cwd, f"xfoil_{i:02d}.csv")
 
         # Determine the relative paths
         name_0 = os.path.basename(path_0)
         name_1 = os.path.basename(path_1)
         name_out = os.path.basename(path_out)
 
+        # Initialise XFOIL
+        xfoil = XFoil(xfoil_path, cwd)
+
         # Run the XFOIL simulation
-        xfoil.run(name_0, name_1, fraction, name_out, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
+        xfoil.run(name_0, name_1, name_out, fraction, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
 
         # Read the output file
-        data = pd.read_csv(path_out, delimiter=r"\s+", names=["s/c", "x/c", "y/c", "U_e/U", \
-                           "delta_star/c", "theta/c", "C_f", "H"], skiprows=1)
+        data = pd.read_csv(path_out, delimiter=r"\s+", names=["s/c", "x/c", "y/c", \
+                           "U_e/U", "delta_star/c", "theta/c", "C_f", "H"], skiprows=1)
 
         # Filter and sort the boundary layer data
         index = data["x/c"].idxmin()
-        upper = data[data["x/c"] <= 1.0].iloc[:index + 1][::-1]
-        lower = data[data["x/c"] <= 1.0].iloc[index:]
+        data_upper = data[data["x/c"] <= 1.0].iloc[:index + 1][::-1]
+        data_lower = data[data["x/c"] <= 1.0].iloc[index:]
 
         # Determine the displacement thickness at the probe locations
-        delta_star_upper[i] = np.interp(probe_upper, upper["x/c"], upper["delta_star/c"]) * c[i]
-        delta_star_lower[i] = np.interp(probe_lower, lower["x/c"], lower["delta_star/c"]) * c[i]
+        delta_star_upper[i] = np.interp(probe_upper, data_upper["x/c"], data_upper["delta_star/c"]) * c[i]
+        delta_star_lower[i] = np.interp(probe_lower, data_lower["x/c"], data_lower["delta_star/c"]) * c[i]
 
         # Remove the output file
         os.remove(path_out)
