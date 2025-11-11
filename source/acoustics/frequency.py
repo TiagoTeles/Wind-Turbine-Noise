@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-11
 License:  GNU GPL 3.0
 
 Determine the one-third octave frequency bands.
@@ -25,7 +25,8 @@ from source.settings import F_MIN, F_MAX
 
 def one_third_octave(f_min, f_max, base_10):
     """
-    Determine the center, lower, and upper frequencies of the one-third octave frequency bands.
+    Determine the center, lower, and upper frequencies 
+    of the one-third octave frequency bands.
 
     Parameters:
         f_min : float -- minimum frequency, [Hz]
