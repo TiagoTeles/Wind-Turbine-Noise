@@ -171,8 +171,8 @@ def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0)
     U = U[np.newaxis, :, np.newaxis]
     alpha = alpha[np.newaxis, :, np.newaxis]
     x = x[np.newaxis, :, :]
-    y = x[np.newaxis, :, :]
-    z = x[np.newaxis, :, :]
+    y = y[np.newaxis, :, :]
+    z = z[np.newaxis, :, :]
 
     # Determine the flat plate SPL
     spl_amiet = flat_plate_spl(f, b, c, I, L, U, alpha, x, y, z, c_0, rho_0)

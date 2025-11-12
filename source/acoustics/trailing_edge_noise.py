@@ -171,8 +171,8 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0):
     U = U[np.newaxis, :, np.newaxis]
     delta_star = delta_star[np.newaxis, :, np.newaxis]
     x = x[np.newaxis, :, :]
-    y = x[np.newaxis, :, :]
-    z = x[np.newaxis, :, :]
+    y = y[np.newaxis, :, :]
+    z = z[np.newaxis, :, :]
 
     # Determine the wall pressure spectrum using Schlinker's model
     Phi_pp = wall_pressure_spectrum(f, U, delta_star, rho_0)
