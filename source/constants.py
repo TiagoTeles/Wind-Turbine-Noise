@@ -1,17 +1,22 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-12
 License:  GNU GPL 3.0
 """
 
-# Atmosphere constants
+# Acoustic
+F_REF = 1000.0          # Reference frequency, [Hz]
+P_REF_AIR = 2.0E-5      # Reference acoustic pressure in air, [Pa]
+P_REF_WATER = 1.0E-6    # Reference acoustic pressure in water, [Pa]
+
+# Atmosphere
 R = 287.1               # Specific gas constant, [J/(k*Kg)]
 S = 110.4               # Sutherland's empirical coefficient, [K]
 BETA_S = 1.458E-6       # Sutherland's empirical coefficient, [kg/(m*s*K^0.5)]
 GAMMA = 1.4             # Specific heat capacity ratio, [-]
 
-# Absorption constants
+# Atmospheric absorption
 P_REF = 101325.0        # Reference pressure, [Pa]
 T_REF = 293.15          # Reference temperature, [K]
 T_01 = 273.16           # Triple-point temperature of water, [K]
@@ -20,20 +25,15 @@ X_O = 0.2095            # Fractional molar concentration of oxygen, [-]
 THETA_N = 3352.0        # Characteristic vibrational temperature of nitrogen, [K]
 THETA_O = 2239.1        # Characteristic vibrational temperature of oxygen, [K]
 
-# Boundary layer constants
+# Boundary layer
 ALPHA_C = 1.0 / 0.7     # Freestream-Convection velocity ratio, [-]
 B_C = 1.5               # Spanwise correlation coefficient, [-]
 
-# One-Third octave constants
-F_REF = 1000.0          # Reference frequency, [Hz]
-P_REF_AIR = 2.0E-5      # Reference acoustic pressure in air, [Pa]
-P_REF_WATER = 1.0E-6    # Reference acoustic pressure in water, [Pa]
-
-# Surface roughness length constants
+# Surface roughness
 ALPHA_CH = 0.018        # Charnock's empirical coefficient, [-]
 ALPHA_M = 0.11          # Hersbach's empirical coefficient, [-]
 P = -12.0               # Hersbach's blending factor, [-]
 
-# Universal constants
+# Universal
 G = 9.80665             # Gravitational acceleration, [m/s^2]
 KAPPA = 0.41            # von Karman constant, [-]
