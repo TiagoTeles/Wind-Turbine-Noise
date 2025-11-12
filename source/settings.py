@@ -37,6 +37,11 @@ BASE_10 = True      # Use base-10 formulation?
 F_MIN = 20.0        # Minimum frequency, [Hz]
 F_MAX = 20000.0     # Maximum frequency, [Hz]
 
+# Observer settings
+X_OBSERVER = np.array([[100.0],     # x coordinate, [m]
+                       [  0.0],     # y coordinate, [m]
+                       [  0.0]])    # z coordinate, [m]
+
 # Aeroacoustic discretisation settings
 N_AZIMUTH = 12      # Number of azimuthal positions, [-]
 ASPECT_RATIO = 2.0  # Panel aspect ratio, [-]
@@ -60,3 +65,18 @@ PROBE_LOWER = 0.950 # Lower probe position, [-]
 
 # QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
 # QBLADE_RESULTS_PATH = "results\\wind_turbine\\NM_2MW_RWT\\qblade.txt"                       # Results path
+
+# I = 0.0896  # Turbulence intensity, [-]
+# L = 39.0    # Turbulence length scale, [m]
+
+# X_OBSERVER = np.array([[97.0],  # x coordinate, [m]
+#                        [ 0.0],  # y coordinate, [m]
+#                        [ 0.0]]) # z coordinate, [m]
+
+# X_OBSERVER = np.array([[100.0],     # x coordinate, [m]
+#                        [  0.0],     # y coordinate, [m]
+#                        [170.0]])    # z coordinate, [m]
+
+# X_OBSERVER = np.array([np.cos(np.linspace(0, 2 * np.pi, 13)) * 100.0,   # x coordinate, [m]
+#                        np.sin(np.linspace(0, 2 * np.pi, 13)) * 100.0,   # y coordinate, [m]
+#                        np.ones(13) * 1.2])                              # z coordinate, [m]
