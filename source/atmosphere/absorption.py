@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-12
 License:  GNU GPL 3.0
 
 Determine the attenuation coefficient due to atmospheric absorption.
@@ -38,60 +38,46 @@ def attenuation_coefficient(f, p, T, h):
         alpha : np.ndarray -- attenuation coefficient, [dB/m]
     """
 
-    # Check for low molar concentrations of water vapour
-    if np.any(h < 5.0E-4):
-        print("Low molar concentration of water vapour detected! h < 5.0E-4 [-].")
-
-    # Check for high molar concentrations of water vapour
-    if np.any(h > 0.05):
-        print("High molar concentration of water vapour detected! h > 0.05 [-].")
-
-    # Check for high pressures
+    # Check range of validity
     if np.any(p > 200000.0):
         print("High pressure detected! p > 200000.0 [Pa].")
 
-    # Check for low temperatures
     if np.any(T < 253.15):
         print("Low temperature detected! T < 253.15 [K].")
 
-    # Check for high temperatures
     if np.any(T > 323.15):
         print("High temperature detected! T > 323.15 [K].")
 
-    # Check for low frequency-pressure ratios
+    if np.any(h < 5.0E-4):
+        print("Low molar concentration of water vapour detected! h < 5.0E-4 [-].")
+
+    if np.any(h > 0.05):
+        print("High molar concentration of water vapour detected! h > 0.05 [-].")
+
     if np.any(f/p < 4.0E-4):
         print("Low frequency-pressure ratio detected! f/p < 4.0E-4 [Hz/Pa].")
 
-    # Check for high frequency-pressure ratios
     if np.any(f/p > 10.0):
         print("High frequency-pressure ratio detected! f/p > 10.0 [Hz/Pa].")
 
-    # Determine the speed of sound in air
+    # Determine the speed of sound
     c_0 = 343.2 * np.sqrt(T / T_REF)
 
     # Convert the molar concentration of water vapour from [-] to [%]
     h = h * 100.0
 
-    # Determine the relaxation frequency of oxygen molecules
+    # Determine the relaxation frequencies
     f_rO = (p / P_REF) * (24.0 + 4.04E4 * h * (0.02 + h) / (0.391 + h))
-
-    # Determine the relaxation frequency of nitrogen molecules
     f_rN = (p / P_REF) * np.pow(T / T_REF, -1.0 / 2.0) \
          * (9.0 + 280.0 * h * np.exp(-4.170 * (np.pow(T / T_REF, -1.0 / 3.0) - 1.0)))
 
-    # Determine the maximum attenuations due to vibrational relaxation of oxygen molecules
+    # Determine the maximum attenuations due to vibrational relaxation
     alpha_lambda_O = 1.559 * X_O * np.square(THETA_O / T) * np.exp(-THETA_O / T)
-
-    # Determine the maximum attenuations due to vibrational relaxation of nitrogen molecules
     alpha_lambda_N = 1.559 * X_N * np.square(THETA_N / T) * np.exp(-THETA_N / T)
 
-    # Determine the classical attenuation coefficient
+    # Determine the individual attenuation coefficients
     alpha_classical = 1.60E-10 * np.square(f) * np.pow(p / P_REF, -1.0) * np.sqrt(T / T_REF)
-
-    # Determine the attenuation coefficient due to vibrational relaxation of oxygen molecules
     alpha_vib_O = alpha_lambda_O * (f / c_0) * (2.0 * (f / f_rO) * np.pow(1.0 + np.square(f / f_rO), -1.0))
-
-    # Determine the attenuation coefficient due to vibrational relaxation of nitrogen molecules
     alpha_vib_N = alpha_lambda_N * (f / c_0) * (2.0 * (f / f_rN) * np.pow(1.0 + np.square(f / f_rN), -1.0))
 
     # Determine the total attenuation coefficient
@@ -124,11 +110,9 @@ def molar_concentration(p, T, h_r):
 
 if __name__ == "__main__":
 
-    # Determine the molar concentration of water vapour
-    h = molar_concentration(P_0, T_0, H_R)
-
     # Determine the attenuation coefficient
     f = np.linspace(F_MIN, F_MAX, 1000)
+    h = molar_concentration(P_0, T_0, H_R)
     alpha = attenuation_coefficient(f, P_0, T_0, h)
 
     # Show the attenuation coefficient
