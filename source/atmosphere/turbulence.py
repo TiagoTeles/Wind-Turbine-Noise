@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-12
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -98,7 +98,7 @@ def surface_roughness_length(u_n, z, nu, output_all=False):
 
 if __name__ == "__main__":
 
-    # Show z_0 when u_n=11 [m/s] and z=170 [m]
+    # Show the surface roughness length
     rho = density(P_0, T_0)
     nu = kinematic_viscosity(T_0, rho)
     z_0 = surface_roughness_length(11.0, 170.0, nu)
