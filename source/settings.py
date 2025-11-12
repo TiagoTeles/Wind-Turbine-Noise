@@ -57,26 +57,3 @@ XFOIL_AMPLIFICATION = 9.0               # Critical amplification factor, [-]
 # Boundary layer settings
 PROBE_UPPER = 0.975 # Upper probe position, [-]
 PROBE_LOWER = 0.950 # Lower probe position, [-]
-
-# # NM80 settings
-# P_0 = 103236.2  # Pressure, [Pa]
-# T_0 = 292.15    # Temperature, [K]
-# H_R = 0.70      # Relative humidity, [-]
-
-# QBLADE_SIMULATION_PATH = "data\\wind_turbine\\NM_2MW_RWT\\NM-2-80-RWT.sim"                  # Simulation path
-# QBLADE_RESULTS_PATH = "results\\wind_turbine\\NM_2MW_RWT\\qblade.txt"                       # Results path
-
-# I = 0.0896  # Turbulence intensity, [-]
-# L = 39.0    # Turbulence length scale, [m]
-
-# X_OBSERVER = np.array([[97.0],  # x coordinate, [m]
-#                        [ 0.0],  # y coordinate, [m]
-#                        [ 0.0]]) # z coordinate, [m]
-
-# X_OBSERVER = np.array([[100.0],     # x coordinate, [m]
-#                        [  0.0],     # y coordinate, [m]
-#                        [170.0]])    # z coordinate, [m]
-
-# X_OBSERVER = np.array([np.cos(np.linspace(0, 2 * np.pi, 13)) * 100.0,   # x coordinate, [m]
-#                        np.sin(np.linspace(0, 2 * np.pi, 13)) * 100.0,   # y coordinate, [m]
-#                        np.ones(13) * 1.2])                              # z coordinate, [m]
