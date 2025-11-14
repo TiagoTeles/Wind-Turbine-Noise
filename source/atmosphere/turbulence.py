@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-12
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -84,12 +84,12 @@ def surface_roughness_length(u_n, z, nu, output_all=False):
     # Determine b_n
     b_n_nu = -1.47 + 0.93 * np.log(R)
     b_n_alpha = 2.65 - 1.44 * np.log(A) - 0.015 * np.square(np.log(A))
-    b_n_fit = np.pow(np.pow(b_n_nu, P) + np.pow(b_n_alpha, P), 1.0 / P)
+    b_n = np.pow(np.pow(b_n_nu, P) + np.pow(b_n_alpha, P), 1.0 / P)
 
     # Determine the surface roughness length
     z_0_nu = z / (np.exp(b_n_nu) - 1.0)
     z_0_alpha = z / (np.exp(b_n_alpha) - 1.0)
-    z_0 = z / (np.exp(b_n_fit) - 1.0)
+    z_0 = z / (np.exp(b_n) - 1.0)
 
     if output_all:
         return z_0_nu, z_0_alpha, z_0
