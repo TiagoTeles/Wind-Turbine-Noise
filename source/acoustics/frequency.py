@@ -71,8 +71,8 @@ def doppler_shift(x_s, x_o, v_s, v_o, c):
     Determine the frequency shift due to the Doppler effect.
 
     Parameters:
-        x_s : np.ndarray -- source position, [m]
-        x_o : np.ndarray -- observer position, [m]
+        x_s : np.ndarray -- source coordinates, [m]
+        x_o : np.ndarray -- observer coordinates, [m]
         v_s : np.ndarray -- source velocity, [m/s]
         v_o : np.ndarray -- observer velocity, [m/s]
         c : float -- speed of sound, [m/s]

@@ -38,7 +38,7 @@ F_MIN = 20.0        # Minimum frequency, [Hz]
 F_MAX = 20000.0     # Maximum frequency, [Hz]
 
 # Observer
-X_OBSERVER = np.array([[100.0, 0.0, 0.0]])  # Observer position, [m]
+X_OBSERVER = np.array([[100.0, 0.0, 0.0]])  # Observer coordinates, [m]
 
 # Aeroacoustic discretisation
 N_AZIMUTH = 12      # Number of azimuthal positions, [-]
