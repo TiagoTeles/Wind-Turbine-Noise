@@ -146,6 +146,6 @@ class Salinity:
 
 if __name__ == "__main__":
 
-    # Show the temperature profile
+    # Show the salinity profile
     salinity = Salinity(SALINITY_PATH)
     salinity.show(LAT, LON, 0.035, 0.036)
