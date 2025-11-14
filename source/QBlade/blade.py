@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -133,7 +133,8 @@ class Blade():
             value : np.ndarray -- property value
         """
 
-        if key in ["chord", "twist", "offset_x", "offset_y", "pitch_axis", "thickness_01", "thickness_10"]:
+        if key in ["chord", "twist", "offset_x", "offset_y", \
+                   "pitch_axis", "thickness_01", "thickness_10"]:
 
             # Interpolate the geometry
             value = np.interp(radius, self.radius, getattr(self, key))
