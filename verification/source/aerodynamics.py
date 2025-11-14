@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-14
 License:  GNU GPL 3.0
 """
 
@@ -26,18 +26,14 @@ simulation.read_results(QBLADE_RESULTS_PATH)
 DTU = pd.read_csv(BEM_DTU_PATH)
 NREL = pd.read_csv(BEM_NREL_PATH)
 
-# Determine the azimuth angles
-azimuth = np.linspace(0.0, 2.0 * np.pi, 360)
-
-# Determine the blade radius
-radius = np.linspace(blade.radius[0], blade.radius[-1], 1000)
-
 # Determine the meshgrid of the radius and azimuth
+azimuth = np.linspace(0.0, 2.0 * np.pi, 360)
+radius = np.linspace(blade.radius[0], blade.radius[-1], 1000)
 RADIUS, AZIMUTH = np.meshgrid(radius, azimuth)
 
 # Show the steady-state operating conditions
 inflow_velocity = simulation.get_results("inflow_velocity", azimuth)
-tip_speed_ratio = turbine.get_results("tip_speed_ratio", azimuth)
+tip_speed_ratio = turbine.get_results("angular_velocity", azimuth) * blade.radius[-1] / inflow_velocity
 blade_pitch = turbine.get_results("pitch", azimuth)
 
 inflow_velocity = np.mean(inflow_velocity)
