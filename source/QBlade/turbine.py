@@ -43,6 +43,7 @@ class Turbine:
         tower_height : float -- tower height, [m]
         blade: Blade -- blade object
         azimuth : np.ndarray -- azimuth angle, [rad]
+        angular_velocity : np.ndarray -- angular velocity, [rad/s]
         tip_speed_ratio : np.ndarray -- tip speed ratio, [-]
         yaw : np.ndarray -- yaw angle, [rad]
         power_coefficient : np.ndarray -- power coefficient, [-]
@@ -93,6 +94,7 @@ class Turbine:
 
         # Initialise the results attributes
         self.azimuth = None
+        self.angular_velocity = None
         self.tip_speed_ratio = None
         self.yaw = None
         self.power_coefficient = None
@@ -113,6 +115,7 @@ class Turbine:
 
         # Read the Turbine results
         self.azimuth = results["Azimuthal~Angle~BLD_1~[deg]"].to_numpy()
+        self.angular_velocity = results["Rotational~Speed~[rpm]"].to_numpy()
         self.tip_speed_ratio = results["Tip~Speed~Ratio~[-]"].to_numpy()
         self.yaw = results["Yaw~Angle~[deg]"].to_numpy()
         self.power_coefficient = results["Power~Coefficient~[-]"].to_numpy()
@@ -124,6 +127,9 @@ class Turbine:
         self.azimuth = np.radians(self.azimuth)
         self.yaw = np.radians(self.yaw)
         self.pitch = np.radians(self.pitch)
+
+        # Convert the angular velocity from [rpm] to [rad/s]
+        self.angular_velocity = self.angular_velocity * (2.0 * np.pi / 60)
 
         # Read the Blade results
         self.blade.read_results(results)
@@ -138,8 +144,8 @@ class Turbine:
         """
 
         # Check if the key is valid
-        if key in ["azimuth", "tip_speed_ratio", "yaw", "power_coefficient", \
-                   "torque_coefficient", "thrust_coefficient", "pitch"]:
+        if key in ["azimuth", "angular_velocity", "tip_speed_ratio", "yaw", \
+                   "power_coefficient", "torque_coefficient", "thrust_coefficient", "pitch"]:
 
             # Interpolate the results
             value = np.interp(azimuth, self.azimuth, getattr(self, key), period=2*np.pi)
