@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the TBLTE noise spectra.
@@ -21,7 +21,7 @@ Exceptions:
 import numpy as np
 import scipy as sp
 
-from source.boundary_layer.statistics import spanwise_correlation_length, wall_pressure_spectrum
+from source.boundary_layer.statistics import wall_pressure_spectrum, spanwise_correlation_length
 from source.constants import P_REF_AIR, ALPHA_C
 
 
@@ -163,6 +163,16 @@ def trailing_edge_noise(f, b, c, U, delta_star, x, y, z, c_0, rho_0):
     Returns:
         spl : np.ndarray -- TBLTE noise SPL, [dB]
     """
+
+    # Reshape the input arrays for broadcasting
+    f = f[:, :, :]
+    b = b[np.newaxis, :, np.newaxis]
+    c = c[np.newaxis, :, np.newaxis]
+    U = U[np.newaxis, :, np.newaxis]
+    delta_star = delta_star[np.newaxis, :, np.newaxis]
+    x = x[np.newaxis, :, :]
+    y = y[np.newaxis, :, :]
+    z = z[np.newaxis, :, :]
 
     # Determine the wall pressure spectrum using Schlinker's model
     Phi_pp = wall_pressure_spectrum(f, U, delta_star, rho_0)
