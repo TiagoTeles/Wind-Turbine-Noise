@@ -33,7 +33,7 @@ RADIUS, AZIMUTH = np.meshgrid(radius, azimuth)
 
 # Show the steady-state operating conditions
 inflow_velocity = simulation.get_results("inflow_velocity", azimuth)
-tip_speed_ratio = turbine.get_results("angular_velocity", azimuth) * blade.radius[-1] / inflow_velocity
+tip_speed_ratio = turbine.get_results("tip_speed_ratio", azimuth)
 blade_pitch = turbine.get_results("pitch", azimuth)
 
 inflow_velocity = np.mean(inflow_velocity)

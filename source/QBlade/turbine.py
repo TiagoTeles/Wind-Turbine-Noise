@@ -143,15 +143,7 @@ class Turbine:
             azimuth : float -- azimuth angle, [rad]
         """
 
-        # Check if the key is valid
-        if key in ["azimuth", "angular_velocity", "tip_speed_ratio", "yaw", \
-                   "power_coefficient", "torque_coefficient", "thrust_coefficient", "pitch"]:
-
-            # Interpolate the results
-            value = np.interp(azimuth, self.azimuth, getattr(self, key), period=2*np.pi)
-
-        else:
-            print("Invalid key!")
-            sys.exit(1)
+        # Interpolate the results
+        value = np.interp(azimuth, self.azimuth, getattr(self, key), period=2*np.pi)
 
         return value
