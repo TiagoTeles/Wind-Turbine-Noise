@@ -11,7 +11,8 @@ Classes:
 
 Functions:
     one_third_octave
-    doppler_shift
+    doppler_factor
+    source_frequency
 
 Exceptions:
     None
@@ -66,7 +67,7 @@ def one_third_octave(f_min, f_max, base_10):
     return f_center, f_lower, f_upper
 
 
-def doppler_shift(x_s, x_o, v_s, v_o, c):
+def doppler_factor(x_s, x_o, v_s, v_o, c):
     """
     Determine the frequency shift due to the Doppler effect.
 
@@ -92,6 +93,58 @@ def doppler_shift(x_s, x_o, v_s, v_o, c):
     doppler_factor = (c - v_o_r_so) / (c - v_s_r_so)
 
     return doppler_factor
+
+
+def source_frequency(simulation, psi, f_o, x_s, x_o, c):
+    """
+    Determine the source frequency.
+
+    Parameters:
+        simulation : Simulation -- simulation object
+        psi : float -- azimuth angle, [rad]
+        f_o : np.ndarray -- observer frequency, [Hz]
+        x_s : np.ndarray -- source coordinates, [m]
+        x_o : np.ndarray -- observer coordinates, [m]
+        c : float -- speed of sound, [m/s]
+
+    Returns:
+        f_s : np.ndarray -- source frequency, [Hz]
+    """
+
+    # Determine the turbine properties
+    z_hub = simulation.turbine.tower_height
+    gamma = simulation.turbine.shaft_tilt
+
+    # Determine the simulation operating conditions
+    U_hub = simulation.get_results("inflow_velocity", psi)
+
+    # Determine the turbine operating conditions
+    phi = simulation.turbine.get_results("yaw", psi)
+    omega = simulation.turbine.get_results("angular_velocity", psi)
+
+    # Determine the source velocity
+    r_s = x_s - np.array([[[0.0]], [[0.0]], [[z_hub]]])
+    
+    omega_s = omega * np.array([np.cos(gamma) * np.cos(phi), 
+                                np.cos(gamma) * np.sin(phi), 
+                                np.sin(gamma)])
+
+    v_s = np.cross(omega_s, r_s, axisa=0, axisb=0, axisc=0)
+
+    # Determine the observer velocity
+    v_o = np.array([[[0.0]], [[0.0]], [[0.0]]])
+
+    # Transform to the wind coordinate system
+    v_s -= np.array([[[U_hub]], [[0.0]], [[0.0]]])
+    v_o -= np.array([[[U_hub]], [[0.0]], [[0.0]]])
+
+    # Determine the doppler factor
+    factor = doppler_factor(x_s, x_o, v_s, v_o, c)
+
+    # Determine the source frequency
+    f_s = f_o[:, np.newaxis, np.newaxis] / factor[np.newaxis, :, :]
+
+    return f_s
 
 if __name__ == "__main__":
 
