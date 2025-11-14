@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-12
+Date:     2025-11-13
 License:  GNU GPL 3.0
 
 Determine the one-third octave frequency bands.
@@ -41,7 +41,7 @@ def one_third_octave(f_min, f_max, base_10):
 
     if base_10:
 
-        # Determine the smallest and largest index
+        # Determine the frequency band indices
         min_index = np.floor(10.0 * np.log10(f_min / F_REF))
         max_index = np.ceil(10.0 * np.log10(f_max / F_REF))
         indices = np.arange(min_index, max_index + 1)
@@ -53,7 +53,7 @@ def one_third_octave(f_min, f_max, base_10):
 
     else:
 
-        # Determine the smallest and largest index
+        # Determine the frequency band indices
         min_index = np.floor(3.0 * np.log2(f_min / F_REF))
         max_index = np.ceil(3.0 * np.log2(f_max / F_REF))
         indices = np.arange(min_index, max_index + 1)
@@ -82,11 +82,11 @@ def doppler_shift(x_s, x_o, v_s, v_o, c_0):
     """
 
     # Determine the source-observer unit vector
-    r_so = (x_o - x_s) / np.linalg.norm(x_o - x_s, axis=1)
+    r_so = (x_o - x_s) / np.linalg.norm(x_o - x_s, axis=0)
 
     # Determine the velocity component in the direction of r_so
-    v_s_r_so = np.inner(v_s, r_so)
-    v_o_r_so = np.inner(v_o, r_so)
+    v_s_r_so = np.sum(v_s * r_so , axis=0)
+    v_o_r_so = np.sum(v_o * r_so , axis=0)
 
     # Determine the doppler factor
     doppler_factor = (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
