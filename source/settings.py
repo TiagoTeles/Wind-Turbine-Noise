@@ -38,7 +38,7 @@ F_MIN = 20.0        # Minimum frequency, [Hz]
 F_MAX = 20000.0     # Maximum frequency, [Hz]
 
 # Observer
-N_OBSERVER = 1      # Number of observers, [-]
+N_OBSERVER = 0      # Number of observers, [-]
 R_OBSERVER = 100.0  # Observer radius, [m]
 Z_OBSERVER = 170.0  # Observer height, [m]
 
