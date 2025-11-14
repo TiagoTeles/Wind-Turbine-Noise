@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-12
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the attenuation coefficient due to atmospheric absorption.
@@ -61,7 +61,7 @@ def attenuation_coefficient(f, p, T, h):
         print("High frequency-pressure ratio detected! f/p > 10.0 [Hz/Pa].")
 
     # Determine the speed of sound
-    c_0 = 343.2 * np.sqrt(T / T_REF)
+    c = 343.2 * np.sqrt(T / T_REF)
 
     # Convert the molar concentration of water vapour from [-] to [%]
     h = h * 100.0
@@ -77,8 +77,8 @@ def attenuation_coefficient(f, p, T, h):
 
     # Determine the individual attenuation coefficients
     alpha_classical = 1.60E-10 * np.square(f) * np.pow(p / P_REF, -1.0) * np.sqrt(T / T_REF)
-    alpha_vib_O = alpha_lambda_O * (f / c_0) * (2.0 * (f / f_rO) * np.pow(1.0 + np.square(f / f_rO), -1.0))
-    alpha_vib_N = alpha_lambda_N * (f / c_0) * (2.0 * (f / f_rN) * np.pow(1.0 + np.square(f / f_rN), -1.0))
+    alpha_vib_O = alpha_lambda_O * (f / c) * (2.0 * (f / f_rO) * np.pow(1.0 + np.square(f / f_rO), -1.0))
+    alpha_vib_N = alpha_lambda_N * (f / c) * (2.0 * (f / f_rN) * np.pow(1.0 + np.square(f / f_rN), -1.0))
 
     # Determine the total attenuation coefficient
     alpha = alpha_classical + alpha_vib_O + alpha_vib_N

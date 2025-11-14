@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-10
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the international standard atmosphere.
@@ -83,12 +83,12 @@ if __name__ == "__main__":
 
     # Show the density of air
     rho = density(P_0, T_0)
-    print(f"Rho: {rho} [kg/m^3]")
+    print(f"Density: {rho} [kg/m^3]")
 
     # Show the kinematic viscosity of air
     nu = kinematic_viscosity(T_0, rho)
-    print(f"Nu: {nu} [m^2/s]")
+    print(f"Kinematic Viscosity: {nu} [m^2/s]")
 
     # Show the speed of sound in air
     c = speed_of_sound(T_0)
-    print(f"C: {c} [m/s]")
+    print(f"Speed of Sound: {c} [m/s]")
