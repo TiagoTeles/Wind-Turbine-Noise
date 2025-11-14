@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the sound speed profile.
@@ -36,22 +36,19 @@ def sound_speed_profile(T, S, P):
         P : np.ndarray -- pressure, [Pa]
 
     Returns:
-        c : np.ndarray -- sound speed, [m/s]
+        c : np.ndarray -- speed of sound, [m/s]
     """
 
-    # Check for low temperatures
+    # Check range of validity
     if np.any(T < 273.15):
         print("Low ocean temperature detected! T < 273.15 [K].")
 
-    # Check for high temperatures
     if np.any(T > 313.15):
         print("High ocean temperature detected! T > 313.15 [K].")
 
-    # Check for high salinities
     if np.any(S > 0.04):
         print("High ocean salinity detected! S > 0.04 [-].")
 
-    # Check for high pressures
     if np.any(P > 1.0E8):
         print("High ocean pressure detected! P > 1.00E8 [Pa].")
 
@@ -105,7 +102,7 @@ def pressure(z, rho):
         p : np.ndarray -- pressure, [Pa]
     """
 
-    # Check for positive altitudes
+    # Check range of validity
     if np.any(z > 0.0):
         print("Positive altitude detected! z > 0.0 [m].")
 
