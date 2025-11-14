@@ -5,7 +5,7 @@ Date:     2025-11-12
 License:  GNU GPL 3.0
 """
 
-# Acoustic
+# Acoustics
 F_REF = 1000.0          # Reference frequency, [Hz]
 P_REF_AIR = 2.0E-5      # Reference acoustic pressure in air, [Pa]
 P_REF_WATER = 1.0E-6    # Reference acoustic pressure in water, [Pa]
