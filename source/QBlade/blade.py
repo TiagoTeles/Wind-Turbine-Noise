@@ -133,15 +133,8 @@ class Blade():
             value : np.ndarray -- property value
         """
 
-        if key in ["chord", "twist", "offset_x", "offset_y", \
-                   "pitch_axis", "thickness_01", "thickness_10"]:
-
-            # Interpolate the geometry
-            value = np.interp(radius, self.radius, getattr(self, key))
-
-        else:
-            print("Invalid key!")
-            sys.exit(1)
+        # Interpolate the geometry
+        value = np.interp(radius, self.radius, getattr(self, key))
 
         return value
 
@@ -154,20 +147,24 @@ class Blade():
             cutoff : float -- radial cutoff, [-]
 
         Returns:
-            radius_p : np.ndarray -- panel radiuses, [m]
-            span_p : np.ndarray -- panel spans, [m]
-            chord_p : np.ndarray -- panel chords, [m]
+            radius_p : np.ndarray -- panel radius, [m]
+            span_p : np.ndarray -- panel span, [m]
+            chord_p : np.ndarray -- panel chord, [m]
         """
 
+        # Initialise the radius and chord lists
         radius = []
         chord = []
+
+        # Limit the minimum cutoff
+        cutoff = np.maximum(cutoff, self.radius[0] / self.radius[-1])
 
         # Start at the rotor blade tip
         radius.append(self.radius[-1])
         chord.append(self.chord[-1])
 
-        # Loop until the rotor blade root
-        while radius[-1] > self.radius[0]:
+        # Loop until the cutoff is reached
+        while radius[-1] > cutoff * self.radius[-1]:
 
             # Assume an initial guess
             c_panel = chord[-1]
@@ -189,9 +186,10 @@ class Blade():
             radius.append(r_new)
             chord.append(c_new)
 
-        # Add the rotor blade root
-        radius[-1] = self.radius[0]
-        chord[-1] = self.chord[0]
+        # Replace with the blade root
+        if radius[-1] < self.radius[0]:
+            radius[-1] = self.radius[0]
+            chord[-1] = self.chord[0]
 
         # Invert the radius and chord lists
         radius = np.array(radius[::-1])
@@ -203,14 +201,6 @@ class Blade():
 
         # Determine the panel span
         span_p = np.diff(radius)
-
-        # Determine the radial cutoff mask
-        mask = (radius_p >= cutoff * self.radius[-1])
-
-        # Apply the radial cutoff mask
-        radius_p = radius_p[mask]
-        span_p = span_p[mask]
-        chord_p = chord_p[mask]
 
         return radius_p, span_p, chord_p
 
@@ -282,7 +272,7 @@ class Blade():
 
         Parameters:
             key : str -- member key
-            azimuth : np.array -- azimuth angle, [rad]
+            azimuth : np.ndarray -- azimuth angle, [rad]
             radius : np.ndarray -- radius, [m]
         """
     
