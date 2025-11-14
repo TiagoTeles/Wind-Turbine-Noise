@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-13
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the one-third octave frequency bands.
@@ -66,7 +66,7 @@ def one_third_octave(f_min, f_max, base_10):
     return f_center, f_lower, f_upper
 
 
-def doppler_shift(x_s, x_o, v_s, v_o, c_0):
+def doppler_shift(x_s, x_o, v_s, v_o, c):
     """
     Determine the frequency shift due to the Doppler effect.
 
@@ -75,7 +75,7 @@ def doppler_shift(x_s, x_o, v_s, v_o, c_0):
         x_o : np.ndarray -- observer position, [m]
         v_s : np.ndarray -- source velocity, [m/s]
         v_o : np.ndarray -- observer velocity, [m/s]
-        c_0 : float -- speed of sound, [m/s]
+        c : float -- speed of sound, [m/s]
 
     Returns:
         doppler_factor : np.ndarray -- f_o / f_s, [-]
@@ -89,7 +89,7 @@ def doppler_shift(x_s, x_o, v_s, v_o, c_0):
     v_o_r_so = np.sum(v_o * r_so , axis=0)
 
     # Determine the doppler factor
-    doppler_factor = (c_0 - v_o_r_so) / (c_0 - v_s_r_so)
+    doppler_factor = (c - v_o_r_so) / (c - v_s_r_so)
 
     return doppler_factor
 
