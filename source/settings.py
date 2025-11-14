@@ -38,7 +38,9 @@ F_MIN = 20.0        # Minimum frequency, [Hz]
 F_MAX = 20000.0     # Maximum frequency, [Hz]
 
 # Observer
-X_OBSERVER = np.array([[100.0, 0.0, 0.0]])  # Observer coordinates, [m]
+N_OBSERVER = 1      # Number of observers, [-]
+R_OBSERVER = 100.0  # Observer radius, [m]
+Z_OBSERVER = 170.0  # Observer height, [m]
 
 # Aeroacoustic discretisation
 ASPECT_RATIO = 2.0  # Panel aspect ratio, [-]
