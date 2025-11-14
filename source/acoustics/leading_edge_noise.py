@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2025-11-14
 License:  GNU GPL 3.0
 
 Determine the inflow turbulence noise spectra.
@@ -159,6 +159,20 @@ def leading_edge_noise(f, b, c, I, L, t_01, t_10, U, alpha, x, y, z, c_0, rho_0)
     Returns:
         spl : np.ndarray -- inflow turbulence noise SPL, [dB]
     """
+
+    # Reshape the input arrays for broadcasting
+    f = f[:, :, :]
+    b = b[np.newaxis, :, np.newaxis]
+    c = c[np.newaxis, :, np.newaxis]
+    I = I[np.newaxis, :, :]
+    L = L[np.newaxis, :, :]
+    t_01 = t_01[np.newaxis, :, np.newaxis]
+    t_10 = t_01[np.newaxis, :, np.newaxis]
+    U = U[np.newaxis, :, np.newaxis]
+    alpha = alpha[np.newaxis, :, np.newaxis]
+    x = x[np.newaxis, :, :]
+    y = y[np.newaxis, :, :]
+    z = z[np.newaxis, :, :]
 
     # Determine the flat plate SPL
     spl_amiet = flat_plate_spl(f, b, c, I, L, U, alpha, x, y, z, c_0, rho_0)
