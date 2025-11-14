@@ -19,9 +19,9 @@ LON = np.radians(-9.0574)   # Longitude, [rad]
 
 # Ocean
 BATHYMETRY_PATH = "data\\study_domain\\windfloat_atlantic\\bathymetry.csv"      # Bathymetry path
-TEMPERATURE_PATH = "data\\study_domain\\windfloat_atlantic\\temperature.csv"    # Temperature path
 SALINITY_PATH = "data\\study_domain\\windfloat_atlantic\\salinity.csv"          # Salinity path
 SEABED_PATH = "data\\study_domain\\windfloat_atlantic\\seabed.csv"              # Seabed path
+TEMPERATURE_PATH = "data\\study_domain\\windfloat_atlantic\\temperature.csv"    # Temperature path
 
 # QBlade
 QBLADE_DLL_PATH = "bin\\QBlade\\QBladeCE_2.0.9.4.dll"   # QBlade.dll path
@@ -41,17 +41,15 @@ F_MAX = 20000.0     # Maximum frequency, [Hz]
 X_OBSERVER = np.array([[100.0, 0.0, 0.0]])  # Observer coordinates, [m]
 
 # Aeroacoustic discretisation
-N_AZIMUTH = 12      # Number of azimuthal positions, [-]
 ASPECT_RATIO = 2.0  # Panel aspect ratio, [-]
+N_AZIMUTH = 12      # Number of azimuthal positions, [-]
 RADIUS_CUTOFF = 0.4 # Radial cutoff, [-]
 
 # XFOIL
-XFOIL_PATH = "bin\\XFOIL\\xfoil.exe"    # xfoil.exe path
-XFOIL_MAX_ITERATIONS = 100              # Iteration limit, [-]
-XFOIL_TRANSITION_UPPER = 0.065          # Upper transition position, [-]
-XFOIL_TRANSITION_LOWER = 0.200          # Lower transition position, [-]
-XFOIL_AMPLIFICATION = 9.0               # Critical amplification factor, [-]
-
-# Boundary layer probe
-PROBE_UPPER = 0.975 # Upper probe position, [-]
-PROBE_LOWER = 0.950 # Lower probe position, [-]
+XFOIL_EXE_PATH = "bin\\XFOIL\\xfoil.exe"    # xfoil.exe path
+XFOIL_ITERATION_LIMIT = 100                 # Iteration limit, [-]
+XFOIL_PROBE_UPPER = 0.975                   # Upper probe position, [-]
+XFOIL_PROBE_LOWER = 0.950                   # Lower probe position, [-]
+XFOIL_TRANSITION_UPPER = 0.065              # Upper transition position, [-]
+XFOIL_TRANSITION_LOWER = 0.200              # Lower transition position, [-]
+XFOIL_AMPLIFICATION = 9.0                   # Critical amplification factor, [-]
