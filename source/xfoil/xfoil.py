@@ -112,7 +112,7 @@ class XFoil:
         self.process.stdin.write("\n")
 
         # Run the analysis at a given alpha
-        self.process.stdin.write(f"Alfa {alpha}\n")
+        self.process.stdin.write(f"ALFA {alpha}\n")
 
         # Save the boundary layer data
         self.process.stdin.write(f"DUMP {path_out}\n")
