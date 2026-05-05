@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Store the polar data.
@@ -18,7 +18,7 @@ Exceptions:
 
 import os
 
-from source.QBlade.airfoil import Airfoil
+from source.qblade.airfoil import Airfoil
 
 
 class Polar:
