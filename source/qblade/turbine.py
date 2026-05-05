@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Store the turbine data.
@@ -17,11 +17,10 @@ Exceptions:
 """
 
 import os
-import sys
 
 import numpy as np
 
-from source.QBlade.blade import Blade
+from source.qblade.blade import Blade
 
 
 class Turbine:
