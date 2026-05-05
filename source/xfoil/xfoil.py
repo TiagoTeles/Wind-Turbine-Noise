@@ -52,8 +52,7 @@ class XFoil:
         self.cwd = cwd
 
         # Create the XFOIL process
-        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, \
-                                stderr=sp.PIPE, cwd=cwd, text=True)
+        self.process = sp.Popen(path, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, cwd=cwd, text=True)
 
     def run(self, path_0, path_1, path_out, fraction, re, alpha, max_iter, x_c_upper, x_c_lower, n_crit):
         """
