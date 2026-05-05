@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Determine the displacement thickness.
@@ -10,18 +10,19 @@ Classes:
     None
 
 Functions:
-    displacement_thickness -- Determine the displacement thickness.
+    displacement_thickness
 
 Exceptions:
     None
 """
 
+import glob
 import os
 
 import numpy as np
 import pandas as pd
 
-from source.XFOIL.xfoil import XFoil
+from source.xfoil.xfoil import XFoil
 
 
 def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
@@ -74,26 +75,29 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         # Determine the interpolation fraction
         fraction = (r[i] - radius_0) / (radius_1 - radius_0)
 
+        # Determine the absolute XFOIL path
+        path = os.path.join(os.getcwd(), xfoil_path)
+
         # Determine the current working directory
         cwd = os.path.dirname(path_0)
 
         # Determine the output path
         path_out = os.path.join(cwd, f"xfoil_{i:02d}.csv")
 
-        # Determine the relative paths
+        # Determine the basenames
         name_0 = os.path.basename(path_0)
         name_1 = os.path.basename(path_1)
         name_out = os.path.basename(path_out)
 
         # Initialise XFOIL
-        xfoil = XFoil(xfoil_path, cwd)
+        xfoil = XFoil(path, cwd)
 
         # Run the XFOIL simulation
         xfoil.run(name_0, name_1, name_out, fraction, re[i], alpha[i], max_iter, x_c_upper, x_c_lower, n_crit)
 
         # Read the output file
-        data = pd.read_csv(path_out, delimiter=r"\s+", names=["s/c", "x/c", "y/c", \
-                           "U_e/U", "delta_star/c", "theta/c", "C_f", "H"], skiprows=1)
+        data = pd.read_csv(path_out, delimiter=r"\s+", names=["s/c", "x/c", "y/c", "U_e/U", \
+                           "delta_star/c", "theta/c", "C_f", "H", "H_star", "P", "m", "K"], skiprows=1)
 
         # Filter and sort the boundary layer data
         index = data["x/c"].idxmin()
@@ -106,5 +110,8 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
 
         # Remove the output file
         os.remove(path_out)
+
+        # Remove the .bl file
+        os.remove(glob.glob(os.path.join(cwd, "*.bl"))[0])
 
     return delta_star_upper, delta_star_lower
