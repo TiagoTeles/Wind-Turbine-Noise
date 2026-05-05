@@ -1,8 +1,8 @@
 ----------------------------------------QBlade Simulation Definition File------------------------------------------
-Generated with : QBlade CE v2.0.9.4_beta windows
-Archive Format: 310039
-Time : 11:58:09
-Date : 21.10.2025
+Generated with : QBlade CE v2.0.9.7b_beta unix
+Archive Format: 310043
+Time : 09:51:26
+Date : 05.05.2026
 
 ----------------------------------------Object Name-----------------------------------------------------------------
 IEA-22-280-RWT-Monopile                            OBJECTNAME         - the name of the simulation object
@@ -50,7 +50,7 @@ END_TURB_1
 
 ----------------------------------------Wind Input-----------------------------------------------------------------
 0                                                  WNDTYPE            - use a number: 0 = steady; 1 = windfield; 2 = hubheight
-                                                   WNDNAME            - filename of the turbsim input file, mann input file or hubheight file (with extension), leave blank if unused
+                                                   WNDNAME            - wind file name: TurbSim (.inp), Mann (.man), hub-height (.hht) or binary field (.bts); leave empty if unused. If an .inp is given and a matching .bts exists, the .bts is used
 0                                                  STITCHINGTYPE      - the windfield stitching type; 0 = periodic; 1 = mirror
 true                                               WINDAUTOSHIFT      - the windfield shifting automatically based on rotor diameter [bool]
 0.00                                               SHIFTTIME          - the windfield is shifted by this time if WINDAUTOSHIFT = 0
@@ -66,12 +66,16 @@ false                                              GROUNDEFFECT       - should t
 
 ----------------------------------------Ocean Depth, Waves and Currents------------------------------------------- 
 the following parameters only need to be set if ISOFFSHORE = 1
-1.00                                               WATERDEPTH         - the water depth
+34.00                                              WATERDEPTH         - the water depth
                                                    WAVEFILE           - the path to the wave file, leave blank if unused
-1                                                  WAVESTRETCHING     - the type of wave stretching, 0 = vertical, 1 = wheeler, 2 = extrapolation, 3 = none
-10000.00                                           SEABEDSTIFF        - the vertical seabed stiffness [N/m^3]
-0.20                                               SEABEDDAMP         - a damping factor for the vertical seabed stiffness evaluation, between 0 and 1 [-]
-0.10                                               SEABEDSHEAR        - a factor for the evaluation of shear forces (friction), between 0 and 1 [-]
+0                                                  WAVESTRETCHING     - the type of wave stretching, 0 = vertical, 1 = wheeler, 2 = extrapolation, 3 = none
+1                                                  VERTWEIGHT         - vertical to wheeler blending factor: 1 = pure vertical, 0 = pure wheeler, only active if WAVETRETCHING = 0
+100000.00                                          SEABEDSTIFF        - the vertical seabed stiffness [N/m^3]
+10000.00                                           SEABEDDAMP         - a linear damping coefficient for the vertical seabed contact [N*s/m^3]; applied proportional to vertical penetration velocity 
+0.50                                               SEABEDFRICTAXIAL   - seabed axial kinematic friction coefficient (mu_k_a) [-]; defines the Coulomb sliding friction along the seafloor (typically 0.2 to 1.0)
+0.50                                               SEABEDFRICTTRANS   - seabed transverse kinematic friction coefficient (mu_k_t) [-]; defines the Coulomb sliding friction along the seafloor (typically 0.2 to 1.0)
+1.00                                               SEABEDFRICTSCALE   - static/dynamic friction scale [-]; mu_s = mu_k * scale (1.0 = no breakout, > 1.0 increases low-speed/breakout resistance)
+0.0500                                             SEABEDFRICTVEL     - seabed friction break velocity v_c [m/s]; threshold for kinetic sliding (MoorDyn FricDamp = 1.0 / v_c)
 0.00                                               SURF_CURR_U        - near surface current velocity [m/s]
 0.00                                               SURF_CURR_DIR      - near surface current direction [deg]
 30.00                                              SURF_CURR_DEPTH    - near surface current depth [m]
