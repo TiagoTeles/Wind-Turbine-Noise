@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Determine the turbulence characteristics.
@@ -21,7 +21,7 @@ Exceptions:
 import matplotlib.pyplot as plt
 import numpy as np
 
-from source.atmosphere.ISA import density, kinematic_viscosity
+from source.atmosphere.isa import density, kinematic_viscosity
 from source.constants import G, P, ALPHA_CH, ALPHA_M, KAPPA
 from source.settings import P_0, T_0
 
