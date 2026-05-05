@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-05
 License:  GNU GPL 3.0
 """
 
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from source.QBlade.simulation import Simulation
+from source.qblade.simulation import Simulation
 from source.settings import QBLADE_SIMULATION_PATH, QBLADE_RESULTS_PATH
 from verification.source.settings import BEM_DTU_PATH, BEM_NREL_PATH
 
@@ -23,10 +23,10 @@ blade = turbine.blade
 simulation.read_results(QBLADE_RESULTS_PATH)
 
 # Read the verification data
-DTU = pd.read_csv(BEM_DTU_PATH)
-NREL = pd.read_csv(BEM_NREL_PATH)
+bem_dtu = pd.read_csv(BEM_DTU_PATH)
+bem_nrel = pd.read_csv(BEM_NREL_PATH)
 
-# Determine the meshgrid of the radius and azimuth
+# Determine the radius and azimuth angle
 azimuth = np.linspace(0.0, 2.0 * np.pi, 360)
 radius = np.linspace(blade.radius[0], blade.radius[-1], 1000)
 RADIUS, AZIMUTH = np.meshgrid(radius, azimuth)
@@ -65,8 +65,8 @@ axial_force = np.mean(axial_force, axis=0)
 tangential_force = np.mean(tangential_force, axis=0)
 
 plt.plot(radius, axial_force, label="QBlade")
-plt.plot(DTU["radius"], DTU["F_x"], ls="--", label="HAWC2")
-plt.plot(NREL["radius"], NREL["F_x"], ls="--", label="OpenFAST")
+plt.plot(bem_dtu["radius"], bem_dtu["F_x"], ls="--", label="HAWC2")
+plt.plot(bem_nrel["radius"], bem_nrel["F_x"], ls="--", label="OpenFAST")
 plt.xlabel("Radius, [m]")
 plt.ylabel("Axial Force per Unit Span, [N/m]")
 plt.xlim(blade.radius[0], blade.radius[-1])
@@ -76,8 +76,8 @@ plt.legend()
 plt.show()
 
 plt.plot(radius, tangential_force, label="QBlade")
-plt.plot(DTU["radius"], -DTU["F_y"], ls="--", label="HAWC2")
-plt.plot(NREL["radius"], -NREL["F_y"], ls="--", label="OpenFAST")
+plt.plot(bem_dtu["radius"], -bem_dtu["F_y"], ls="--", label="HAWC2")
+plt.plot(bem_nrel["radius"], -bem_nrel["F_y"], ls="--", label="OpenFAST")
 plt.xlabel("Radius, [m]")
 plt.ylabel("Tangential Force per Unit Span, [N/m]")
 plt.xlim(blade.radius[0], blade.radius[-1])
@@ -94,8 +94,8 @@ axial_deflection = np.mean(axial_deflection, axis=0)
 radial_twist = np.mean(radial_twist, axis=0)
 
 plt.plot(radius, axial_deflection, label="QBlade")
-plt.plot(DTU["radius"], DTU["delta_x"], ls="--", label="HAWC2")
-plt.plot(NREL["radius"], NREL["delta_x"], ls="--", label="OpenFAST")
+plt.plot(bem_dtu["radius"], bem_dtu["delta_x"], ls="--", label="HAWC2")
+plt.plot(bem_nrel["radius"], bem_nrel["delta_x"], ls="--", label="OpenFAST")
 plt.xlabel("Radius, [m]")
 plt.ylabel("Blade Deflection, [m]")
 plt.xlim(blade.radius[0], blade.radius[-1])
@@ -105,8 +105,8 @@ plt.legend()
 plt.show()
 
 plt.plot(radius, np.degrees(radial_twist), label="QBlade")
-plt.plot(DTU["radius"], DTU["theta_z"], ls="--", label="HAWC2")
-plt.plot(NREL["radius"], NREL["theta_z"], ls="--", label="OpenFAST")
+plt.plot(bem_dtu["radius"], bem_dtu["theta_z"], ls="--", label="HAWC2")
+plt.plot(bem_nrel["radius"], bem_nrel["theta_z"], ls="--", label="OpenFAST")
 plt.xlabel("Radius, [m]")
 plt.ylabel(r"Blade Twist, [$^\circ$]")
 plt.xlim(blade.radius[0], blade.radius[-1])
