@@ -1,7 +1,7 @@
 """ 
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Run the XFOIL executable.
@@ -98,7 +98,7 @@ class XFoil:
         self.process.stdin.write(f"interpolated_airfoil\n")
 
         # Set the current airfoil
-        self.process.stdin.write("PCOP\n")
+        self.process.stdin.write("PANE\n")
 
         # Set re and max_iter in the OPER environment
         self.process.stdin.write("OPER\n")
