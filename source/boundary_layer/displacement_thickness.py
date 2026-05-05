@@ -64,24 +64,20 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         index_0 = np.searchsorted(blade.radius, r[i]) - 1
         index_1 = np.searchsorted(blade.radius, r[i])
 
-        # Determine the airfoil radiuses
-        radius_0 = blade.radius[index_0]
-        radius_1 = blade.radius[index_1]
-
         # Determine the airfoil paths
         path_0 = blade.polar[index_0].airfoil.path
         path_1 = blade.polar[index_1].airfoil.path
 
+        # Determine the airfoil radiuses
+        radius_0 = blade.radius[index_0]
+        radius_1 = blade.radius[index_1]
+
         # Determine the interpolation fraction
         fraction = (r[i] - radius_0) / (radius_1 - radius_0)
 
-        # Determine the absolute XFOIL path
+        # Determine the paths
         path = os.path.join(os.getcwd(), xfoil_path)
-
-        # Determine the current working directory
         cwd = os.path.dirname(path_0)
-
-        # Determine the output path
         path_out = os.path.join(cwd, f"xfoil_{i:02d}.csv")
 
         # Determine the basenames
@@ -108,10 +104,8 @@ def displacement_thickness(blade, c, r, U, alpha, nu, xfoil_path, max_iter, \
         delta_star_upper[i] = np.interp(probe_upper, data_upper["x/c"], data_upper["delta_star/c"]) * c[i]
         delta_star_lower[i] = np.interp(probe_lower, data_lower["x/c"], data_lower["delta_star/c"]) * c[i]
 
-        # Remove the output file
+        # Remove the output files
         os.remove(path_out)
-
-        # Remove the .bl file
         os.remove(glob.glob(os.path.join(cwd, "*.bl"))[0])
 
     return delta_star_upper, delta_star_lower
