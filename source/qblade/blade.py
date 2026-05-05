@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Store the blade data.
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 
-from source.QBlade.polar import Polar
+from source.qblade.polar import Polar
 from source.settings import QBLADE_SIMULATION_PATH, ASPECT_RATIO
 
 
@@ -44,9 +44,10 @@ class Blade():
         radius : np.ndarray -- radius, [m]
         chord : np.ndarray -- chord, [m]
         twist : np.ndarray -- twist angle, [rad]
-        offset_x : np.ndarray -- in-plane offset, [m]
-        offset_y : np.ndarray -- out-of-plane offset, [m]
-        pitch_axis : np.ndarray -- pitch axis position, [-]
+        offset_y : np.ndarray -- offset in y-direction, [m]
+        offset_x : np.ndarray -- offset in x-direction, [m]
+        pitch_axis_y : np.ndarray -- pitch axis position in y-direction, [-]
+        pitch_axis_x : np.ndarray -- pitch axis position in x-direction, [-]
         polar : np.ndarray -- polar object
         thickness_01 : np.ndarray -- airfoil thickness at x/c = 0.01 [-], [-]
         thickness_10 : np.ndarray -- airfoil thickness at x/c = 0.10 [-], [-]
@@ -76,15 +77,16 @@ class Blade():
 
         # Read the blade geometry
         geometry = pd.read_csv(self.path, delimiter=r"\s+", names=["radius", "chord", "twist", \
-                               "offset_x", "offset_y", "pitch_axis", "polar_path"], skiprows=16)
+                               "offset_y", "offset_x", "pitch_axis_y", "pitch_axis_x", "polar_path"], skiprows=16)
 
         # Add the blade geometry
         self.radius = geometry["radius"].to_numpy()
         self.chord = geometry["chord"].to_numpy()
         self.twist = geometry["twist"].to_numpy()
-        self.offset_x = geometry["offset_x"].to_numpy()
         self.offset_y = geometry["offset_y"].to_numpy()
-        self.pitch_axis = geometry["pitch_axis"].to_numpy()
+        self.offset_x = geometry["offset_x"].to_numpy()
+        self.pitch_axis_y = geometry["pitch_axis_y"].to_numpy()
+        self.pitch_axis_x = geometry["pitch_axis_x"].to_numpy()
 
         # Convert the twist from [deg] to [rad]
         self.twist = np.radians(self.twist)
@@ -274,6 +276,8 @@ class Blade():
             key : str -- member key
             azimuth : np.ndarray -- azimuth angle, [rad]
             radius : np.ndarray -- radius, [m]
+        Returns:
+            value : np.ndarray -- property value
         """
     
         # Clamp the azimuth angle
@@ -304,7 +308,7 @@ class Blade():
 if __name__ == "__main__":
 
     # Import the Simulation class
-    from source.QBlade.simulation import Simulation
+    from source.qblade.simulation import Simulation
 
     # Create the Blade object
     simulation = Simulation(QBLADE_SIMULATION_PATH)
