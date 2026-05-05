@@ -116,3 +116,4 @@ false                                              USEMBC             - apply th
 0.00000                                            MINFREQ            - store Eigenvalues, starting with this frequency
 0.00000                                            DELTAFREQ          - omit Eigenvalues that are closer spaced than this value
 100.00000                                          NUMFREQ            - set the number of Eigenmodes and Eigenvalues that will be stored
+
