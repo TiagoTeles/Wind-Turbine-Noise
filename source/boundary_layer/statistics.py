@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Determine the boundary layer statistics.
@@ -76,7 +76,7 @@ def spanwise_correlation_length(f, U, delta_star, K_2):
     U_c = U / ALPHA_C
 
     # Determine the spanwise correlation length
-    l_y = (omega / (B_C * U_c)) / (np.square(K_2) + np.square(omega) / np.square(B_C * U_c))
+    l_y = (omega / (B_C * U_c)) / (np.square(K_2) + (np.square(omega) / np.square(B_C * U_c)))
 
     # Determine the convective wavenumber
     K = omega / U
