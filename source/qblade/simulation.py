@@ -109,6 +109,9 @@ class Simulation:
         Parameters:
             key : str -- member name
             azimuth : float -- azimuth angle, [rad]
+
+        Returns:
+            value : np.ndarray -- property value
         """
 
         # Interpolate the results
