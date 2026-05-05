@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Store the simulation data.
@@ -17,12 +17,11 @@ Exceptions:
 """
 
 import os
-import sys
 
 import numpy as np
 import pandas as pd
 
-from source.QBlade.turbine import Turbine
+from source.qblade.turbine import Turbine
 
 
 class Simulation:
@@ -89,7 +88,7 @@ class Simulation:
         # Read the results
         self.results = pd.read_csv(path, delimiter=r"\s+", skiprows=2)
 
-        # Determine the start and end indices of the last revolution
+        # Determine the start and end indices of the last full revolution
         index_0 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-2] + 1
         index_1 = np.where(np.diff(self.results["Azimuthal~Angle~BLD_1~[deg]"]) < 0.0)[0][-1] + 1
 
