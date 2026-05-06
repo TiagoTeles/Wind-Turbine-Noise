@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-11
+Date:     2026-05-06
 License:  GNU GPL 3.0
 
 Determine the coordinate system transformations.
@@ -25,7 +25,7 @@ import sys
 
 import numpy as np
 
-from source.QBlade.simulation import Simulation
+from source.qblade.simulation import Simulation
 from source.settings import QBLADE_SIMULATION_PATH
 
 
@@ -138,7 +138,7 @@ def blade_to_hub(rotor_cone, pitch):
     return transform(0.0, 0.0, 0.0, 0.0, -rotor_cone, -pitch, "xzy")
 
 
-def airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, x_c):
+def airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis_x, pitch_axis_y, x_c, y_c):
     """
     Determine the transformation matrix from the airfoil
     coordinate system to the blade coordinate system.
@@ -149,15 +149,17 @@ def airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, x_c):
         twist : float -- twist angle, [rad]
         offset_x : float -- offset in the x-direction, [m]
         offset_y : float -- offset in the y-direction, [m]
-        pitch_axis : float -- pitch axis position, [-]
-        x_c : float -- origin position, [-]
+        pitch_axis_x : float -- pitch axis position in the x-direction, [-]
+        pitch_axis_y : float -- pitch axis position in the y-direction, [-]
+        x_c : float -- origin position in the x-direction, [-]
+        y_c : float -- origin position in the y-direction, [-]
 
     Returns:
         matrix : np.ndarray -- transformation matrix
     """
 
-    return transform(offset_y, offset_x, radius, np.pi/2.0, 0.0, np.pi/2.0 - twist, "xyz") \
-           @ transform((x_c - pitch_axis) * chord, 0.0, 0.0, 0.0, 0.0, 0.0, "xyz")
+    return transform(offset_x, offset_y, radius, np.pi/2.0, 0.0, np.pi/2.0 - twist, "xyz") \
+           @ transform((x_c - pitch_axis_y) * chord, (y_c - pitch_axis_x) * chord, 0.0, 0.0, 0.0, 0.0, "xyz")
 
 
 def freestream_to_airfoil(alpha):
@@ -199,7 +201,8 @@ if __name__ == "__main__":
             twist = blade.twist[j]
             offset_x = blade.offset_x[j]
             offset_y = blade.offset_y[j]
-            pitch_axis = blade.pitch_axis[j]
+            pitch_axis_x = blade.pitch_axis_x[j]
+            pitch_axis_y = blade.pitch_axis_y[j]
             airfoil = blade.polar[j].airfoil
 
             # Determine the airfoil coordinates
@@ -209,7 +212,7 @@ if __name__ == "__main__":
             w = np.ones(x.shape)
 
             # Determine the transformation matrices
-            matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis, 0.0)
+            matrix_ab = airfoil_to_blade(radius, chord, twist, offset_x, offset_y, pitch_axis_x, pitch_axis_y, 0.0, 0.0)
             matrix_bh = blade_to_hub(turbine.rotor_cone, 0.0)
             matrix_hn = hub_to_nacelle(turbine.rotor_overhang, azimuth)
             matrix_nt = nacelle_to_turbine(turbine.tower_height, turbine.shaft_tilt, 0.0)
