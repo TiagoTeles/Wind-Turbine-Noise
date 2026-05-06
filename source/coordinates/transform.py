@@ -223,3 +223,6 @@ if __name__ == "__main__":
             # Write the airfoil coordinates
             for k in range(x_t.shape[1]):
                 f.write(f"v {x_t[0, k]} {x_t[1, k]} {x_t[2, k]}\n")
+
+    # Close the output file
+    f.close()
