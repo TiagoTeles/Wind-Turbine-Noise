@@ -16,10 +16,15 @@ Exceptions:
     None
 """
 
+import matplotlib.pyplot as plt
 import numpy as np
 
+from source.atmosphere.isa import speed_of_sound
 from source.coordinates.transform import nacelle_to_turbine, hub_to_nacelle, blade_to_hub
 from source.coordinates.transform import airfoil_to_blade, freestream_to_airfoil
+from source.qblade.simulation import Simulation
+from source.settings import QBLADE_SIMULATION_PATH, QBLADE_RESULTS_PATH
+from source.settings import T_0, ASPECT_RATIO, N_AZIMUTH
 
 
 def retarded_coordinates(turbine, azimuth, radius, x_o_t, c):
@@ -126,3 +131,41 @@ def retarded_coordinates(turbine, azimuth, radius, x_o_t, c):
             x_o_f[:, i, j] = x_observer[0:3]
 
     return x_s_t, x_o_f
+
+if __name__ == "__main__":
+
+    # Read the simulation data
+    simulation = Simulation(QBLADE_SIMULATION_PATH)
+    turbine = simulation.turbine
+    blade = turbine.blade
+
+    # Read the simulation results
+    simulation.read_results(QBLADE_RESULTS_PATH)
+
+    # Determine the rotor blade discretisation
+    r, b, c = blade.discretise(ASPECT_RATIO, 0.0)
+
+    # Determine the speed of sound
+    c_0 = speed_of_sound(T_0)
+
+    # Iterate over the azimuth angles
+    for i in range(N_AZIMUTH):
+
+        # Determine the azimuth angle
+        psi = 2.0 * np.pi * i / N_AZIMUTH
+
+        # Determine the retarded coordinates
+        x_s_t, x_o_f = retarded_coordinates(turbine, psi, r, np.array([[[0.0]], [[0.0]], [[0.0]]]), c_0)
+
+        # Plot the retarded coordinates
+        plt.plot(-x_s_t[1, :, :], x_s_t[2, :, :], label=f"{np.degrees(psi):.0f}°")
+    
+    # Show the plot
+    plt.xlabel("y, [m]")
+    plt.ylabel("z, [m]")
+    plt.xlim(-150, 150)
+    plt.ylim(20, 320)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.grid()
+    plt.legend()
+    plt.show()
