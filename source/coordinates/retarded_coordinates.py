@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2025-05-06
 License:  GNU GPL 3.0
 
 Determine the retarded source and observer coordinates.
@@ -53,7 +53,8 @@ def retarded_coordinates(turbine, azimuth, radius, x_o_t, c):
     twist = turbine.blade.get_geometry("twist", radius)
     offset_x = turbine.blade.get_geometry("offset_x", radius)
     offset_y = turbine.blade.get_geometry("offset_y", radius)
-    pitch_axis = turbine.blade.get_geometry("pitch_axis", radius)
+    pitch_axis_x = turbine.blade.get_geometry("pitch_axis_x", radius)
+    pitch_axis_y = turbine.blade.get_geometry("pitch_axis_y", radius)
 
     # Initialise the coordinate arrays
     x_s_t = np.empty((3, n_sources, n_observers))
@@ -82,7 +83,7 @@ def retarded_coordinates(turbine, azimuth, radius, x_o_t, c):
                 matrix_nt = nacelle_to_turbine(tower_height, shaft_tilt, yaw[i, j])
                 matrix_hn = hub_to_nacelle(rotor_overhang, azimuth_e[i, j])
                 matrix_bh = blade_to_hub(rotor_cone, pitch[i, j])
-                matrix_ab = airfoil_to_blade(radius[i], chord[i], twist[i], offset_x[i], offset_y[i], pitch_axis[i], 0.5)
+                matrix_ab = airfoil_to_blade(radius[i], chord[i], twist[i], offset_x[i], offset_y[i], pitch_axis_x[i], pitch_axis_y[i], 0.5, 0.0)
                 matrix_fa = freestream_to_airfoil(angle_of_attack[i, j])
 
                 # Multiply the transformation matrices
@@ -112,7 +113,7 @@ def retarded_coordinates(turbine, azimuth, radius, x_o_t, c):
             matrix_nt = nacelle_to_turbine(tower_height, shaft_tilt, yaw[i, j])
             matrix_hn = hub_to_nacelle(rotor_overhang, azimuth_e[i, j])
             matrix_bh = blade_to_hub(rotor_cone, pitch[i, j])
-            matrix_ab = airfoil_to_blade(radius[i], chord[i], twist[i], offset_x[i], offset_y[i], pitch_axis[i], 0.5)
+            matrix_ab = airfoil_to_blade(radius[i], chord[i], twist[i], offset_x[i], offset_y[i], pitch_axis_x[i], pitch_axis_y[i], 0.5, 0.0)
             matrix_fa = freestream_to_airfoil(angle_of_attack[i, j])
 
             # Multiply the transformation matrices
