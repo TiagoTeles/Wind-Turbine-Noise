@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-05
 License:  GNU GPL 3.0
 
 Determine the one-third octave frequency bands.
@@ -26,7 +26,7 @@ from source.settings import F_MIN, F_MAX
 
 def one_third_octave(f_min, f_max, base_10):
     """
-    Determine the center, lower, and upper frequencies 
+    Determine the center, lower, and upper frequency 
     of the one-third octave frequency bands.
 
     Parameters:
@@ -35,9 +35,9 @@ def one_third_octave(f_min, f_max, base_10):
         base_10 : bool -- use base-10 formulation?
 
     Returns:
-        f_center : np.ndarray -- center frequencies, [Hz]
-        f_lower : np.ndarray -- lower frequencies, [Hz]
-        f_upper : np.ndarray -- upper frequencies, [Hz]
+        f_center : np.ndarray -- center frequency, [Hz]
+        f_lower : np.ndarray -- lower frequency, [Hz]
+        f_upper : np.ndarray -- upper frequency, [Hz]
     """
 
     if base_10:
@@ -72,8 +72,8 @@ def doppler_factor(x_s, x_o, v_s, v_o, c):
     Determine the frequency shift due to the Doppler effect.
 
     Parameters:
-        x_s : np.ndarray -- source coordinates, [m]
-        x_o : np.ndarray -- observer coordinates, [m]
+        x_s : np.ndarray -- source position, [m]
+        x_o : np.ndarray -- observer position, [m]
         v_s : np.ndarray -- source velocity, [m/s]
         v_o : np.ndarray -- observer velocity, [m/s]
         c : float -- speed of sound, [m/s]
@@ -103,8 +103,8 @@ def source_frequency(simulation, psi, f_o, x_s, x_o, c):
         simulation : Simulation -- simulation object
         psi : float -- azimuth angle, [rad]
         f_o : np.ndarray -- observer frequency, [Hz]
-        x_s : np.ndarray -- source coordinates, [m]
-        x_o : np.ndarray -- observer coordinates, [m]
+        x_s : np.ndarray -- source position, [m]
+        x_o : np.ndarray -- observer position, [m]
         c : float -- speed of sound, [m/s]
 
     Returns:
@@ -115,19 +115,17 @@ def source_frequency(simulation, psi, f_o, x_s, x_o, c):
     z_hub = simulation.turbine.tower_height
     gamma = simulation.turbine.shaft_tilt
 
-    # Determine the simulation operating conditions
+    # Determine the operating conditions
     U_hub = simulation.get_results("inflow_velocity", psi)
-
-    # Determine the turbine operating conditions
     phi = simulation.turbine.get_results("yaw", psi)
     omega = simulation.turbine.get_results("angular_velocity", psi)
 
     # Determine the source velocity
     r_s = x_s - np.array([[[0.0]], [[0.0]], [[z_hub]]])
     
-    omega_s = omega * np.array([np.cos(gamma) * np.cos(phi), 
-                                np.cos(gamma) * np.sin(phi), 
-                                np.sin(gamma)])
+    omega_s = omega * np.array([ np.cos(gamma) * np.cos(phi), 
+                                 np.cos(gamma) * np.sin(phi), 
+                                -np.sin(gamma)])
 
     v_s = np.cross(omega_s, r_s, axisa=0, axisb=0, axisc=0)
 
@@ -138,7 +136,7 @@ def source_frequency(simulation, psi, f_o, x_s, x_o, c):
     v_s -= np.array([[[U_hub]], [[0.0]], [[0.0]]])
     v_o -= np.array([[[U_hub]], [[0.0]], [[0.0]]])
 
-    # Determine the doppler factor
+    # Determine the Doppler factor
     factor = doppler_factor(x_s, x_o, v_s, v_o, c)
 
     # Determine the source frequency
