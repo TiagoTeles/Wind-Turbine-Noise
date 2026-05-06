@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-06
 License:  GNU GPL 3.0
 
 Determine the inflow turbulence noise spectra.
@@ -88,10 +88,10 @@ def flat_plate_spl(f, b, c, I, L, U, alpha, x, y, z, c_0, rho_0):
                        / (1.0 + 2.4 * (K_x_line / np.square(beta)))))
 
     # Determine the low-frequency correction
-    LFC = 10.0 * np.square(S) * M * (np.square(K_x_line) / np.square(beta))
+    LFC = 10.0 * np.square(S) * M * np.square(K_x_line) / np.square(beta)
 
     # Apply the angle of attack correction
-    LFC *= 1.0 + 9.0 * np.square(alpha)
+    LFC *= (1.0 + 9.0 * np.square(alpha))
 
     # Determine the flat plate SPL
     spl_flat_plate = spl_h + 10.0 * np.log10(LFC / (1.0 + LFC))
