@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-06
 License:  GNU GPL 3.0
 
 Determine the TBLTE noise spectra.
