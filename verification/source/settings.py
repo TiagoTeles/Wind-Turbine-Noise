@@ -10,7 +10,7 @@ BEM_DTU_PATH = "verification/data/aerodynamics/DTU.csv"     # DTU verification p
 BEM_NREL_PATH = "verification/data/aerodynamics/NREL.csv"   # NREL verification path
 
 # Aeroacoustic verification
-CAA_DS_PATH = "verification/data/aeroacoustics/3DS.csv"     # DS verification path
+CAA_3DS_PATH = "verification/data/aeroacoustics/3DS.csv"    # 3DS verification path
 CAA_DLR_PATH = "verification/data/aeroacoustics/DLR.csv"    # DLR verification path
 CAA_DTU_PATH = "verification/data/aeroacoustics/DTU.csv"    # DTU verification path
 CAA_IAG_PATH = "verification/data/aeroacoustics/IAG.csv"    # IAG verification path
