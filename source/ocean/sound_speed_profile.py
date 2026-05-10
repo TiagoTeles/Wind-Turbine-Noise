@@ -1,7 +1,7 @@
 """
 Author:   T. Moreira da Fonte Fonseca Teles
 Email:    tmoreiradafont@tudelft.nl
-Date:     2025-11-14
+Date:     2026-05-10
 License:  GNU GPL 3.0
 
 Determine the sound speed profile.
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     plt.plot(c, altitude)
     plt.xlabel("Speed of Sound, [m/s]")
     plt.ylabel("Altitude, [m]")
-    plt.xlim(1502.0, 1514.0)
+    plt.xlim(1501.0, 1504.0)
     plt.ylim(np.min(altitude), 0.0)
     plt.grid()
     plt.show()
